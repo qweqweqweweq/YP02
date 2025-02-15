@@ -10,16 +10,6 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
-    <Folder Include="Pages\Audiences\" />
-    <Folder Include="Pages\Developers\" />
-    <Folder Include="Pages\DirectionAndStatus\" />
-    <Folder Include="Pages\Inventory\" />
-    <Folder Include="Pages\Materials\" />
-    <Folder Include="Pages\Programs\" />
-    <Folder Include="Pages\Settings\" />
-    <Folder Include="Pages\TypeEquipment\" />
-    <Folder Include="Pages\TypeModel\" />
-    <Folder Include="Pages\Users\" />
   </ItemGroup>
 
   <ItemGroup>
