@@ -16,9 +16,17 @@ namespace YP02
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow init;
+        public static Pages.Main main;
         public MainWindow()
         {
             InitializeComponent();
+            init = this;
+            OpenPages(new Pages.Authorization());
+        }
+        public void OpenPages(Page page)
+        {
+            frame.Navigate(page);
         }
     }
 }
