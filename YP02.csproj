@@ -13,7 +13,6 @@
     <Folder Include="Pages\Audiences\" />
     <Folder Include="Pages\Developers\" />
     <Folder Include="Pages\DirectionAndStatus\" />
-    <Folder Include="Pages\Equipment\" />
     <Folder Include="Pages\Inventory\" />
     <Folder Include="Pages\Materials\" />
     <Folder Include="Pages\Programs\" />
