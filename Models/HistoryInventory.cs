@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace YP02.Models
 {
-    public class Inventory
+    public class HistoryInventory
     {
         [Key]
         public int Id { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public string Name { get; set; }
-        public int UserId { get; set; }
+        public int OborId { get; set; }
+        public int IdUser { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace YP02.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int IdDeveloper { get; set; }
-        public string Version { get; set; }
+        public string VersionPO { get; set; }
+        public int DeveloperId { get; set; }
     }
 }

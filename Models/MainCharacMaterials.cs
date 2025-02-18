@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace YP02.Models
 {
-    public class Inventory
+    public class MainCharacMaterials
     {
         [Key]
         public int Id { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public string Name { get; set; }
-        public int UserId { get; set; }
+        public string Color { get; set; }
+        public double Cost { get; set; }
+        public string Size { get; set; }
     }
 }

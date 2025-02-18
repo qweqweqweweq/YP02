@@ -9,7 +9,7 @@ namespace YP02.Context.Database
 {
     public class Config
     {
-        public static readonly string connection = "server=127.0.0.1;port=3306;database=YP02;uid=root;pwd=";
+        public static readonly string connection = "server=sql.freedb.tech;port=3306;database=freedb_ychp02;uid=freedb_qweqq;pwd=3#rtDPD%3Ggm9N&";
         public static readonly MySqlServerVersion version = new MySqlServerVersion(new Version(8, 0, 11));
     }
 }
