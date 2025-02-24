@@ -21,15 +21,16 @@ namespace YP02.Pages.OborType
     /// </summary>
     public partial class OborType : Page
     {
-        public OborTypeContext OborTypeContext = new OborTypeContext();
+        public OborTypeContext OborTypeContext = new OborTypeContext();        
         public OborType()
         {
-            InitializeComponent();
+            InitializeComponent();            
             parent.Children.Clear();
             foreach(Models.OborType item in OborTypeContext.OborType)
             {
-                parent.Children.Add(new Pages.OborType.Item(item));
+                parent.Children.Add(new Pages.OborType.Item(item, this));
             }
+            parent.Children.Add(new Pages.Add_itm(new Pages.OborType.Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)

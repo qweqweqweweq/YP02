@@ -22,7 +22,7 @@ namespace YP02
         {
             InitializeComponent();
             init = this;
-            OpenPages(new Pages.Authorization());
+            OpenPages(new Pages.OborType.OborType());
         }
         public void OpenPages(Page page)
         {
