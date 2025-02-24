@@ -20,9 +20,22 @@ namespace YP02.Pages.OborType
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Models.OborType OborType;
+        public Item(Models.OborType OborType)
         {
             InitializeComponent();
+            this.OborType = OborType;
+            lb_Name.Content = OborType.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

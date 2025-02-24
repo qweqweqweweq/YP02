@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.OborType
 {
@@ -20,9 +21,35 @@ namespace YP02.Pages.OborType
     /// </summary>
     public partial class OborType : Page
     {
+        public OborTypeContext OborTypeContext = new OborTypeContext();
         public OborType()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach(Models.OborType item in OborTypeContext.OborType)
+            {
+                parent.Children.Add(new Pages.OborType.Item(item));
+            }
+        }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+
+        }
+                
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Main());
+        }
+
+        private void SortUp(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SortDown(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

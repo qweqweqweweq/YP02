@@ -24,5 +24,25 @@ namespace YP02.Pages.NetworkSettings
         {
             InitializeComponent();
         }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Back(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SortUp(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SortDown(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

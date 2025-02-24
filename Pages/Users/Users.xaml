@@ -171,8 +171,8 @@
                 <Label Content="Пользователи" FontFamily="/Fonts/#Montserrat Bold" Height="45" FontSize="25" Foreground="#0060AC" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,10,0,10"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30,0,0,0">
                     <TextBox Style="{DynamicResource TextBoxStyle1}" x:Name="search" Height="35" FontSize="15" Width="340" BorderBrush="#0060AC" Margin="0,0,0,0" KeyDown="KeyDown_Search"/>
-                    <Button Style="{DynamicResource ButtonStyle2}" x:Name="SortUp" Content="↑" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="15,0,0,0" Click="SortUp"/>
-                    <Button Style="{DynamicResource ButtonStyle2}" x:Name="SortDown" Content="↓" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="5,0,0,0" Click="SortDown"/>
+                    <Button Style="{DynamicResource ButtonStyle2}" Content="↑" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="15,0,0,0" Click="SortUp"/>
+                    <Button Style="{DynamicResource ButtonStyle2}" Content="↓" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="5,0,0,0" Click="SortDown"/>
                 </StackPanel>
                 <Button Style="{DynamicResource ButtonStyle1}" Click="Back" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,20,10" Background="Red" Foreground="White" Height="40" Width="150" Content="Назад" FontSize="18"/>
             </Grid>

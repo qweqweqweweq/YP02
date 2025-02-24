@@ -24,5 +24,10 @@ namespace YP02.Pages
         {
             InitializeComponent();
         }
+
+        private void AuthorizationClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
