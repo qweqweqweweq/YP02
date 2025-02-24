@@ -28,29 +28,27 @@ namespace YP02.Pages.OborType
             parent.Children.Clear();
             foreach(Models.OborType item in OborTypeContext.OborType)
             {
-                parent.Children.Add(new Pages.OborType.Item(item, this));
+                parent.Children.Add(new Item(item, this));
             }
-            parent.Children.Add(new Pages.Add_itm(new Pages.OborType.Add(this, null)));
+            parent.Children.Add(new Add_itm(new Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-
+            string searchText = search.Text.ToLower();
+            var result = OborTypeContext.OborType.Where(x =>
+                x.Name.ToLower().Contains(searchText)
+            );            
+            parent.Children.Clear();
+            foreach(var item in result)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
                 
         private void Back(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Main());
-        }
-
-        private void SortUp(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SortDown(object sender, RoutedEventArgs e)
-        {
-
+            MainWindow.init.OpenPages(new Main());
         }
     }
 }
