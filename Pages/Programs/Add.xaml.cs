@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Programs
 {
@@ -20,9 +21,59 @@ namespace YP02.Pages.Programs
     /// </summary>
     public partial class Add : Page
     {
-        public Add()
+        public Programs MainPrograms;
+        public Models.Programs programs;
+        DevelopersContext developersContext = new DevelopersContext();
+        public Add(Programs MainPrograms, Models.Programs programs = null)
         {
             InitializeComponent();
+            this.MainPrograms = MainViewModel;
+            this.programs = programs;
+            if (programs != null)
+            {
+                tb_Name.Text = programs.Name;
+                tb_VersionPO.Text = programs.VersionPO;
+                cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.Id).FirstOrDefault().Name;
+            }
+            foreach (var item in developersContext.Developers)
+            {
+                cm_DeveloperId.Items.Add(item.Name);
+            }
+        }
+
+        private void Click_Redact(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tb_Name.Text))
+            {
+                MessageBox.Show("Введите название типа оборудования");
+                return;
+            }
+            if (cm_DeveloperId.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите тип оборудвания");
+                return;
+            }
+            if (programs == null)
+            {
+                programs = new Models.Programs();
+                programs.Name = tb_Name.Text;
+                programs.VersionPO = tb_VersionPO.Text;
+                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
+                MainPrograms.ProgramsContext.Programs.Add(programs);
+            }
+            else
+            {
+                programs.Name = tb_Name.Text;
+                programs.VersionPO = tb_VersionPO.Text;
+                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
+            }
+            MainPrograms.ProgramsContext.SaveChanges();
+            MainWindow.init.OpenPages(new Pages.Programs.Programs());
+        }
+
+        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Programs.Programs());
         }
     }
 }

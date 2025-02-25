@@ -32,7 +32,7 @@ namespace YP02.Pages.ViewModel
             if (viewModel != null)
             {
                 tb_Name.Text = viewModel.Name;
-                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.Id).First().Name;
+                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.Id).FirstOrDefault().Name;
             }
             foreach(var item in oborTypeContext.OborType)
             {
