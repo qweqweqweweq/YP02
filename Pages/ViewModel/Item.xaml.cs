@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.ViewModel
 {
@@ -22,12 +23,14 @@ namespace YP02.Pages.ViewModel
     {
         ViewModel MainViewModel;
         Models.ViewModel ViewModel;
+        OborTypeContext oborTypeContext = new OborTypeContext();
         public Item(Models.ViewModel ViewModel, ViewModel MainViewModel)
         {
             InitializeComponent();
             this.ViewModel = ViewModel;
             this.MainViewModel = MainViewModel;
             lb_Name.Content = ViewModel.Name;
+            lb_OborType.Content = oborTypeContext.OborType.Where(x => x.Id == ViewModel.Id).First().Name;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)

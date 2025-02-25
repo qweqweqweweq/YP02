@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.ViewModel
 {
@@ -20,29 +21,26 @@ namespace YP02.Pages.ViewModel
     /// </summary>
     public partial class ViewModel : Page
     {
+        public ViewModelContext ViewModelContext = new ViewModelContext();
         public ViewModel()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach (Models.ViewModel item in ViewModelContext.ViewModel)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
+            parent.Children.Add(new Add_itm(new Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-
+            
         }
 
         private void Back(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void SortUp(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SortDown(object sender, RoutedEventArgs e)
-        {
-
+            MainWindow.init.OpenPages(new Main());
         }
     }
 }
