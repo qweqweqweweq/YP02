@@ -35,7 +35,15 @@ namespace YP02.Pages.ViewModel
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-            
+            string searchText = search.Text.ToLower();
+            var result = ViewModelContext.ViewModel.Where(x =>
+                x.Name.ToLower().Contains(searchText)
+            );
+            parent.Children.Clear();
+            foreach (var item in result)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
 
         private void Back(object sender, RoutedEventArgs e)
