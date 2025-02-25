@@ -32,7 +32,7 @@ namespace YP02.Pages.Oborudovanie
 
         private void Back(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Menu());
         }
 
         private void SortUp(object sender, RoutedEventArgs e)

@@ -27,7 +27,7 @@ namespace YP02.Pages
 
         private void AuthorizationClick(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Menu());
         }
     }
 }

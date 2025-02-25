@@ -17,12 +17,12 @@ namespace YP02
     public partial class MainWindow : Window
     {
         public static MainWindow init;
-        public static Pages.Main main;
+        public static Pages.Menu menu;
         public MainWindow()
         {
             InitializeComponent();
             init = this;
-            OpenPages(new Pages.Programs.Programs());
+            OpenPages(new Pages.Authorization());
         }
         public void OpenPages(Page page)
         {

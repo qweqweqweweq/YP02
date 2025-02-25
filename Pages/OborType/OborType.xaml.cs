@@ -48,7 +48,7 @@ namespace YP02.Pages.OborType
                 
         private void Back(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Main());
+            MainWindow.init.OpenPages(new Menu());
         }
     }
 }

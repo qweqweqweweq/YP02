@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Models;
+using YP02.Pages.RasxodMaterials;
 
 namespace YP02.Pages
 {
@@ -27,22 +29,22 @@ namespace YP02.Pages
 
         private void Exit(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Authorization());
         }
 
         private void OpenEquip(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Oborudovanie.Oborudovanie());
         }
 
         private void OpenEqType(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new OborType.OborType());
         }
 
         private void OpenAudien(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Auditories.Auditories());
         }
 
         private void OpenDirSt(object sender, RoutedEventArgs e)
@@ -52,42 +54,42 @@ namespace YP02.Pages
 
         private void OpenProgr(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Programs.Programs());
         }
 
         private void OpenDevel(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Developers.Developers());
         }
 
         private void OpenRMat(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new RasxodMaterials.RasxodMaterials());
         }
 
         private void OpenCharRMat(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new CharacteristicsMaterials.CharacteristicsMaterials());
         }
 
         private void OpenModType(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new ViewModel.ViewModel());
         }
 
         private void OpenInvent(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Inventory.Inventory());
         }
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new NetworkSettings.NetworkSettings());
         }
 
         private void OpenUsers(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Users.Users());
         }
     }
 }

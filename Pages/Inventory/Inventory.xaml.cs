@@ -42,7 +42,7 @@ namespace YP02.Pages.Inventory
 
         private void Back(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Main());
+            MainWindow.init.OpenPages(new Pages.Menu());
         }
     }
 }
