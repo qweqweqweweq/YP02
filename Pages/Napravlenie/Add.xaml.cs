@@ -20,9 +20,43 @@ namespace YP02.Pages.Napravlenie
     /// </summary>
     public partial class Add : Page
     {
-        public Add()
+        public Napravlenie MainNapravlenie;
+        public Models.Napravlenie napravlenie;
+        public Add(Napravlenie MainNapravlenie, Models.Napravlenie napravlenie = null)
         {
             InitializeComponent();
+            this.MainNapravlenie = MainNapravlenie;
+            this.napravlenie = napravlenie;
+            if (napravlenie != null)
+            {
+                tb_Name.Text = napravlenie.Name;
+            }
+        }
+
+        private void Click_Redact(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tb_Name.Text))
+            {
+                MessageBox.Show("Введите название направления");
+                return;
+            }
+            if (napravlenie == null)
+            {
+                napravlenie = new Models.Napravlenie();
+                napravlenie.Name = tb_Name.Text;
+                MainNapravlenie.NapravlenieContext.Napravlenie.Add(napravlenie);
+            }
+            else
+            {
+                napravlenie.Name = tb_Name.Text;
+            }
+            MainNapravlenie.NapravlenieContext.SaveChanges();
+            MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
+        }
+
+        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
         }
     }
 }

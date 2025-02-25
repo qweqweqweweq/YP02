@@ -20,9 +20,31 @@ namespace YP02.Pages.Napravlenie
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Napravlenie MainNapravlenie;
+        Models.Napravlenie Napravlenie;
+        public Item(Models.Napravlenie Napravlenie, Napravlenie MainNapravlenie)
         {
             InitializeComponent();
+            this.Napravlenie = Napravlenie;
+            this.MainNapravlenie = MainNapravlenie;
+            lb_Name.Content = Napravlenie.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Napravlenie.Add(MainNapravlenie, Napravlenie));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainNapravlenie.NapravlenieContext.Napravlenie.Remove(Napravlenie);
+                MainNapravlenie.NapravlenieContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }

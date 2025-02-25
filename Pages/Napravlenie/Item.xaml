@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:YP02.Pages.Napravlenie"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <Border x:Name="border" Opacity="1" Margin="10,5,10,5" Height="100" CornerRadius="7" Background="White">
+        <Grid>
+            <Label Content="Направление" x:Name="lb_Name" Margin="19,10,101,0" Foreground="Black" FontFamily="Corbel" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Height="35" VerticalAlignment="Top" FontWeight="Bold" FontSize="17"/>
+            <Button Content="Редактировать" x:Name="redac" Background="#ff2c2c2c" Margin="0,5,9.6,50" VerticalAlignment="Bottom" Height="40" HorizontalAlignment="Right" Width="63" Click="Click_redact">
+
+            </Button>
+            <Button Content="Удалить" Name="remove" Background="#ffe42b2b" Margin="0,0,9.6,10" VerticalAlignment="Bottom" Height="40" HorizontalAlignment="Right" Width="63" Click="Click_remove">
+
+            </Button>
+        </Grid>
+    </Border>
 </UserControl>
