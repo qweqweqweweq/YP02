@@ -20,9 +20,31 @@ namespace YP02.Pages.ViewModel
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        ViewModel MainViewModel;
+        Models.ViewModel ViewModel;
+        public Item(Models.ViewModel ViewModel, ViewModel MainViewModel)
         {
             InitializeComponent();
+            this.ViewModel = ViewModel;
+            this.MainViewModel = MainViewModel;
+            lb_Name.Content = ViewModel.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.ViewModel.Add(MainViewModel, ViewModel));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainViewModel.ViewModelContext.ViewModel.Remove(ViewModel);
+                MainViewModel.ViewModelContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }
