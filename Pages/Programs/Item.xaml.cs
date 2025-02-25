@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Programs
 {
@@ -20,9 +21,34 @@ namespace YP02.Pages.Programs
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Programs MainPrograms;
+        Models.Programs Programs;
+        DevelopersContext developersContext = new DevelopersContext();
+        public Item(Models.Programs Programs, Programs MainPrograms)
         {
             InitializeComponent();
+            this.Programs = Programs;
+            this.MainPrograms = MainPrograms;
+            lb_Name.Content = Programs.Name;
+            lb_VersionPO.Content = Programs.VersionPO;
+            lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.Id).FirstOrDefault().Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.ViewModel.Add(MainPrograms, Programs));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainPrograms.ProgramsContext.Programs.Remove(Programs);
+                MainPrograms.ProgramsContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }

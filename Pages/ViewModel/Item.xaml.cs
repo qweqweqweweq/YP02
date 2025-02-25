@@ -30,7 +30,7 @@ namespace YP02.Pages.ViewModel
             this.ViewModel = ViewModel;
             this.MainViewModel = MainViewModel;
             lb_Name.Content = ViewModel.Name;
-            lb_OborType.Content = oborTypeContext.OborType.Where(x => x.Id == ViewModel.Id).First().Name;
+            lb_OborType.Content = oborTypeContext.OborType.Where(x => x.Id == ViewModel.Id).FirstOrDefault().Name;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)
