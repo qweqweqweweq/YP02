@@ -5,26 +5,28 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:YP02.Pages.Programs"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Add">
+      d:DesignHeight="550" d:DesignWidth="900"
+      Title="Add" FontFamily="/Fonts/#Montserrat">
 
-    <Border x:Name="Info_user" MinHeight="400">
-        <Grid>
-            <Label Content="Программы" Margin="39,28,26,0" Foreground="Black" FontSize="30" FontFamily="Yu Gothic UI Semibold" HorizontalContentAlignment="Left" Height="52" VerticalAlignment="Top"/>
-            <Label Content="Название программы" Margin="39,85,232,0" Foreground="Black" FontSize="15" FontFamily="Yu Gothic UI Semilight" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
-            <TextBox  x:Name="tb_Name" Height="35" Background="#ffdedede" Margin="39,112,28,0" VerticalAlignment="Top" Text=""/>
-            <Label Content="Название программы" Margin="39,149,232,0" Foreground="Black" FontSize="15" FontFamily="Yu Gothic UI Semilight" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
-            <TextBox  x:Name="tb_VersionPO" Height="35" Background="#ffdedede" Margin="39,180,28,0" VerticalAlignment="Top" Text=""/>
-            <Label Content="Тип оборудования" Margin="39,213,232,0" Foreground="Black" FontSize="15" FontFamily="Yu Gothic UI Semilight" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
-            <ComboBox x:Name="cm_DeveloperId" Height="35" Background="#ffdedede" Margin="39,240,26,0" VerticalAlignment="Top" Text=""/>
+    <Grid Background="White">
+        <Border CornerRadius="0,0,10,10" Background="#0060AC" Height="60" VerticalAlignment="Top">
+            <Grid>
+                <Label Content="Добавление программы" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
+            </Grid>
+        </Border>
+        <Label Content="Название программы" Margin="39,85,232,0" Foreground="Black" FontSize="15" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
+        <TextBox  x:Name="tb_Name" Height="35" Background="#ffdedede" Margin="39,112,28,0" VerticalAlignment="Top" Text=""/>
+        <Label Content="Название программы" Margin="39,149,232,0" Foreground="Black" FontSize="15" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
+        <TextBox  x:Name="tb_VersionPO" Height="35" Background="#ffdedede" Margin="39,180,28,0" VerticalAlignment="Top" Text=""/>
+        <Label Content="Тип оборудования" Margin="39,213,232,0" Foreground="Black" FontSize="15" HorizontalContentAlignment="Left" Height="29" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cm_DeveloperId" Height="35" Background="#ffdedede" Margin="39,240,26,0" VerticalAlignment="Top" Text=""/>
 
-            <Button Content="Сохранить" Margin="0,0,142.2,10" VerticalAlignment="Bottom" Height="40" HorizontalAlignment="Right" Width="105" Click="Click_Redact">
+        <Button Content="Добавить" Margin="0,0,142.2,10" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="105" Click="Click_Redact">
 
-            </Button>
-            <Button Content="Назад"  Background="#ffe48f2b" Margin="0,0,26.2,10" VerticalAlignment="Bottom" Height="40" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact">
+        </Button>
+        <Button Content="Назад"  Background="#ffe48f2b" Margin="0,0,26.2,10" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact">
 
-            </Button>
+        </Button>
 
-        </Grid>
-    </Border>
+    </Grid>
 </Page>
