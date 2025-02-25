@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Programs
 {
@@ -20,14 +21,26 @@ namespace YP02.Pages.Programs
     /// </summary>
     public partial class Programs : Page
     {
+        public ProgramsContext ProgramsContext = new ProgramsContext();
         public Programs()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach (Models.Programs item in ProgramsContext.Programs)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
+            parent.Children.Add(new Add_itm(new Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
+            
+        }
 
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Main());
         }
 
         private void SortUp(object sender, RoutedEventArgs e)
@@ -38,11 +51,6 @@ namespace YP02.Pages.Programs
         private void SortDown(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void Back(object sender, RoutedEventArgs e)
-        {
-            MainWindow.init.OpenPages(new Pages.Main());
         }
     }
 }

@@ -27,7 +27,7 @@ namespace YP02.Pages.Programs
         public Add(Programs MainPrograms, Models.Programs programs = null)
         {
             InitializeComponent();
-            this.MainPrograms = MainViewModel;
+            this.MainPrograms = MainPrograms;
             this.programs = programs;
             if (programs != null)
             {
@@ -45,12 +45,17 @@ namespace YP02.Pages.Programs
         {
             if (string.IsNullOrEmpty(tb_Name.Text))
             {
-                MessageBox.Show("Введите название типа оборудования");
+                MessageBox.Show("Введите название программы");
+                return;
+            }
+            if (string.IsNullOrEmpty(tb_VersionPO.Text))
+            {
+                MessageBox.Show("Введите версию ПО");
                 return;
             }
             if (cm_DeveloperId.SelectedItem == null)
             {
-                MessageBox.Show("Выберите тип оборудвания");
+                MessageBox.Show("Выберите разработчика");
                 return;
             }
             if (programs == null)
