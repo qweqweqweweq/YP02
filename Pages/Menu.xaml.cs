@@ -24,5 +24,70 @@ namespace YP02.Pages
         {
             InitializeComponent();
         }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenEquip(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenEqType(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenAudien(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenDirSt(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenProgr(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenDevel(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenRMat(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenCharRMat(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenModType(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenInvent(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenSettings(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenUsers(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
