@@ -59,7 +59,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Border CornerRadius="10" Background="White" Margin="10">
+    <Border CornerRadius="10" Background="White" Margin="10" BorderBrush="#0060AC" BorderThickness="1">
         <Grid Margin="10,5,10,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

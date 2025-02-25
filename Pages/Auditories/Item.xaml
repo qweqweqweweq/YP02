@@ -4,9 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:YP02.Pages.Auditories"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             mc:Ignorable="d" FontFamily="/Fonts/#Montserrat">
+    <Border CornerRadius="10" Background="White" Margin="10" BorderBrush="#0060AC" BorderThickness="1">
+        <Grid Margin="10,5,10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center">
+                <Label x:Name="lb_Name" Content="Аудитория" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label x:Name="lb_sokrName" Content="Сокращенное наименование" Height="30" FontSize="15"/>
+                <Label x:Name="lb_User" Content="Ответственный пользователь" Height="30" FontSize="15"/>
+                <Label x:Name="lb_tempUser" Content="Временно-ответственный пользователь" Height="30" FontSize="15"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Button Click="Click_redact" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,10,10,5" Background="#0060AC" Foreground="White"/>
+                <Button Click="Click_remove" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,10" Background="#E41613" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>
