@@ -24,5 +24,15 @@ namespace YP02.Pages.Auditories
         {
             InitializeComponent();
         }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

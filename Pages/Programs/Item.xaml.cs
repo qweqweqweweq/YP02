@@ -22,7 +22,7 @@ namespace YP02.Pages.Programs
     public partial class Item : UserControl
     {
         Programs MainPrograms;
-        Models.Auditories Auditories;
+        Models.Programs Programs;
         DevelopersContext developersContext = new DevelopersContext();
         public Item(Models.Programs Programs, Programs MainPrograms)
         {
