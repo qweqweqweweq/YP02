@@ -51,6 +51,7 @@ namespace YP02.Pages.Programs
             MainWindow.init.OpenPages(new Main());
         }
 
+        //Сделать сортировку
         private void SortUp(object sender, RoutedEventArgs e)
         {
 

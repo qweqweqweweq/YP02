@@ -31,12 +31,12 @@ namespace YP02.Pages.Programs
             this.MainPrograms = MainPrograms;
             lb_Name.Content = Programs.Name;
             lb_VersionPO.Content = Programs.VersionPO;
-            lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.Id).FirstOrDefault().Name;
+            lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.Id).First().Name;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.ViewModel.Add(MainPrograms, Programs));
+            MainWindow.init.OpenPages(new Pages.Programs.Add(MainPrograms, Programs));
         }
 
         private void Click_remove(object sender, RoutedEventArgs e)
