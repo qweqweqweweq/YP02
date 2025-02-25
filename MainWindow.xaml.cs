@@ -22,7 +22,7 @@ namespace YP02
         {
             InitializeComponent();
             init = this;
-            OpenPages(new Pages.Napravlenie.Napravlenie());
+            OpenPages(new Pages.ViewModel.ViewModel());
         }
         public void OpenPages(Page page)
         {
