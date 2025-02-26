@@ -299,7 +299,7 @@
         </Grid.ColumnDefinitions>
         <Border CornerRadius="0,0,10,10" Background="#0060AC" Height="60" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <Grid>
-                <Label x:Name="text1" Content="Добавление обоудования" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
+                <Label x:Name="text1" Content="Добавление оборудования" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
             </Grid>
         </Border>
         <StackPanel Orientation="Horizontal" Margin="20,80,20,0" VerticalAlignment="Top">
