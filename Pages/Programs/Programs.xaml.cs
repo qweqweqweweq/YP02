@@ -50,7 +50,6 @@ namespace YP02.Pages.Programs
             MainWindow.init.OpenPages(new Menu());
         }
 
-        //Сделать сортировку
         private void SortUp(object sender, RoutedEventArgs e)
         {
             var sortUp = ProgramsContext.Programs.OrderBy(x => x.Name);

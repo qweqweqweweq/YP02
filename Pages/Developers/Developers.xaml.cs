@@ -50,20 +50,29 @@ namespace YP02.Pages.Developers
             MainWindow.init.OpenPages(new Menu());
         }
 
-        //Сделать сортировку
         private void SortUp(object sender, RoutedEventArgs e)
         {
-
+            var sortUp = DevelopersContext.Developers.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var developers in sortUp)
+            {
+                parent.Children.Add(new Item(developers, this));
+            }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-
+            var sortDown = DevelopersContext.Developers.OrderByDescending(x => x.Name);
+            parent.Children.Clear();
+            foreach (var developers in sortDown)
+            {
+                parent.Children.Add(new Item(developers, this));
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.Developers.Add(this, null));
         }
     }
 }
