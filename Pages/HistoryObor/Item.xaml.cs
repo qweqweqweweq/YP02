@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.HistoryObor
 {
@@ -20,9 +21,16 @@ namespace YP02.Pages.HistoryObor
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        HistoryObor MainHistoryObor;
+        Models.HistoryObor HistoryObor;
+        AudiencesContext auditoriesContext = new AudiencesContext();
+        public Item(Models.HistoryObor HistoryObor, HistoryObor MainHistoryObor)
         {
             InitializeComponent();
+            this.HistoryObor = HistoryObor;
+            this.MainHistoryObor = MainHistoryObor;
+            lb_IdAuditories.Content = auditoriesContext.Auditories.Where(x => x.Id == HistoryObor.Id).First().Name;
+            lb_Date.Content = HistoryObor.Date.ToString();
         }
     }
 }

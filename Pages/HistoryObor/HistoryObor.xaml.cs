@@ -25,16 +25,12 @@ namespace YP02.Pages.HistoryObor
             InitializeComponent();
         }
 
-        private void KeyDown_Search(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void Back(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Menu());
         }
 
+        //Сделать сортировку
         private void SortUp(object sender, RoutedEventArgs e)
         {
 

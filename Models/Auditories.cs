@@ -10,7 +10,7 @@ namespace YP02.Models
     public class Auditories
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
         public int ResponUser { get; set; }
