@@ -315,10 +315,9 @@
         <Label Content="Дата поступления:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0"/>
         <DatePicker x:Name="tb_DatePost" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" Background="White" BorderBrush="#0060AC"/>
         <Label Content="Количество:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,290,20,0"/>
-        <TextBox x:Name="tb_Price" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White" BorderBrush="#0060AC"  Style="{DynamicResource TextBoxStyle1}"/>
+        <TextBox x:Name="tb_Quantity" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White" BorderBrush="#0060AC"  Style="{DynamicResource TextBoxStyle1}"/>
         <Label Content="Ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,360,20,0"/>
         <ComboBox x:Name="tb_responUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,390,20,0" Background="White" BorderBrush="#0060AC" Style="{DynamicResource ComboBoxStyle1}"/>
-
         <Label Content="Временно-ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,185,20,0" Grid.Column="1"/>
         <ComboBox x:Name="tb_timeResponUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"/>
         <Label Content="Тип расходного материала:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,255,20,0" Grid.Column="1"/>

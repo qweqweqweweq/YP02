@@ -14,7 +14,7 @@ namespace YP02.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string DatePostupleniya { get; set; }
+        public DateTime DatePostupleniya { get; set; }
         public Blob Photo { get; set; }
         public double Quantity { get; set; }
         public int UserRespon { get; set; }
