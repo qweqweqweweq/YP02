@@ -23,13 +23,13 @@ namespace YP02.Pages.HistoryObor
     {
         HistoryObor MainHistoryObor;
         Models.HistoryObor HistoryObor;
-        AudiencesContext auditoriesContext = new AudiencesContext();
+        UsersContext usersContext = new UsersContext();
         public Item(Models.HistoryObor HistoryObor, HistoryObor MainHistoryObor)
         {
             InitializeComponent();
             this.HistoryObor = HistoryObor;
             this.MainHistoryObor = MainHistoryObor;
-            lb_IdAuditories.Content = auditoriesContext.Auditories.Where(x => x.Id == HistoryObor.Id).First().Name;
+            lb_Users.Content = usersContext.Users.Where(x => x.Id == HistoryObor.Id).First().FIO;
             lb_Date.Content = HistoryObor.Date.ToString();
         }
     }
