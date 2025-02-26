@@ -20,9 +20,31 @@ namespace YP02.Pages.TypeRasxod
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        TypeRasxod MainTypeRasxod;
+        Models.TypeRasxod TypeRasxod;
+        public Item(Models.TypeRasxod TypeRasxod, TypeRasxod MainTypeRasxod)
         {
             InitializeComponent();
+            this.TypeRasxod = TypeRasxod;
+            this.MainTypeRasxod = MainTypeRasxod;
+            lb_Name.Content = TypeRasxod.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.TypeRasxod.Add(MainTypeRasxod, TypeRasxod));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainTypeRasxod.TypeRasxodContext.TypeRasxod.Remove(TypeRasxod);
+                MainTypeRasxod.TypeRasxodContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }
