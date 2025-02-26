@@ -31,8 +31,8 @@ namespace YP02.Pages.Auditories
             this.MainAuditories = MainAuditories;
             lb_Name.Content = Auditories.Name;
             lb_sokrName.Content = Auditories.ShortName;
-            lb_User.Content = usersContext.Users.Where(x => x.Id == Auditories.id).First().FIO;
-            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Auditories.id).First().FIO;
+            lb_User.Content = usersContext.Users.Where(x => x.Id == Auditories.Id).First().FIO;
+            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Auditories.Id).First().FIO;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)

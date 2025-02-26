@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Win32;
 using YP02.Context;
 
 namespace YP02.Pages.Oborudovanie
@@ -39,7 +42,7 @@ namespace YP02.Pages.Oborudovanie
                 text2.Content = "Изменить";
                 tb_Name.Text = oborudovanie.Name;
                 tb_invNum.Text = oborudovanie.InventNumber;
-                tb_Audience.Text = audiencesContext.Auditories.Where(x => x.id == oborudovanie.Id).FirstOrDefault().Name;
+                tb_Audience.Text = audiencesContext.Auditories.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
                 tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
                 tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
                 tb_Price.Text = oborudovanie.PriceObor;
@@ -124,7 +127,7 @@ namespace YP02.Pages.Oborudovanie
                 {
                     Name = tb_Name.Text,
                     InventNumber = tb_invNum.Text,
-                    IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().id,
+                    IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id,
                     IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
                     IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id,
                     PriceObor = tb_Price.Text,
@@ -139,7 +142,7 @@ namespace YP02.Pages.Oborudovanie
             {
                 oborudovanie.Name = tb_Name.Text;
                 oborudovanie.InventNumber = tb_invNum.Text;
-                oborudovanie.IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().id;
+                oborudovanie.IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id;
                 oborudovanie.IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
                 oborudovanie.IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
                 oborudovanie.PriceObor = tb_Price.Text;
@@ -159,7 +162,22 @@ namespace YP02.Pages.Oborudovanie
 
         private void OpenPhoto(object sender, RoutedEventArgs e)
         {
-
+            var ofd = new OpenFileDialog
+            {
+                Filter = "Image Files (*.jpg;*.jpeg;*.png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
+            };
+            if (ofd.ShowDialog() == true)
+            {
+                try
+                {
+                    
+                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка загрузки фотографии: \n{ex.Message}");
+                }
+            }
         }
     }
 }

@@ -35,8 +35,8 @@ namespace YP02.Pages.Auditories
                 text2.Content = "Изменить";
                 tb_Name.Text = auditories.Name;
                 tb_shortName.Text = auditories.ShortName;
-                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.id).FirstOrDefault().FIO;
-                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.id).FirstOrDefault().FIO;
+                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.Id).FirstOrDefault().FIO;
+                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.Id).FirstOrDefault().FIO;
             }
             foreach (var item in usersContext.Users)
             {
