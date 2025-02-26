@@ -20,9 +20,31 @@ namespace YP02.Pages.Developers
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Developers MainDevelopers;
+        Models.Developers Developers;
+        public Item(Models.Developers Developers, Developers MainDevelopers)
         {
             InitializeComponent();
+            this.Developers = Developers;
+            this.MainDevelopers = MainDevelopers;
+            lb_Name.Content = Developers.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Developers.Add(MainDevelopers, Developers));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainDevelopers.DevelopersContext.Developers.Remove(Developers);
+                MainDevelopers.DevelopersContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }
