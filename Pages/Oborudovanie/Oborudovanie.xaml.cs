@@ -44,5 +44,10 @@ namespace YP02.Pages.Oborudovanie
         {
 
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

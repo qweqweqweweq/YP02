@@ -5,10 +5,46 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:YP02.Pages.Oborudovanie"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="550" d:DesignWidth="900"
       Title="Add">
 
-    <Grid>
-        
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border CornerRadius="0,0,10,10" Background="#0060AC" Height="60" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            <Grid>
+                <Label Content="Добавление обоудования" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
+            </Grid>
+        </Border>
+        <StackPanel Orientation="Horizontal" Margin="20,80,20,0" VerticalAlignment="Top">
+            <StackPanel>
+                <Label Content="Наименование:" Height="30" FontSize="15"/>
+                <TextBox x:Name="tb_Name" Height="30" FontSize="15" BorderBrush="#0060AC" Width="280"/>
+            </StackPanel>
+            <Button Click="OpenPhoto" Content="Выбрать фото" x:Name="photobut" Height="30" FontSize="15" VerticalAlignment="Bottom" Margin="10,0,0,0" BorderBrush="#0060AC" Width="120"/>
+        </StackPanel>
+        <Label Content="Инвентарный номер оборудования:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,150,20,0"/>
+        <TextBox x:Name="tb_invNum" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,180,20,0" Background="White" BorderBrush="#0060AC"/>
+        <Label Content="Аудитория:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0"/>
+        <ComboBox x:Name="tb_Audience" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" Background="White" BorderBrush="#0060AC"/>
+        <Label Content="Ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,290,20,0"/>
+        <ComboBox x:Name="tb_User" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White" BorderBrush="#0060AC"/>
+        <Label Content="Временно-ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,360,20,0"/>
+        <ComboBox x:Name="tb_tempUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,390,20,0" Background="White" BorderBrush="#0060AC"/>
+        <Label Content="Стоимость оборудования:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,80,20,0" Grid.Column="1"/>
+        <TextBox x:Name="tb_Price" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,110,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1"/>
+        <Label Content="Направление:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,150,20,0" Grid.Column="1"/>
+        <ComboBox x:Name="tb_Direction" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,180,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1"/>
+        <Label Content="Статус:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0" Grid.Column="1"/>
+        <ComboBox x:Name="tb_Status" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1"/>
+        <Label Content="Модель:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,290,20,0" Grid.Column="1"/>
+        <ComboBox x:Name="tb_Model" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1"/>
+        <Label Content="Комментарий:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,360,20,0" Grid.Column="1"/>
+        <TextBox x:Name="tb_Comment" Height="60" FontSize="15" VerticalContentAlignment="Top" VerticalAlignment="Top" Margin="20,390,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1"/>
+
+        <Button Content="Добавить" Background="#0060AC" Foreground="White" Margin="20,20,140,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Redact" Grid.Column="1"/>
+        <Button Content="Назад"  Background="#9EA1A2" Foreground="White" Margin="20,20,20,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact" Grid.Column="1"/>
     </Grid>
 </Page>

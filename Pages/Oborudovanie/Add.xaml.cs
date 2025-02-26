@@ -24,5 +24,20 @@ namespace YP02.Pages.Oborudovanie
         {
             InitializeComponent();
         }
+
+        private void Click_Redact(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenPhoto(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

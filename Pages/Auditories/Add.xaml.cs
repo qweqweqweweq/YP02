@@ -31,6 +31,8 @@ namespace YP02.Pages.Auditories
             this.auditories = auditories;
             if (auditories != null)
             {
+                text1.Content = "Изменение аудитории";
+                text2.Content = "Изменить";
                 tb_Name.Text = auditories.Name;
                 tb_shortName.Text = auditories.ShortName;
                 tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.id).FirstOrDefault().FIO;
