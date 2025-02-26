@@ -179,7 +179,7 @@
             </Grid>
         </Border>
         <ScrollViewer Margin="5,65,5,55">
-            <StackPanel x:Name="parent">
+            <StackPanel x:Name="parent"> 
 
             </StackPanel>
         </ScrollViewer>
