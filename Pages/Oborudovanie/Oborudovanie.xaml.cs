@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Oborudovanie
 {
@@ -20,14 +21,28 @@ namespace YP02.Pages.Oborudovanie
     /// </summary>
     public partial class Oborudovanie : Page
     {
+        public OborudovanieContext OborudovanieContext = new OborudovanieContext();
         public Oborudovanie()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-
+            string searchText = search.Text.ToLower();
+            var result = OborudovanieContext.Oborudovanie.Where(x =>
+                x.Name.ToLower().Contains(searchText)
+            );
+            parent.Children.Clear();
+            foreach (var item in result)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
 
         private void Back(object sender, RoutedEventArgs e)
@@ -47,7 +62,7 @@ namespace YP02.Pages.Oborudovanie
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.Oborudovanie.Add(this, null));
         }
     }
 }

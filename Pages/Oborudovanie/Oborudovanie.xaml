@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:YP02.Pages.Oborudovanie"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="900"
-      Title="Oborudovanie">
+      Title="Oborudovanie" FontFamily="/Fonts/#Montserrat">
 
     <Page.Resources>
         <Style x:Key="FocusVisual">
