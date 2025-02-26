@@ -6,9 +6,24 @@
       xmlns:local="clr-namespace:YP02.Pages.Auditories"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="900"
-      Title="Add">
+      Title="Add" FontFamily="/Fonts/#Montserrat">
 
     <Grid Background="White">
-        
+        <Border CornerRadius="0,0,10,10" Background="#0060AC" Height="60" VerticalAlignment="Top">
+            <Grid>
+                <Label Content="Добавление аудитории" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
+            </Grid>
+        </Border>
+        <Label Content="Наименование:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,80,20,0"/>
+        <TextBox x:Name="tb_Name" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,110,20,0"/>
+        <Label Content="Сокращённое наименование:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,150,20,0"/>
+        <TextBox x:Name="tb_shortName" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,180,20,0"/>
+        <Label Content="Ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0"/>
+        <ComboBox x:Name="tb_User" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" Background="White"/>
+        <Label Content="Временно-ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,290,20,0"/>
+        <ComboBox x:Name="tb_tempUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White"/>
+
+        <Button Content="Добавить" Background="#0060AC" Foreground="White" Margin="20,20,140,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Redact"/>
+        <Button Content="Назад"  Background="#9EA1A2" Margin="20,20,20,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact"/>
     </Grid>
 </Page>

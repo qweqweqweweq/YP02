@@ -30,7 +30,6 @@ namespace YP02.Pages.Programs
             {
                 parent.Children.Add(new Item(item, this));
             }
-            parent.Children.Add(new Add_itm(new Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)

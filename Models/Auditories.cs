@@ -14,6 +14,6 @@ namespace YP02.Models
         public string Name { get; set; }
         public string ShortName { get; set; }
         public int ResponUser { get; set; }
-        public string TimeResponUser { get; set; }
+        public int TimeResponUser { get; set; }
     }
 }
