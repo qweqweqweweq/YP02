@@ -52,12 +52,22 @@ namespace YP02.Pages.Oborudovanie
 
         private void SortUp(object sender, RoutedEventArgs e)
         {
-
+            var sortUp = OborudovanieContext.Oborudovanie.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var oborudovanie in sortUp)
+            {
+                parent.Children.Add(new Item(oborudovanie, this));
+            }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-
+            var sortDown = OborudovanieContext.Oborudovanie.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var oborudovanie in sortDown)
+            {
+                parent.Children.Add(new Item(oborudovanie, this));
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)

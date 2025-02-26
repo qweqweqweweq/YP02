@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using YP02.Context;
+using YP02.Models;
 
 namespace YP02.Pages.Auditories
 {
@@ -52,12 +53,22 @@ namespace YP02.Pages.Auditories
 
         private void SortUp(object sender, RoutedEventArgs e)
         {
-
+            var sortUp = AuditoriesContext.Auditories.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var auditories in sortUp)
+            {
+                parent.Children.Add(new Item(auditories, this));
+            }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-
+            var sortDown = AuditoriesContext.Auditories.OrderByDescending(x => x.Name);
+            parent.Children.Clear();
+            foreach (var auditories in sortDown)
+            {
+                parent.Children.Add(new Item(auditories, this));
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)
