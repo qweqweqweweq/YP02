@@ -24,6 +24,7 @@ namespace YP02.Pages.Programs
         Programs MainPrograms;
         Models.Programs Programs;
         DevelopersContext developersContext = new DevelopersContext();
+        OborudovanieContext oborudovanieContext = new OborudovanieContext();
         public Item(Models.Programs Programs, Programs MainPrograms)
         {
             InitializeComponent();
@@ -32,6 +33,7 @@ namespace YP02.Pages.Programs
             lb_Name.Content = Programs.Name;
             lb_VersionPO.Content = Programs.VersionPO;
             lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.Id).First().Name;
+            lb_Obor.Content = oborudovanieContext.Oborudovanie.Where(x => x.Id == Programs.Id).First().Name;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)
@@ -41,7 +43,7 @@ namespace YP02.Pages.Programs
 
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("При удалении аудитории все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 MainPrograms.ProgramsContext.Programs.Remove(Programs);

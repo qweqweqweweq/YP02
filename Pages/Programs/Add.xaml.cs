@@ -24,6 +24,7 @@ namespace YP02.Pages.Programs
         public Programs MainPrograms;
         public Models.Programs programs;
         DevelopersContext developersContext = new DevelopersContext();
+        OborudovanieContext oborudovanieContext = new OborudovanieContext();
         public Add(Programs MainPrograms, Models.Programs programs = null)
         {
             InitializeComponent();
@@ -34,6 +35,7 @@ namespace YP02.Pages.Programs
                 tb_Name.Text = programs.Name;
                 tb_VersionPO.Text = programs.VersionPO;
                 cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.Id).FirstOrDefault().Name;
+                cm_OborId.SelectedItem = oborudovanieContext.Oborudovanie.Where(x => x.Id == programs.Id).FirstOrDefault().Name;
             }
             foreach (var item in developersContext.Developers)
             {
@@ -64,6 +66,7 @@ namespace YP02.Pages.Programs
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
                 programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
+                programs.OborId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
                 MainPrograms.ProgramsContext.Programs.Add(programs);
             }
             else
@@ -71,6 +74,7 @@ namespace YP02.Pages.Programs
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
                 programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
+                programs.OborId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
             }
             MainPrograms.ProgramsContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Programs.Programs());

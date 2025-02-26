@@ -14,5 +14,6 @@ namespace YP02.Models
         public string Name { get; set; }
         public string VersionPO { get; set; }
         public int DeveloperId { get; set; }
+        public int OborId { get; set; }
     }
 }

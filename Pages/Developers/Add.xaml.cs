@@ -20,42 +20,62 @@ namespace YP02.Pages.Developers
     /// </summary>
     public partial class Add : Page
     {
+        // Поле для хранения ссылки на основной объект разработчиков
         public Developers MainDevelopers;
+
+        // Поле для хранения информации о конкретном разработчике
         public Models.Developers developers;
+
         public Add(Developers MainDevelopers, Models.Developers developers = null)
-        {
+        {            
             InitializeComponent();
+
+            // Присваивание переданных параметров полям класса
             this.MainDevelopers = MainDevelopers;
             this.developers = developers;
+
+            // Если объект разработчика не равен null, заполняем текстовое поле его именем
             if (developers != null)
             {
                 tb_Name.Text = developers.Name;
             }
         }
 
+        // Обработчик события нажатия кнопки "Редактировать"
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
+            // Проверка, введено ли название разработчика
             if (string.IsNullOrEmpty(tb_Name.Text))
             {
+                // Если нет, выводим сообщение об ошибке
                 MessageBox.Show("Введите название типа оборудования");
-                return;
+                return; // Прерываем выполнение метода
             }
+
+            // Если объект разработчика равен null, создаем новый объект
             if (developers == null)
             {
                 developers = new Models.Developers();
-                developers.Name = tb_Name.Text;
-                MainDevelopers.DevelopersContext.Developers.Add(developers);
+                developers.Name = tb_Name.Text; // Устанавливаем имя разработчика
+                MainDevelopers.DevelopersContext.Developers.Add(developers); // Добавляем нового разработчика в контекст
             }
             else
             {
+                // Если объект разработчика существует, обновляем его имя
                 developers.Name = tb_Name.Text;
             }
+
+            // Сохраняем изменения в контексте разработчиков
             MainDevelopers.DevelopersContext.SaveChanges();
+
+            // Открываем страницу со списком разработчиков
             MainWindow.init.OpenPages(new Pages.Developers.Developers());
         }
 
+        // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
+            // Открываем страницу со списком разработчиков без сохранения изменений
             MainWindow.init.OpenPages(new Pages.Developers.Developers());
         }
     }

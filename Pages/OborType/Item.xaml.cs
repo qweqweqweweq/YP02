@@ -37,7 +37,7 @@ namespace YP02.Pages.OborType
 
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("При удалении отдела все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 MainOborType.OborTypeContext.OborType.Remove(OborType);
