@@ -60,5 +60,10 @@ namespace YP02.Pages.Programs
         {
 
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

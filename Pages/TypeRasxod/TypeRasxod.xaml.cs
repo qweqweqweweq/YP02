@@ -30,7 +30,6 @@ namespace YP02.Pages.TypeRasxod
             {
                 parent.Children.Add(new Item(item, this));
             }
-            parent.Children.Add(new Add_itm(new Add(this, null)));
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
@@ -49,6 +48,11 @@ namespace YP02.Pages.TypeRasxod
         private void Back(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Menu());
+        }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

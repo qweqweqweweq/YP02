@@ -49,5 +49,10 @@ namespace YP02.Pages.ViewModel
         {
             MainWindow.init.OpenPages(new Menu());
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

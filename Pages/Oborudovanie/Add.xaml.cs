@@ -23,11 +23,11 @@ namespace YP02.Pages.Oborudovanie
     {
         public Oborudovanie MainOborudovanie;
         public Models.Oborudovanie oborudovanie;
-        AudiencesContext audiencesContext = new AudiencesContext();
-        UsersContext usersContext = new UsersContext();
-        NapravlenieContext napravlenieContext = new NapravlenieContext();
-        StatusContext statusContext = new StatusContext();
-        ViewModelContext viewModelContext = new ViewModelContext();
+        private AudiencesContext audiencesContext = new();
+        private UsersContext usersContext = new();
+        private NapravlenieContext napravlenieContext = new();
+        private StatusContext statusContext = new();
+        private ViewModelContext viewModelContext = new();
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {
             InitializeComponent();
@@ -120,17 +120,19 @@ namespace YP02.Pages.Oborudovanie
             }
             if (oborudovanie == null)
             {
-                oborudovanie = new Models.Oborudovanie();
-                oborudovanie.Name = tb_Name.Text;
-                oborudovanie.InventNumber = tb_invNum.Text;
-                oborudovanie.IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().id;
-                oborudovanie.IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
-                oborudovanie.IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
-                oborudovanie.PriceObor = tb_Price.Text;
-                oborudovanie.IdNapravObor = napravlenieContext.Napravlenie.Where(x => x.Name == tb_Direction.SelectedItem).First().Id;
-                oborudovanie.IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id;
-                oborudovanie.IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id;
-                oborudovanie.Comments = tb_Comment.Text;
+                oborudovanie = new Models.Oborudovanie
+                {
+                    Name = tb_Name.Text,
+                    InventNumber = tb_invNum.Text,
+                    IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().id,
+                    IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
+                    IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id,
+                    PriceObor = tb_Price.Text,
+                    IdNapravObor = napravlenieContext.Napravlenie.Where(x => x.Name == tb_Direction.SelectedItem).First().Id,
+                    IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id,
+                    IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id,
+                    Comments = tb_Comment.Text
+                };
                 MainOborudovanie.OborudovanieContext.Oborudovanie.Add(oborudovanie);
             }
             else

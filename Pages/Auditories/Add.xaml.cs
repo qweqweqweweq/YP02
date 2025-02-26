@@ -23,7 +23,7 @@ namespace YP02.Pages.Auditories
     {
         public Auditories MainAuditories;
         public Models.Auditories auditories;
-        UsersContext usersContext = new UsersContext();
+        private UsersContext usersContext = new();
         public Add(Auditories MainAuditories, Models.Auditories auditories = null)
         {
             InitializeComponent();
@@ -69,11 +69,13 @@ namespace YP02.Pages.Auditories
             }
             if (auditories == null)
             {
-                auditories = new Models.Auditories();
-                auditories.Name = tb_Name.Text;
-                auditories.ShortName = tb_shortName.Text;
-                auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
-                auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
+                auditories = new Models.Auditories
+                {
+                    Name = tb_Name.Text,
+                    ShortName = tb_shortName.Text,
+                    ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
+                    TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id
+                };
                 MainAuditories.AuditoriesContext.Auditories.Add(auditories);
             }
             else

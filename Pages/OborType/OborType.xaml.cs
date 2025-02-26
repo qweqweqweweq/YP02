@@ -21,7 +21,7 @@ namespace YP02.Pages.OborType
     /// </summary>
     public partial class OborType : Page
     {
-        public OborTypeContext OborTypeContext = new OborTypeContext();        
+        public OborTypeContext OborTypeContext = new();        
         public OborType()
         {
             InitializeComponent();            
@@ -48,6 +48,11 @@ namespace YP02.Pages.OborType
         private void Back(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Menu());
+        }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
