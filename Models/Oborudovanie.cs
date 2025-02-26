@@ -22,6 +22,7 @@ namespace YP02.Models
         public int IdNapravObor { get; set; }
         public int IdStatusObor { get; set; }
         public int IdModelObor { get; set; }
+        public int IdProgr {  get; set; }
         public string Comments { get; set; }
     }
 }
