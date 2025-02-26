@@ -63,7 +63,7 @@
         <Grid Margin="10,5,10,5">
             
             <StackPanel VerticalAlignment="Center">
-                <Label x:Name="lb_Users" Content="Ответственный пользователь" Height="30" FontSize="15"/>
+                <Label x:Name="lb_IdAuditories" Content="Аудитория" Height="30" FontSize="15"/>
                 <Label x:Name="lb_Date" Content="Дата" Height="30" FontSize="15"/>
             </StackPanel>            
         </Grid>
