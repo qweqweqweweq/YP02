@@ -21,9 +21,9 @@ namespace YP02.Pages.Auditories
     /// </summary>
     public partial class Item : UserControl
     {
-        private Auditories MainAuditories;
-        private Models.Auditories Auditories;
-        private UsersContext usersContext = new();
+        Auditories MainAuditories;
+        Models.Auditories Auditories;
+        UsersContext usersContext = new();
         public Item(Models.Auditories Auditories, Auditories MainAuditories)
         {
             InitializeComponent();

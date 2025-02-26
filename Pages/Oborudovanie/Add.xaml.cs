@@ -23,11 +23,11 @@ namespace YP02.Pages.Oborudovanie
     {
         public Oborudovanie MainOborudovanie;
         public Models.Oborudovanie oborudovanie;
-        private AudiencesContext audiencesContext = new();
-        private UsersContext usersContext = new();
-        private NapravlenieContext napravlenieContext = new();
-        private StatusContext statusContext = new();
-        private ViewModelContext viewModelContext = new();
+        AudiencesContext audiencesContext = new();
+        UsersContext usersContext = new();
+        NapravlenieContext napravlenieContext = new();
+        StatusContext statusContext = new();
+        ViewModelContext viewModelContext = new();
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {
             InitializeComponent();

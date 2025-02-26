@@ -23,7 +23,7 @@ namespace YP02.Pages.Auditories
     {
         public Auditories MainAuditories;
         public Models.Auditories auditories;
-        private UsersContext usersContext = new();
+        UsersContext usersContext = new();
         public Add(Auditories MainAuditories, Models.Auditories auditories = null)
         {
             InitializeComponent();

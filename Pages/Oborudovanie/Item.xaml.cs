@@ -22,12 +22,12 @@ namespace YP02.Pages.Oborudovanie
     public partial class Item : UserControl
     {
         Oborudovanie MainOborudovanie;
-        private Models.Oborudovanie Oborudovanie;
-        private AudiencesContext audiencesContext = new();
-        private UsersContext usersContext = new();
-        private NapravlenieContext napravlenieContext = new();
-        private StatusContext statusContext = new();
-        private ViewModelContext viewModelContext = new();
+        Models.Oborudovanie Oborudovanie;
+        AudiencesContext audiencesContext = new();
+        UsersContext usersContext = new();
+        NapravlenieContext napravlenieContext = new();
+        StatusContext statusContext = new();
+        ViewModelContext viewModelContext = new();
 
         public Item(Models.Oborudovanie Oborudovanie, Oborudovanie MainOborudovanie)
         {
