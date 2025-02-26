@@ -52,7 +52,7 @@ namespace YP02.Pages.OborType
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.OborType.Add(this, null));
         }
     }
 }

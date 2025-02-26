@@ -52,7 +52,7 @@ namespace YP02.Pages.TypeRasxod
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.TypeRasxod.Add(this, null));
         }
     }
 }

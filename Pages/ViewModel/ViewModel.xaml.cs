@@ -52,7 +52,7 @@ namespace YP02.Pages.ViewModel
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.ViewModel.Add(this, null));
         }
     }
 }
