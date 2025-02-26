@@ -53,17 +53,27 @@ namespace YP02.Pages.Programs
         //Сделать сортировку
         private void SortUp(object sender, RoutedEventArgs e)
         {
-
+            var sortUp = ProgramsContext.Programs.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var program in sortUp)
+            {
+                parent.Children.Add(new Item(program, this));
+            }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-
+            var sortDown = ProgramsContext.Programs.OrderByDescending(x => x.Name);
+            parent.Children.Clear();
+            foreach (var program in sortDown)
+            {
+                parent.Children.Add(new Item(program, this));
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.Programs.Add(this, null));
         }
     }
 }
