@@ -20,9 +20,35 @@ namespace YP02.Pages.Users
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Users MainUsers;
+        Models.Users Users;
+        public Item(Models.Users Users, Users MainUsers)
         {
             InitializeComponent();
+            this.Users = Users;
+            this.MainUsers = MainUsers;
+            lb_FIO.Content = Users.FIO;
+            lb_Role.Content = Users.Role;
+            lb_Number.Content = Users.Number;
+            lb_Email.Content = Users.Email;
+            lb_Address.Content = Users.Address;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Users.Add(MainUsers, Users));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении пользователя все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainUsers.UsersContext.Users.Remove(Users);
+                MainUsers.UsersContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }
