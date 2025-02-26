@@ -20,9 +20,43 @@ namespace YP02.Pages.TypeRasxod
     /// </summary>
     public partial class Add : Page
     {
-        public Add()
+        public TypeRasxod MainTypeRasxod;
+        public Models.TypeRasxod typeRasxod;
+        public Add(TypeRasxod MainTypeRasxod, Models.TypeRasxod typeRasxod = null)
         {
             InitializeComponent();
+            this.MainTypeRasxod = MainTypeRasxod;
+            this.typeRasxod = typeRasxod;
+            if (typeRasxod != null)
+            {
+                tb_Name.Text = typeRasxod.Name;
+            }
+        }
+
+        private void Click_Redact(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tb_Name.Text))
+            {
+                MessageBox.Show("Введите название типа оборудования");
+                return;
+            }
+            if (typeRasxod == null)
+            {
+                typeRasxod = new Models.TypeRasxod();
+                typeRasxod.Name = tb_Name.Text;
+                MainTypeRasxod.TypeRasxodContext.TypeRasxod.Add(typeRasxod);
+            }
+            else
+            {
+                typeRasxod.Name = tb_Name.Text;
+            }
+            MainTypeRasxod.TypeRasxodContext.SaveChanges();
+            MainWindow.init.OpenPages(new Pages.TypeRasxod.TypeRasxod());
+        }
+
+        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.TypeRasxod.TypeRasxod());
         }
     }
 }

@@ -35,15 +35,7 @@ namespace YP02.Pages.TypeRasxod
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-            string searchText = search.Text.ToLower();
-            var result = TypeRasxodContext.TypeRasxod.Where(x =>
-                x.Name.ToLower().Contains(searchText)
-            );
-            parent.Children.Clear();
-            foreach (var item in result)
-            {
-                parent.Children.Add(new Item(item, this));
-            }
+            
         }
 
         private void Back(object sender, RoutedEventArgs e)
