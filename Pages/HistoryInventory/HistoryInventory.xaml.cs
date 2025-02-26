@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.HistoryInventory
 {
@@ -20,19 +21,26 @@ namespace YP02.Pages.HistoryInventory
     /// </summary>
     public partial class HistoryInventory : Page
     {
+        public HistoryInventoryContext historyInventoryContext = new HistoryInventoryContext();
+
         public HistoryInventory()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach (Models.HistoryInventory item in historyInventoryContext.HistoryInventory)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
 
-        private void KeyDown_Search(object sender, KeyEventArgs e)
+        private void Add(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.HistoryInventory.Add(this, null));
         }
 
         private void Back(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Menu());
         }
 
         private void SortUp(object sender, RoutedEventArgs e)
@@ -43,6 +51,19 @@ namespace YP02.Pages.HistoryInventory
         private void SortDown(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+            string searchText = search.Text.ToLower();
+            var result = HistoryInventoryContext.HistoryInventory.Where(x =>
+                x..ToLower().Contains(searchText)
+            );
+            parent.Children.Clear();
+            foreach (var item in result)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
     }
 }
