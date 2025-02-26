@@ -49,5 +49,10 @@ namespace YP02.Pages.Napravlenie
         {
             MainWindow.init.OpenPages(new Menu());
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Napravlenie.Add(this, null));
+        }
     }
 }
