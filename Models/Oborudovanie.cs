@@ -13,7 +13,7 @@ namespace YP02.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public Blob Photo { get; set; }
+        public string Photo { get; set; }
         public string InventNumber { get; set; }
         public int IdClassroom { get; set; }
         public int IdResponUser { get; set; }
@@ -22,7 +22,6 @@ namespace YP02.Models
         public int IdNapravObor { get; set; }
         public int IdStatusObor { get; set; }
         public int IdModelObor { get; set; }
-        public int IdProgr {  get; set; }
         public string Comments { get; set; }
     }
 }

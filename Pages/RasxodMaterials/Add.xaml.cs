@@ -102,42 +102,10 @@ namespace YP02.Pages.RasxodMaterials
                 MessageBox.Show("Выберите характеристики расходного материала");
                 return;
             }
-            if (rasxodMaterials == null)
-            {
-                rasxodMaterials = new Models.RasxodMaterials();
-                rasxodMaterials.Name = tb_Name.Text;
-                rasxodMaterials.Description = tb_Des.Text;
-                rasxodMaterials.DatePostupleniya = tb_DatePost.Text;
-                inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem).First().Id;
-                MainInventory.InventoryContext.Inventory.Add(inventory);
-            }
-            else
-            {
-                inventory.Name = tb_Name.Text;
-                inventory.StartDate = tb_DateStart.Text;
-                inventory.EndDate = tb_DateEnd.Text;
-                inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem).First().Id;
-            }
-            MainInventory.InventoryContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
         }
 
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Click_Redact(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OpenPhoto(object sender, RoutedEventArgs e)
         {
 
         }
