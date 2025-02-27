@@ -1,13 +1,18 @@
-﻿using YP02.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YP02.Context.Database;
+using YP02.Models;
 
 namespace YP02.Context
 {
-    public class AudiencesContext : DbContext
+    public class AuditoriesContext : DbContext
     {
         public DbSet<Auditories> Auditories { get; set; }
-        public AudiencesContext()
+        public AuditoriesContext()
         {
             Database.EnsureCreated();
             Auditories.Load();

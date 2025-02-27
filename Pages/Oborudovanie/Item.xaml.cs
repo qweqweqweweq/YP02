@@ -23,7 +23,7 @@ namespace YP02.Pages.Oborudovanie
     {
         Oborudovanie MainOborudovanie;
         Models.Oborudovanie Oborudovanie;
-        AudiencesContext audiencesContext = new();
+        AuditoriesContext auditoriesContext = new();
         UsersContext usersContext = new();
         NapravlenieContext napravlenieContext = new();
         StatusContext statusContext = new();
@@ -36,7 +36,7 @@ namespace YP02.Pages.Oborudovanie
             this.MainOborudovanie = MainOborudovanie;
             lb_Name.Content = Oborudovanie.Name;
             lb_invNum.Content = Oborudovanie.InventNumber;
-            lb_Audience.Content = audiencesContext.Auditories.Where(x => x.Id == Oborudovanie.Id).First().Name;
+            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.Id).First().Name;
             lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.Id).First().FIO;
             lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.Id).First().FIO;
             lb_Price.Content = Oborudovanie.PriceObor;

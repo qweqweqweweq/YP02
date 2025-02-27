@@ -26,24 +26,24 @@ namespace YP02.Pages.TypeRasxod
         {
             InitializeComponent();
             parent.Children.Clear();
-            foreach (Models.TypeCharacteristics item in TypeRasxodContext.TypeRasxod)
-            {
-                parent.Children.Add(new Item(item, this));
-            }
+            //foreach (Models.TypeCharacteristics item in TypeRasxodContext.TypeRasxod)
+            //{
+            //    parent.Children.Add(new Item(item, this));
+            //}
         }
 
-        private void KeyDown_Search(object sender, KeyEventArgs e)
-        {
-            string searchText = search.Text.ToLower();
-            var result = TypeRasxodContext.TypeRasxod.Where(x =>
-                x.Name.ToLower().Contains(searchText)
-            );
-            parent.Children.Clear();
-            foreach (var item in result)
-            {
-                parent.Children.Add(new Item(item, this));
-            }
-        }
+        //private void KeyDown_Search(object sender, KeyEventArgs e)
+        //{
+        //    string searchText = search.Text.ToLower();
+        //    var result = TypeRasxodContext.TypeRasxod.Where(x =>
+        //        x.Name.ToLower().Contains(searchText)
+        //    );
+        //    parent.Children.Clear();
+        //    foreach (var item in result)
+        //    {
+        //        parent.Children.Add(new Item(item, this));
+        //    }
+        //}
 
         private void Back(object sender, RoutedEventArgs e)
         {
@@ -53,6 +53,11 @@ namespace YP02.Pages.TypeRasxod
         private void Add(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Pages.TypeRasxod.Add(this, null));
+        }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+
         }
     }
 }

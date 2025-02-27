@@ -26,7 +26,7 @@ namespace YP02.Pages.Oborudovanie
     {
         public Oborudovanie MainOborudovanie;
         public Models.Oborudovanie oborudovanie;
-        AudiencesContext audiencesContext = new();
+        AuditoriesContext auditoriesContext = new();
         UsersContext usersContext = new();
         NapravlenieContext napravlenieContext = new();
         StatusContext statusContext = new();
@@ -42,7 +42,7 @@ namespace YP02.Pages.Oborudovanie
                 text2.Content = "Изменить";
                 tb_Name.Text = oborudovanie.Name;
                 tb_invNum.Text = oborudovanie.InventNumber;
-                tb_Audience.Text = audiencesContext.Auditories.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
+                tb_Audience.Text = auditoriesContext.Auditories.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
                 tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
                 tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
                 tb_Price.Text = oborudovanie.PriceObor;
@@ -51,7 +51,7 @@ namespace YP02.Pages.Oborudovanie
                 tb_Model.SelectedItem = viewModelContext.ViewModel.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
                 tb_Comment.Text = oborudovanie.Comments;
             }
-            foreach (var item in audiencesContext.Auditories)
+            foreach (var item in auditoriesContext.Auditories)
             {
                 tb_Audience.Items.Add(item.Name);
             }
@@ -60,15 +60,15 @@ namespace YP02.Pages.Oborudovanie
                 tb_User.Items.Add(item.FIO);
                 tb_tempUser.Items.Add(item.FIO);
             }
-            foreach (var item in audiencesContext.Auditories)
+            foreach (var item in auditoriesContext.Auditories)
             {
                 tb_Direction.Items.Add(item.Name);
             }
-            foreach (var item in audiencesContext.Auditories)
+            foreach (var item in auditoriesContext.Auditories)
             {
                 tb_Status.Items.Add(item.Name);
             }
-            foreach (var item in audiencesContext.Auditories)
+            foreach (var item in auditoriesContext.Auditories)
             {
                 tb_Model.Items.Add(item.Name);
             }
@@ -127,7 +127,7 @@ namespace YP02.Pages.Oborudovanie
                 {
                     Name = tb_Name.Text,
                     InventNumber = tb_invNum.Text,
-                    IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id,
+                    IdClassroom = auditoriesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id,
                     IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
                     IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id,
                     PriceObor = tb_Price.Text,
@@ -142,7 +142,7 @@ namespace YP02.Pages.Oborudovanie
             {
                 oborudovanie.Name = tb_Name.Text;
                 oborudovanie.InventNumber = tb_invNum.Text;
-                oborudovanie.IdClassroom = audiencesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id;
+                oborudovanie.IdClassroom = auditoriesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id;
                 oborudovanie.IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
                 oborudovanie.IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
                 oborudovanie.PriceObor = tb_Price.Text;

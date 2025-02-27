@@ -66,7 +66,7 @@ namespace YP02.Pages.Programs
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
                 programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
-                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
+                programs.OborId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
                 MainPrograms.ProgramsContext.Programs.Add(programs);
             }
             else
@@ -74,7 +74,7 @@ namespace YP02.Pages.Programs
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
                 programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
-                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
+                programs.OborId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
             }
             MainPrograms.ProgramsContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Programs.Programs());

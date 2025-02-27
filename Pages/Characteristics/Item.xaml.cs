@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace YP02.Pages.CharacteristicsMaterials
+namespace YP02.Pages.Characteristics
 {
     /// <summary>
-    /// Логика взаимодействия для Add.xaml
+    /// Логика взаимодействия для Item.xaml
     /// </summary>
-    public partial class Add : Page
+    public partial class Item : UserControl
     {
-        public Add()
+        public Item()
         {
             InitializeComponent();
         }

@@ -27,10 +27,10 @@ namespace YP02.Pages.RasxodMaterials
         {
             InitializeComponent();
             parent.Children.Clear();
-            foreach (Models.RasxodMaterials item in rasxodMaterialsContext.Auditories)
-            {
-                parent.Children.Add(new Item(item, this));
-            }
+            //foreach (Models.RasxodMaterials item in rasxodMaterialsContext.)
+            //{
+            //    parent.Children.Add(new Item(item, this));
+            //}
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
@@ -42,7 +42,7 @@ namespace YP02.Pages.RasxodMaterials
             parent.Children.Clear();
             foreach (var item in result)
             {
-                parent.Children.Add(new Item(item, this));
+                //parent.Children.Add(new Item(item, this));
             }
         }
 
@@ -63,7 +63,7 @@ namespace YP02.Pages.RasxodMaterials
 
         private void Add(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(this, null));
+            //MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(this, null));
         }
     }
 }

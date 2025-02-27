@@ -76,7 +76,7 @@ namespace YP02.Pages.Auditories
                     ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
                     TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id
                 };
-                MainAuditories.AuditoriesContext.Auditories.Add(auditories);
+                MainAuditories.auditoriesContext.Auditories.Add(auditories);
             }
             else
             {
@@ -85,7 +85,7 @@ namespace YP02.Pages.Auditories
                 auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
                 auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
             }
-            MainAuditories.AuditoriesContext.SaveChanges();
+            MainAuditories.auditoriesContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Auditories.Auditories());
         }
 

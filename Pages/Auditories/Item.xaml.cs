@@ -45,8 +45,8 @@ namespace YP02.Pages.Auditories
             MessageBoxResult result = MessageBox.Show("При удалении аудитории все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                MainAuditories.AuditoriesContext.Auditories.Remove(Auditories);
-                MainAuditories.AuditoriesContext.SaveChanges();
+                MainAuditories.auditoriesContext.Auditories.Remove(Auditories);
+                MainAuditories.auditoriesContext.SaveChanges();
                 (this.Parent as Panel).Children.Remove(this);
             }
             else MessageBox.Show("Действие отменено.");

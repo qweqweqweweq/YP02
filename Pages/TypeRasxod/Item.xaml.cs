@@ -40,7 +40,7 @@ namespace YP02.Pages.TypeRasxod
             MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                MainTypeRasxod.TypeRasxodContext.TypeRasxod.Remove(TypeRasxod);
+                //MainTypeRasxod.TypeRasxodContext.TypeRasxod.Remove(TypeRasxod);
                 MainTypeRasxod.TypeRasxodContext.SaveChanges();
                 (this.Parent as Panel).Children.Remove(this);
             }

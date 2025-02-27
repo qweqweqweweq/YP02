@@ -22,12 +22,12 @@ namespace YP02.Pages.Auditories
     /// </summary>
     public partial class Auditories : Page
     {
-        public AudiencesContext AuditoriesContext = new AudiencesContext();
+        public AuditoriesContext auditoriesContext = new AuditoriesContext();
         public Auditories()
         {
             InitializeComponent();
             parent.Children.Clear();
-            foreach (Models.Auditories item in AuditoriesContext.Auditories)
+            foreach (Models.Auditories item in auditoriesContext.Auditories)
             {
                 parent.Children.Add(new Item(item, this));
             }
@@ -36,7 +36,7 @@ namespace YP02.Pages.Auditories
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
             string searchText = search.Text.ToLower();
-            var result = AuditoriesContext.Auditories.Where(x =>
+            var result = auditoriesContext.Auditories.Where(x =>
                 x.Name.ToLower().Contains(searchText)
             );
             parent.Children.Clear();
@@ -53,7 +53,7 @@ namespace YP02.Pages.Auditories
 
         private void SortUp(object sender, RoutedEventArgs e)
         {
-            var sortUp = AuditoriesContext.Auditories.OrderBy(x => x.Name);
+            var sortUp = auditoriesContext.Auditories.OrderBy(x => x.Name);
             parent.Children.Clear();
             foreach (var auditories in sortUp)
             {
@@ -63,7 +63,7 @@ namespace YP02.Pages.Auditories
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-            var sortDown = AuditoriesContext.Auditories.OrderByDescending(x => x.Name);
+            var sortDown = auditoriesContext.Auditories.OrderByDescending(x => x.Name);
             parent.Children.Clear();
             foreach (var auditories in sortDown)
             {
