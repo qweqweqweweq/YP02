@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace YP02.Models
 {
-    public class TypeRasxod
+    public class Characteristics
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        public int TypeCharacter { get; set; }
     }
 }

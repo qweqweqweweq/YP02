@@ -21,8 +21,8 @@ namespace YP02.Pages.TypeRasxod
     public partial class Item : UserControl
     {
         TypeRasxod MainTypeRasxod;
-        Models.TypeRasxod TypeRasxod;
-        public Item(Models.TypeRasxod TypeRasxod, TypeRasxod MainTypeRasxod)
+        Models.TypeCharacteristics TypeRasxod;
+        public Item(Models.TypeCharacteristics TypeRasxod, TypeRasxod MainTypeRasxod)
         {
             InitializeComponent();
             this.TypeRasxod = TypeRasxod;

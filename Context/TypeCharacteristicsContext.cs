@@ -9,13 +9,13 @@ using YP02.Models;
 
 namespace YP02.Context
 {
-    public class TypeRasxodContext : DbContext
+    public class TypeCharacteristicsContext : DbContext
     {
-        public DbSet<TypeRasxod> TypeRasxod { get; set; }
-        public TypeRasxodContext()
+        public DbSet<TypeCharacteristics> TypeCharacteristics { get; set; }
+        public TypeCharacteristicsContext()
         {
             Database.EnsureCreated();
-            TypeRasxod.Load();
+            TypeCharacteristics.Load();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

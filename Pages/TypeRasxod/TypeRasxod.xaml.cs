@@ -21,12 +21,12 @@ namespace YP02.Pages.TypeRasxod
     /// </summary>
     public partial class TypeRasxod : Page
     {
-        public TypeRasxodContext TypeRasxodContext = new TypeRasxodContext();
+        public TypeCharacteristicsContext TypeRasxodContext = new TypeCharacteristicsContext();
         public TypeRasxod()
         {
             InitializeComponent();
             parent.Children.Clear();
-            foreach (Models.TypeRasxod item in TypeRasxodContext.TypeRasxod)
+            foreach (Models.TypeCharacteristics item in TypeRasxodContext.TypeRasxod)
             {
                 parent.Children.Add(new Item(item, this));
             }

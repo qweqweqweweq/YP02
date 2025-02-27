@@ -4,13 +4,13 @@ using YP02.Models;
 
 namespace YP02.Context
 {
-    public class CharacteristicsMaterialsContext : DbContext
+    public class ValueCharacteristicsContext : DbContext
     {
-        public DbSet<CharacteristicsMaterials> CharacteristicsMaterials { get; set; }
-        public CharacteristicsMaterialsContext()
+        public DbSet<ValueCharacteristics> ValueCharacteristics { get; set; }
+        public ValueCharacteristicsContext()
         {
             Database.EnsureCreated();
-            CharacteristicsMaterials.Load();
+            ValueCharacteristics.Load();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

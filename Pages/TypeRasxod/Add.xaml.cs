@@ -21,8 +21,8 @@ namespace YP02.Pages.TypeRasxod
     public partial class Add : Page
     {
         public TypeRasxod MainTypeRasxod;
-        public Models.TypeRasxod typeRasxod;
-        public Add(TypeRasxod MainTypeRasxod, Models.TypeRasxod typeRasxod = null)
+        public Models.TypeCharacteristics typeRasxod;
+        public Add(TypeRasxod MainTypeRasxod, Models.TypeCharacteristics typeRasxod = null)
         {
             InitializeComponent();
             this.MainTypeRasxod = MainTypeRasxod;
@@ -42,7 +42,7 @@ namespace YP02.Pages.TypeRasxod
             }
             if (typeRasxod == null)
             {
-                typeRasxod = new Models.TypeRasxod();
+                typeRasxod = new Models.TypeCharacteristics();
                 typeRasxod.Name = tb_Name.Text;
                 MainTypeRasxod.TypeRasxodContext.TypeRasxod.Add(typeRasxod);
             }
