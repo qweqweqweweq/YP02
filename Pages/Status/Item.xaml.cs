@@ -20,9 +20,31 @@ namespace YP02.Pages.Status
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        Status MainStatus;
+        Models.Status Status;
+        public Item(Models.Status Status, Status MainStatus)
         {
             InitializeComponent();
+            this.MainStatus = MainStatus;
+            this.Status = Status;
+            lb_Name.Content = Status.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Status.Add(MainStatus, Status));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainStatus.StatusContext.Status.Remove(Status);
+                MainStatus.StatusContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }

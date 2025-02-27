@@ -169,7 +169,7 @@
         </Grid.Background>
         <Border CornerRadius="0,0,10,10" Background="#E5FFFFFF" Height="60" VerticalAlignment="Top">
             <Grid>
-                <Label Content="Аудитории" FontFamily="/Fonts/#Montserrat Bold" Height="45" FontSize="25" Foreground="#0060AC" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,10,0,10"/>
+                <Label Content="Пользователи" FontFamily="/Fonts/#Montserrat Bold" Height="45" FontSize="25" Foreground="#0060AC" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,10,0,10"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30,0,0,0">
                     <TextBox Style="{DynamicResource TextBoxStyle1}" x:Name="search" Height="35" FontSize="15" Width="340" BorderBrush="#0060AC" Margin="0,0,0,0" KeyDown="KeyDown_Search"/>
                     <Button Style="{DynamicResource ButtonStyle2}" Content="↑" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="15,0,0,0" Click="SortUp"/>

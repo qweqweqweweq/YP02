@@ -47,11 +47,6 @@ namespace YP02.Pages
             MainWindow.init.OpenPages(new Auditories.Auditories());
         }
 
-        private void OpenDirSt(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void OpenProgr(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Programs.Programs());
@@ -90,6 +85,16 @@ namespace YP02.Pages
         private void OpenUsers(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Users.Users());
+        }
+
+        private void OpenDirection(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Napravlenie.Napravlenie());
+        }
+
+        private void OpenStatus(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Status.Status());
         }
     }
 }

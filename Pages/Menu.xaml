@@ -130,7 +130,10 @@
                     <Button Click="OpenEquip" Style="{DynamicResource ButtonStyle1}" Content="Оборудование" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,0" BorderBrush="White"/>
                     <Button Click="OpenEqType" Style="{DynamicResource ButtonStyle2}" Content="Тип оборудования" Height="35" Width="200" FontSize="18" Background="#FFDADBDC" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="#9EA1A2"/>
                     <Button Click="OpenAudien" Style="{DynamicResource ButtonStyle1}" Content="Аудитории" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
-                    <Button Click="OpenDirSt" Style="{DynamicResource ButtonStyle1}" Content="Направление и статус" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Click="OpenDirection" Style="{DynamicResource ButtonStyle1}" Content="Направление" Height="35" Width="140" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,10,0" BorderBrush="White"/>
+                        <Button Click="OpenStatus" Style="{DynamicResource ButtonStyle1}" Content="Cтатус" Height="35" Width="70" FontSize="18" Background="White" Foreground="#0060AC" BorderBrush="White"/>
+                    </StackPanel>
                     <Button Click="OpenProgr" Style="{DynamicResource ButtonStyle1}" Content="Программы" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                     <Button Click="OpenDevel" Style="{DynamicResource ButtonStyle1}" Content="Разработчики" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                 </StackPanel>

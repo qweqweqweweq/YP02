@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:YP02.Pages.Napravlenie"
-             mc:Ignorable="d" FontFamily="/Fonts/#Montserrat">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -66,11 +66,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel VerticalAlignment="Center">
-                <Label x:Name="lb_Name" Content="Направление" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label x:Name="lb_Name" Content="Название" Height="40" FontSize="20" FontWeight="Bold"/>
             </StackPanel>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Click="Click_redact" Style="{DynamicResource ButtonStyle1}" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,5,10,5" Background="#0060AC" Foreground="White"/>
-                <Button Click="Click_remove" Style="{DynamicResource ButtonStyle1}" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,5" Background="#E41613" Foreground="White"/>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Button Style="{DynamicResource ButtonStyle1}" Click="Click_redact" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,10,10,5" Background="#0060AC" Foreground="White"/>
+                <Button Style="{DynamicResource ButtonStyle1}" Click="Click_remove" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,10" Background="#E41613" Foreground="White"/>
             </StackPanel>
         </Grid>
     </Border>

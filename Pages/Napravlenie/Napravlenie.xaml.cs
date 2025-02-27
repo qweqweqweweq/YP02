@@ -21,55 +21,57 @@ namespace YP02.Pages.Napravlenie
     /// </summary>
     public partial class Napravlenie : Page
     {
-        // Создание контекста направлений для работы с данными
-        public NapravlenieContext NapravlenieContext = new NapravlenieContext();
-
+        public NapravlenieContext NapravlenieContext = new();
         public Napravlenie()
         {
             InitializeComponent();
-
-            // Очистка дочерних элементов родительского контейнера
             parent.Children.Clear();
-
-            // Перебор всех направлений из контекста и добавление их в родительский контейнер
             foreach (Models.Napravlenie item in NapravlenieContext.Napravlenie)
             {
-                parent.Children.Add(new Item(item, this)); // Создание нового элемента для каждого направления
+                parent.Children.Add(new Item(item, this));
             }
         }
 
-        // Обработчик события нажатия клавиши в поле поиска
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-            // Получение текста поиска и преобразование его в нижний регистр
             string searchText = search.Text.ToLower();
-
-            // Фильтрация направлений по имени, содержащему текст поиска
             var result = NapravlenieContext.Napravlenie.Where(x =>
                 x.Name.ToLower().Contains(searchText)
             );
-
-            // Очистка родительского контейнера перед добавлением результатов поиска
             parent.Children.Clear();
-
-            // Добавление отфильтрованных направлений в родительский контейнер
             foreach (var item in result)
             {
                 parent.Children.Add(new Item(item, this));
             }
         }
 
-        // Обработчик события нажатия кнопки "Назад"
-        private void Back(object sender, RoutedEventArgs e)
+        private void SortUp(object sender, RoutedEventArgs e)
         {
-            // Открытие главного меню
-            MainWindow.init.OpenPages(new Menu());
+            var sortUp = NapravlenieContext.Napravlenie.OrderBy(x => x.Name);
+            parent.Children.Clear();
+            foreach (var napravlenie in sortUp)
+            {
+                parent.Children.Add(new Item(napravlenie, this));
+            }
         }
 
-        // Обработчик события нажатия кнопки "Добавить"
+        private void SortDown(object sender, RoutedEventArgs e)
+        {
+            var sortDown = NapravlenieContext.Napravlenie.OrderByDescending(x => x.Name);
+            parent.Children.Clear();
+            foreach (var napravlenie in sortDown)
+            {
+                parent.Children.Add(new Item(napravlenie, this));
+            }
+        }
+
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Menu());
+        }
+
         private void Add(object sender, RoutedEventArgs e)
         {
-            // Открытие страницы добавления нового направления
             MainWindow.init.OpenPages(new Pages.Napravlenie.Add(this, null));
         }
     }
