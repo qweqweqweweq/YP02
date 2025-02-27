@@ -31,6 +31,7 @@ namespace YP02.Pages.HistoryObor
             this.MainHistoryObor = MainHistoryObor;
             lb_Users.Content = usersContext.Users.Where(x => x.Id == HistoryObor.Id).First().FIO;
             lb_Date.Content = HistoryObor.Date.ToString();
+            lb_Comment.Content = HistoryObor.Comment;
         }
     }
 }

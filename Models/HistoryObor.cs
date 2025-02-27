@@ -14,5 +14,6 @@ namespace YP02.Models
         public int IdUserr { get; set; }
         public int IdObor {  get; set; }
         public DateTime Date { get; set; }
+        public string Comment { get; set; }
     }
 }

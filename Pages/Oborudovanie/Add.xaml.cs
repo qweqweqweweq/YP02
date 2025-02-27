@@ -31,6 +31,9 @@ namespace YP02.Pages.Oborudovanie
         NapravlenieContext napravlenieContext = new();
         StatusContext statusContext = new();
         ViewModelContext viewModelContext = new();
+
+        //
+        public Models.HistoryObor historyObor;
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {
             InitializeComponent();
@@ -136,6 +139,13 @@ namespace YP02.Pages.Oborudovanie
                     IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id,
                     Comments = tb_Comment.Text
                 };
+                //
+                historyObor = new Models.HistoryObor();
+                historyObor.IdUserr = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
+                historyObor.IdObor = oborudovanie.Id;
+                historyObor.Date = DateTime.Now;
+                historyObor.Comment = tb_Comment.Text;
+                //
                 MainOborudovanie.OborudovanieContext.Oborudovanie.Add(oborudovanie);
             }
             else
@@ -150,6 +160,13 @@ namespace YP02.Pages.Oborudovanie
                 oborudovanie.IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id;
                 oborudovanie.IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id;
                 oborudovanie.Comments = tb_Comment.Text;
+                //
+                historyObor = new Models.HistoryObor();
+                historyObor.IdUserr = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
+                historyObor.IdObor = oborudovanie.Id;
+                historyObor.Date = DateTime.Now;
+                historyObor.Comment = tb_Comment.Text;
+                //
             }
             MainOborudovanie.OborudovanieContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());

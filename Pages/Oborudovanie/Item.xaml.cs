@@ -62,5 +62,10 @@ namespace YP02.Pages.Oborudovanie
             }
             else MessageBox.Show("Действие отменено.");
         }
+
+        private void Click_history(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor());
+        }
     }
 }
