@@ -26,6 +26,7 @@ namespace YP02.Pages.RasxodMaterials
         UsersContext usersContext = new UsersContext();
         TypeRasxodContext typeRasxodContext = new TypeRasxodContext();
         MainCharacMaterialsContext mainCharacMaterialsContext = new MainCharacMaterialsContext();
+        RasxodMaterialsContext rasxodMaterialsContext = new RasxodMaterialsContext();
 
         public Add(RasxodMaterials MainRasxodMaterials, Models.RasxodMaterials rasxodMaterials = null)
         {
@@ -77,6 +78,11 @@ namespace YP02.Pages.RasxodMaterials
                 MessageBox.Show("Введите описание расходного материала");
                 return;
             }
+            if (tb_DatePost.SelectedDate == null)
+            {
+                MessageBox.Show("Введите дату поступления расходного материала");
+                return;
+            }
             if (string.IsNullOrEmpty(tb_Quantity.Text))
             {
                 MessageBox.Show("Выберите количество расходного материала");
@@ -102,12 +108,40 @@ namespace YP02.Pages.RasxodMaterials
                 MessageBox.Show("Выберите характеристики расходного материала");
                 return;
             }
-            MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
+            if (rasxodMaterials == null)
+            {
+                rasxodMaterials = new Models.RasxodMaterials
+                {
+                    Name = tb_Name.Text,
+                    Description = tb_Des.Text,
+                    DatePostupleniya = DateTime.Parse(tb_DatePost.Text),
+                    Quantity = double.Parse(tb_Quantity.Text),
+                    UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id,
+                    ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id,
+                    TypeRasxod = typeRasxodContext.TypeRasxod.Where(x => x.Name == tb_typeRasMat.SelectedItem).First().Id,
+                    Characteristics = mainCharacMaterialsContext.MainCharacMaterials.Where(x => x.Color == tb_characters.SelectedItem).First().Id
+                };
+                MainRasxodMaterials.RasxodMaterialsContext.SaveChanges();
+                MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
+            }
+            else
+            {
+                rasxodMaterials.Name = tb_Name.Text;
+                rasxodMaterials.Description = tb_Des.Text;
+                rasxodMaterials.DatePostupleniya = DateTime.Parse(tb_DatePost.Text);
+                rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
+                rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id;
+                rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id;
+                rasxodMaterials.TypeRasxod = typeRasxodContext.TypeRasxod.Where(x => x.Name == tb_typeRasMat.SelectedItem).First().Id;
+                rasxodMaterials.Characteristics = mainCharacMaterialsContext.MainCharacMaterials.Where(x => x.Color == tb_characters.SelectedItem).First().Id
+            }
+            MainCharacMaterials.RasxodMaterialsContext.SaveChanges();
+            MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
         }
 
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
         }
     }
 }

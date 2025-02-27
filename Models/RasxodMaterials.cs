@@ -20,5 +20,6 @@ namespace YP02.Models
         public int UserRespon { get; set; }
         public int ResponUserTime { get; set; }
         public int TypeRasxod { get; set; }
+        public int Characteristics { get; set; }
     }
 }
