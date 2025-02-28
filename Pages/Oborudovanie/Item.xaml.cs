@@ -39,13 +39,13 @@ namespace YP02.Pages.Oborudovanie
             this.MainOborudovanie = MainOborudovanie;
             lb_Name.Content = Oborudovanie.Name;
             lb_invNum.Content = Oborudovanie.InventNumber;
-            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).First().Name;
-            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).First().FIO;
-            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).First().FIO;
+            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).FirstOrDefault().Name;
+            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).FirstOrDefault().FIO;
+            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).FirstOrDefault().FIO;
             lb_Price.Content = Oborudovanie.PriceObor;
-            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).First().Name;
-            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).First().Name;
-            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).First().Name;
+            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).FirstOrDefault().Name;
+            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).FirstOrDefault().Name;
+            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).FirstOrDefault().Name;
             lb_Comment.Content = Oborudovanie.Comments;
             DisplayImage(Oborudovanie.Photo);
         }
