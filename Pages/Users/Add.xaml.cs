@@ -37,7 +37,7 @@ namespace YP02.Pages.Users
                 tb_Password.Text = users.Password;
                 tb_Email.Text = users.Email;
                 tb_Phone.Text = users.Number;
-                tb_Role.Text = users.Role;
+                tb_Role.SelectedItem = users.Role;
                 tb_Address.Text = users.Address;
             }
             tb_Role.Items.Add("Администратор");

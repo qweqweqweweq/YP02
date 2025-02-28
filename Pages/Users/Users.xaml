@@ -175,7 +175,7 @@
                     <Button Style="{DynamicResource ButtonStyle2}" Content="↑" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="15,0,0,0" Click="SortUp"/>
                     <Button Style="{DynamicResource ButtonStyle2}" Content="↓" Height="35" Width="30" FontSize="20" Background="White" Foreground="#0060AC" BorderBrush="#0060AC" FontFamily="/Fonts/#Montserrat Bold" Margin="5,0,0,0" Click="SortDown"/>
                 </StackPanel>
-                <Button Style="{DynamicResource ButtonStyle1}" Click="Back" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,20,10" Background="Red" Foreground="White" Height="40" Width="150" Content="Назад" FontSize="18"/>
+                <Button Style="{DynamicResource ButtonStyle1}" Click="Back" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,20,10" Background="Red" Foreground="White" Height="35" Width="150" Content="Назад" FontSize="18"/>
             </Grid>
         </Border>
         <ScrollViewer Margin="5,65,5,55">

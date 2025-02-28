@@ -45,13 +45,13 @@ namespace YP02.Pages.Oborudovanie
                 text2.Content = "Изменить";
                 tb_Name.Text = oborudovanie.Name;
                 tb_invNum.Text = oborudovanie.InventNumber;
-                tb_Audience.Text = auditoriesContext.Auditories.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
-                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
-                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().FIO;
+                tb_Audience.Text = auditoriesContext.Auditories.Where(x => x.Id == oborudovanie.IdClassroom).FirstOrDefault().Name;
+                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.IdResponUser).FirstOrDefault().FIO;
+                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.IdTimeResponUser).FirstOrDefault().FIO;
                 tb_Price.Text = oborudovanie.PriceObor;
-                tb_Direction.SelectedItem = napravlenieContext.Napravlenie.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
-                tb_Status.SelectedItem = statusContext.Status.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
-                tb_Model.SelectedItem = viewModelContext.ViewModel.Where(x => x.Id == oborudovanie.Id).FirstOrDefault().Name;
+                tb_Direction.SelectedItem = napravlenieContext.Napravlenie.Where(x => x.Id == oborudovanie.IdNapravObor).FirstOrDefault().Name;
+                tb_Status.SelectedItem = statusContext.Status.Where(x => x.Id == oborudovanie.IdStatusObor).FirstOrDefault().Name;
+                tb_Model.SelectedItem = viewModelContext.ViewModel.Where(x => x.Id == oborudovanie.IdModelObor).FirstOrDefault().Name;
                 tb_Comment.Text = oborudovanie.Comments;
             }
             foreach (var item in auditoriesContext.Auditories)
@@ -63,15 +63,15 @@ namespace YP02.Pages.Oborudovanie
                 tb_User.Items.Add(item.FIO);
                 tb_tempUser.Items.Add(item.FIO);
             }
-            foreach (var item in auditoriesContext.Auditories)
+            foreach (var item in napravlenieContext.Napravlenie)
             {
                 tb_Direction.Items.Add(item.Name);
             }
-            foreach (var item in auditoriesContext.Auditories)
+            foreach (var item in statusContext.Status)
             {
                 tb_Status.Items.Add(item.Name);
             }
-            foreach (var item in auditoriesContext.Auditories)
+            foreach (var item in viewModelContext.ViewModel)
             {
                 tb_Model.Items.Add(item.Name);
             }
@@ -189,12 +189,14 @@ namespace YP02.Pages.Oborudovanie
             {
                 try
                 {
+                    oborudovanie = new Models.Oborudovanie();
                     using (var fileStream = File.OpenRead(ofd.FileName))
                     {
                         MemoryStream memoryStream = new MemoryStream();
                         fileStream.CopyTo(memoryStream);
                         oborudovanie.Photo = memoryStream.ToArray();
                     }
+                    photobut.Content = "Фото выбрано";
 
                 }
                 catch (Exception ex)
