@@ -295,13 +295,13 @@
     <Grid Background="White">
         <Border CornerRadius="0,0,10,10" Background="#0060AC" Height="60" VerticalAlignment="Top">
             <Grid>
-                <Label Content="Добавление типа расходов" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
+                <Label Name="lb_title" Content="Добавление типа расходов" FontWeight="Bold" Height="40" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="20,0,0,0"/>
             </Grid>
         </Border>
         <Label Content="Наименование:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,80,20,0"/>
         <TextBox x:Name="tb_Name" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,110,20,0" BorderBrush="#0060AC" Style="{DynamicResource TextBoxStyle1}"/>
 
-        <Button Style="{DynamicResource ButtonStyle1}" Content="Добавить" Background="#0060AC" Foreground="White" Margin="20,20,140,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Redact"/>
+        <Button x:Name="bt_click" Style="{DynamicResource ButtonStyle1}" Content="Добавить" Background="#0060AC" Foreground="White" Margin="20,20,140,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Redact"/>
         <Button Style="{DynamicResource ButtonStyle1}" Content="Назад"  Background="#9EA1A2" Foreground="White" Margin="20,20,20,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact"/>
     </Grid>
 </Page>

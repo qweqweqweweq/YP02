@@ -37,6 +37,8 @@ namespace YP02.Pages.Developers
             // Если объект разработчика не равен null, заполняем текстовое поле его именем
             if (developers != null)
             {
+                lb_title.Content = "Изменение разработчика";
+                bt_click.Content = "Изменить";
                 tb_Name.Text = developers.Name;
             }
         }

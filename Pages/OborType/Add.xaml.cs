@@ -37,6 +37,8 @@ namespace YP02.Pages.OborType
             // Если объект типа оборудования не равен null, заполняем текстовое поле его именем
             if (oborType != null)
             {
+                lb_title.Content = "Изменение типа оборудования";
+                bt_click.Content = "Изменить";
                 tb_Name.Text = oborType.Name;
             }
         }

@@ -21,55 +21,78 @@ namespace YP02.Pages.ViewModel
     /// </summary>
     public partial class Add : Page
     {
+        // Основная модель представления, с которой работает текущая страница
         public ViewModel MainViewModel;
+
+        // Модель представления, которую мы редактируем или добавляем
         public Models.ViewModel viewModel;
+
+        // Контекст для работы с типами оборудования
         OborTypeContext oborTypeContext = new OborTypeContext();
+
+        // Конструктор класса, который принимает основную модель представления и (опционально) модель для редактирования
         public Add(ViewModel MainViewModel, Models.ViewModel viewModel = null)
         {
-            InitializeComponent();
-            this.MainViewModel = MainViewModel;
-            this.viewModel = viewModel;
+            InitializeComponent(); 
+
+            this.MainViewModel = MainViewModel; // Сохранение ссылки на основную модель представления
+            this.viewModel = viewModel; // Сохранение модели представления для редактирования (если передана)
+
+            // Если модель представления для редактирования не равна null, заполняем поля данными модели
             if (viewModel != null)
             {
-                tb_Name.Text = viewModel.Name;
-                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.Id).FirstOrDefault().Name;
+                lb_title.Content = "Изменение вида модели"; // Установка заголовка
+                bt_click.Content = "Изменить"; // Изменение текста кнопки
+                tb_Name.Text = viewModel.Name; // Заполнение поля имени типа оборудования
+                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.Id).FirstOrDefault()?.Name; // Установка выбранного типа оборудования
             }
-            foreach(var item in oborTypeContext.OborType)
+
+            // Заполнение выпадающего списка типов оборудования
+            foreach (var item in oborTypeContext.OborType)
             {
-                cm_OborType.Items.Add(item.Name);
+                cm_OborType.Items.Add(item.Name); // Добавление каждого типа оборудования в выпадающий список
             }
         }
 
+        // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
+            // Проверка на заполненность полей
             if (string.IsNullOrEmpty(tb_Name.Text))
             {
-                MessageBox.Show("Введите название типа оборудования");
-                return;
+                MessageBox.Show("Введите название типа оборудования"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
             }
             if (cm_OborType.SelectedItem == null)
             {
-                MessageBox.Show("Выберите тип оборудвания");
-                return;
+                MessageBox.Show("Выберите тип оборудования"); // Сообщение об ошибке, если тип не выбран
+                return; // Прерывание выполнения метода
             }
+
+            // Если модель представления не была передана (т.е. мы добавляем новую)
             if (viewModel == null)
             {
-                viewModel = new Models.ViewModel();
-                viewModel.Name = tb_Name.Text;
-                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem).First().Id;
-                MainViewModel.ViewModelContext.ViewModel.Add(viewModel);
+                viewModel = new Models.ViewModel(); // Создание новой модели представления
+                viewModel.Name = tb_Name.Text; // Установка имени типа оборудования
+                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Получение ID типа оборудования по имени
+                MainViewModel.ViewModelContext.ViewModel.Add(viewModel); // Добавление новой модели в контекст
             }
-            else
+            else // Если модель уже существует (редактируем)
             {
-                viewModel.Name = tb_Name.Text;
-                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem).First().Id;
+                viewModel.Name = tb_Name.Text; // Обновление имени типа оборудования
+                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Обновление ID типа оборудования
             }
+
+            // Сохранение изменений в базе данных
             MainViewModel.ViewModelContext.SaveChanges();
+            // Переход на страницу со списком моделей представления
             MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
         }
 
+        // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу со списком моделей представления без сохранения изменений
             MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
         }
     }

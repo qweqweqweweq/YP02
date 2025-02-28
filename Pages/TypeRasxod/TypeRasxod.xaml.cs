@@ -54,10 +54,5 @@ namespace YP02.Pages.TypeRasxod
         {
             MainWindow.init.OpenPages(new Pages.TypeRasxod.Add(this, null));
         }
-
-        private void KeyDown_Search(object sender, KeyEventArgs e)
-        {
-
-        }
     }
 }

@@ -29,6 +29,8 @@ namespace YP02.Pages.TypeRasxod
             this.typeRasxod = typeRasxod;
             if (typeRasxod != null)
             {
+                lb_title.Content = "Изменение типа расходов";
+                bt_click.Content = "Изменить";
                 tb_Name.Text = typeRasxod.Name;
             }
         }
@@ -44,7 +46,7 @@ namespace YP02.Pages.TypeRasxod
             {
                 typeRasxod = new Models.TypeCharacteristics();
                 typeRasxod.Name = tb_Name.Text;
-                //MainTypeRasxod.TypeRasxodContext.TypeRasxod.Add(typeRasxod);
+                MainTypeRasxod.TypeRasxodContext.TypeRasxod.Add(typeRasxod);
             }
             else
             {

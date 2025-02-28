@@ -21,45 +21,71 @@ namespace YP02.Pages.Programs
     /// </summary>
     public partial class Add : Page
     {
+        // Основная программа, с которой работает текущая страница
         public Programs MainPrograms;
+
+        // Модель программы, которую мы редактируем или добавляем
         public Models.Programs programs;
+
+        // Контексты для работы с базами данных разработчиков и оборудования
         DevelopersContext developersContext = new DevelopersContext();
         OborudovanieContext oborudovanieContext = new OborudovanieContext();
+
+        // Конструктор класса, который принимает основную программу и (опционально) программу для редактирования
         public Add(Programs MainPrograms, Models.Programs programs = null)
         {
-            InitializeComponent();
-            this.MainPrograms = MainPrograms;
-            this.programs = programs;
+            InitializeComponent(); 
+
+            this.MainPrograms = MainPrograms; // Сохранение ссылки на основную программу
+            this.programs = programs; // Сохранение программы для редактирования (если передана)
+
+            // Если программа для редактирования не равна null, заполняем поля данными программы
             if (programs != null)
             {
-                tb_Name.Text = programs.Name;
-                tb_VersionPO.Text = programs.VersionPO;
-                cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.Id).FirstOrDefault().Name;
-                cm_OborId.SelectedItem = oborudovanieContext.Oborudovanie.Where(x => x.Id == programs.Id).FirstOrDefault().Name;
+                lb_title.Content = "Изменение программ"; // Установка заголовка
+                bt_click.Content = "Изменить"; // Изменение текста кнопки
+                tb_Name.Text = programs.Name; // Заполнение поля имени программы
+                tb_VersionPO.Text = programs.VersionPO; // Заполнение поля версии ПО
+
+                // Установка выбранного разработчика и оборудования на основе текущей программы
+                cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.Id).FirstOrDefault()?.Name;
+                cm_OborId.SelectedItem = oborudovanieContext.Oborudovanie.Where(x => x.Id == programs.Id).FirstOrDefault()?.Name;
             }
+
+            // Заполнение выпадающего списка разработчиков
             foreach (var item in developersContext.Developers)
             {
                 cm_DeveloperId.Items.Add(item.Name);
             }
+
+            // Заполнение выпадающего списка оборудования
+            foreach (var item in oborudovanieContext.Oborudovanie)
+            {
+                cm_OborId.Items.Add(item.Name);
+            }
         }
 
+        // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
+            // Проверка на заполненность полей
             if (string.IsNullOrEmpty(tb_Name.Text))
             {
                 MessageBox.Show("Введите название программы");
-                return;
+                return; // Прерывание выполнения метода, если поле пустое
             }
             if (string.IsNullOrEmpty(tb_VersionPO.Text))
             {
                 MessageBox.Show("Введите версию ПО");
-                return;
+                return; // Прерывание выполнения метода, если поле пустое
             }
             if (cm_DeveloperId.SelectedItem == null)
             {
                 MessageBox.Show("Выберите разработчика");
-                return;
+                return; // Прерывание выполнения метода, если разработчик не выбран
             }
+
+            // Если программа не была передана (т.е. мы добавляем новую)
             if (programs == null)
             {
                 programs = new Models.Programs();
@@ -69,19 +95,25 @@ namespace YP02.Pages.Programs
                 programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
                 MainPrograms.ProgramsContext.Programs.Add(programs);
             }
-            else
+            else // Если программа уже существует (редактируем)
             {
+                // Обновление данных существующей программы
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
                 programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
                 programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
             }
+
+            // Сохранение изменений в базе данных
             MainPrograms.ProgramsContext.SaveChanges();
+            // Переход на страницу со списком программ
             MainWindow.init.OpenPages(new Pages.Programs.Programs());
         }
 
+        // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу со списком программ без сохранения изменений
             MainWindow.init.OpenPages(new Pages.Programs.Programs());
         }
     }
