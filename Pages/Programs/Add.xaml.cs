@@ -91,8 +91,8 @@ namespace YP02.Pages.Programs
                 programs = new Models.Programs();
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
-                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
-                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
+                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem.ToString()).First().Id;
+                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem.ToString()).First().Id;
                 MainPrograms.ProgramsContext.Programs.Add(programs);
             }
             else // Если программа уже существует (редактируем)
@@ -100,8 +100,8 @@ namespace YP02.Pages.Programs
                 // Обновление данных существующей программы
                 programs.Name = tb_Name.Text;
                 programs.VersionPO = tb_VersionPO.Text;
-                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem).First().Id;
-                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem).First().Id;
+                programs.DeveloperId = developersContext.Developers.Where(x => x.Name == cm_DeveloperId.SelectedItem.ToString()).First().Id;
+                programs.OborrId = oborudovanieContext.Oborudovanie.Where(x => x.Name == cm_OborId.SelectedItem.ToString()).First().Id;
             }
 
             // Сохранение изменений в базе данных
