@@ -41,8 +41,8 @@ namespace YP02.Pages.TypeCharacteristics
             MessageBoxResult result = MessageBox.Show("При удалении типа характеристики все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                //MainTypeCharacteristics..Characteristics.Remove(typeCharacteristics);
-                //MainTypeCharacteristics.characteristicsContext.SaveChanges();
+                MainTypeCharacteristics.typeCharacteristicsContext.TypeCharacteristics.Remove(typeCharacteristics);
+                MainTypeCharacteristics.typeCharacteristicsContext.SaveChanges();
                 (this.Parent as Panel).Children.Remove(this);
             }
             else MessageBox.Show("Действие отменено.");

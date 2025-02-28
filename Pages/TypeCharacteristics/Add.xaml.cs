@@ -48,13 +48,13 @@ namespace YP02.Pages.TypeCharacteristics
             {
                 typeCharacteristics = new Models.TypeCharacteristics();
                 typeCharacteristics.Name = tb_Name.Text;
-                //MainTypeCharacteristics..Characteristics.Add(typeCharacteristics);
+                MainTypeCharacteristics.typeCharacteristicsContext.TypeCharacteristics.Add(typeCharacteristics);
             }
             else
             {
                 typeCharacteristics.Name = tb_Name.Text;
             }
-            //MainTypeCharacteristics.characteristicsContext.SaveChanges();
+            MainTypeCharacteristics.typeCharacteristicsContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.TypeCharacteristics.TypeCharacteristics());
         }
 

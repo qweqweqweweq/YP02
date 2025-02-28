@@ -28,28 +28,29 @@ namespace YP02.Pages
 
         private void AuthorizationClick(object sender, RoutedEventArgs e)
         {
-            string Login = login.Text;
-            string Password = password.Password;
-            if (Login != "")
-            {
-                if (Password != "")
-                {
-                    using (var usersContext = new UsersContext())
-                    {
-                        var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
-                        if (user != null)
-                        {
-                            MainWindow.init.OpenPages(new Menu());
-                        }
-                        else
-                        {
-                            MessageBox.Show("Некорректный ввод логина или пароля.");
-                        }
-                    }
-                }
-                else MessageBox.Show("Введите пароль.");
-            }
-            else MessageBox.Show("Введите логин.");
+            MainWindow.init.OpenPages(new Pages.Menu());
+            //string Login = login.Text;
+            //string Password = password.Password;
+            //if (Login != "")
+            //{
+            //    if (Password != "")
+            //    {
+            //        using (var usersContext = new UsersContext())
+            //        {
+            //            var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+            //            if (user != null)
+            //            {
+            //                MainWindow.init.OpenPages(new Menu());
+            //            }
+            //            else
+            //            {
+            //                MessageBox.Show("Некорректный ввод логина или пароля.");
+            //            }
+            //        }
+            //    }
+            //    else MessageBox.Show("Введите пароль.");
+            //}
+            //else MessageBox.Show("Введите логин.");
         }
     }
 }
