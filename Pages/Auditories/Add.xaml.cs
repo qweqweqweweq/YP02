@@ -21,77 +21,97 @@ namespace YP02.Pages.Auditories
     /// </summary>
     public partial class Add : Page
     {
+        // Основная страница аудиторий, с которой работает текущая страница
         public Auditories MainAuditories;
+
+        // Модель аудитории, которую мы редактируем или добавляем
         public Models.Auditories auditories;
+
+        // Контекст для работы с пользователями
         UsersContext usersContext = new();
+
+        // Конструктор класса, который принимает основную страницу аудиторий и (опционально) аудиторию для редактирования
         public Add(Auditories MainAuditories, Models.Auditories auditories = null)
         {
-            InitializeComponent();
-            this.MainAuditories = MainAuditories;
-            this.auditories = auditories;
+            InitializeComponent(); 
+
+            this.MainAuditories = MainAuditories; // Сохранение ссылки на основную страницу аудиторий
+            this.auditories = auditories; // Сохранение аудитории для редактирования (если передана)
+
+            // Если аудитория для редактирования не равна null, заполняем поля данными аудитории
             if (auditories != null)
             {
-                text1.Content = "Изменение аудитории";
-                text2.Content = "Изменить";
-                tb_Name.Text = auditories.Name;
-                tb_shortName.Text = auditories.ShortName;
-                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.ResponUser).FirstOrDefault().FIO;
-                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.TimeResponUser).FirstOrDefault().FIO;
+                text1.Content = "Изменение аудитории"; // Установка заголовка
+                text2.Content = "Изменить"; // Изменение текста кнопки
+                tb_Name.Text = auditories.Name; // Заполнение поля имени аудитории
+                tb_shortName.Text = auditories.ShortName; // Заполнение поля сокращённого имени аудитории
+                                                          // Установка выбранного ответственного пользователя по ID
+                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.ResponUser).FirstOrDefault()?.FIO;
+                // Установка выбранного временно-ответственного пользователя по ID
+                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == auditories.TimeResponUser).FirstOrDefault()?.FIO;
             }
+
+            // Заполнение выпадающих списков пользователей
             foreach (var item in usersContext.Users)
             {
-                tb_User.Items.Add(item.FIO);
-                tb_tempUser.Items.Add(item.FIO);
+                tb_User.Items.Add(item.FIO); // Добавление каждого пользователя в список ответственных
+                tb_tempUser.Items.Add(item.FIO); // Добавление каждого пользователя в список временно-ответственных
             }
         }
 
+        // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
+            // Проверка на заполненность полей
             if (string.IsNullOrEmpty(tb_Name.Text))
             {
-                MessageBox.Show("Введите наименование аудитории");
-                return;
+                MessageBox.Show("Введите наименование аудитории"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
             }
             if (string.IsNullOrEmpty(tb_shortName.Text))
             {
-                MessageBox.Show("Введите сокращённое наименование аудитории");
-                return;
+                MessageBox.Show("Введите сокращённое наименование аудитории"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
             }
             if (tb_User.SelectedItem == null)
             {
-                MessageBox.Show("Выберите ответственного пользователя");
-                return;
+                MessageBox.Show("Выберите ответственного пользователя"); // Сообщение об ошибке, если ответственный не выбран
+                return; // Прерывание выполнения метода
             }
             if (tb_tempUser.SelectedItem == null)
             {
-                MessageBox.Show("Выберите временно-ответственного пользователя");
-                return;
+                MessageBox.Show("Выберите временно-ответственного пользователя"); // Сообщение об ошибке, если временно-ответственный не выбран
+                return; // Прерывание выполнения метода
             }
+
+            // Если аудитория не была передана (т.е. мы добавляем новую)
             if (auditories == null)
             {
-                auditories = new Models.Auditories
+                auditories = new Models.Auditories // Создание новой модели аудитории
                 {
-                    Name = tb_Name.Text,
-                    ShortName = tb_shortName.Text,
-                    ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
-                    TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id
+                    Name = tb_Name.Text, // Установка имени аудитории
+                    ShortName = tb_shortName.Text, // Установка сокращённого имени аудитории
+                    ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id, // Получение ID ответственного пользователя
+                    TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id // Получение ID временно-ответственного пользователя
                 };
-                MainAuditories.auditoriesContext.Auditories.Add(auditories);
+                MainAuditories.auditoriesContext.Auditories.Add(auditories); // Добавление новой аудитории в контекст
             }
-            else
+            else // Если аудитория уже существует (редактируем)
             {
-                auditories.Name = tb_Name.Text;
-                auditories.ShortName = tb_shortName.Text;
-                auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
-                auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
+                // Обновление данных существующей аудитории
+                auditories.Name = tb_Name.Text; // Обновление имени аудитории
+                auditories.ShortName = tb_shortName.Text; // Обновление сокращённого имени аудитории
+                auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id; // Обновление ID ответственного пользователя
+                auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id; // Обновление ID временно-ответственного пользователя
             }
-            MainAuditories.auditoriesContext.SaveChanges();
-            MainWindow.init.OpenPages(new Pages.Auditories.Auditories());
+            MainAuditories.auditoriesContext.SaveChanges(); // Сохранение изменений в контексте базы данных
+            MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий после сохранения
         }
 
+        // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Auditories.Auditories());
+            MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий без сохранения изменений
         }
     }
 }

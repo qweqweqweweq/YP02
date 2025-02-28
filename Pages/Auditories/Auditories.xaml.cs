@@ -22,57 +22,80 @@ namespace YP02.Pages.Auditories
     /// </summary>
     public partial class Auditories : Page
     {
+        // Контекст для работы с аудиториями
         public AuditoriesContext auditoriesContext = new AuditoriesContext();
+
+        // Конструктор класса, инициализирующий страницу
         public Auditories()
         {
-            InitializeComponent();
-            parent.Children.Clear();
+            InitializeComponent(); // Инициализация компонентов страницы
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
+
+            // Заполнение родительского контейнера элементами Item для каждой аудитории из контекста
             foreach (Models.Auditories item in auditoriesContext.Auditories)
             {
-                parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this)); // Добавление нового элемента Item для каждой аудитории
             }
         }
 
+        // Обработчик события нажатия клавиши в поле поиска
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-            string searchText = search.Text.ToLower();
+            string searchText = search.Text.ToLower(); // Получение текста поиска в нижнем регистре
+
+            // Поиск аудиторий, имя которых содержит текст поиска
             var result = auditoriesContext.Auditories.Where(x =>
                 x.Name.ToLower().Contains(searchText)
             );
-            parent.Children.Clear();
+
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением результатов поиска
+
+            // Добавление найденных аудиторий в родительский контейнер
             foreach (var item in result)
             {
-                parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this)); // Создание элемента Item для каждой найденной аудитории
             }
         }
 
+        // Обработчик события нажатия кнопки "Назад"
         private void Back(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу меню
             MainWindow.init.OpenPages(new Menu());
         }
 
+        // Обработчик события нажатия кнопки "Сортировать по возрастанию"
         private void SortUp(object sender, RoutedEventArgs e)
         {
+            // Сортировка аудиторий по имени в порядке возрастания
             var sortUp = auditoriesContext.Auditories.OrderBy(x => x.Name);
-            parent.Children.Clear();
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением отсортированных аудиторий
+
+            // Добавление отсортированных аудиторий в родительский контейнер
             foreach (var auditories in sortUp)
             {
-                parent.Children.Add(new Item(auditories, this));
+                parent.Children.Add(new Item(auditories, this)); // Создание элемента Item для каждой отсортированной аудитории
             }
         }
 
+        // Обработчик события нажатия кнопки "Сортировать по убыванию"
         private void SortDown(object sender, RoutedEventArgs e)
         {
+            // Сортировка аудиторий по имени в порядке убывания
             var sortDown = auditoriesContext.Auditories.OrderByDescending(x => x.Name);
-            parent.Children.Clear();
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением отсортированных аудиторий
+
+            // Добавление отсортированных аудиторий в родительский контейнер
             foreach (var auditories in sortDown)
             {
-                parent.Children.Add(new Item(auditories, this));
+                parent.Children.Add(new Item(auditories, this)); // Создание элемента Item для каждой отсортированной аудитории
             }
         }
 
+        // Обработчик события нажатия кнопки "Добавить"
         private void Add(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу добавления новой аудитории
             MainWindow.init.OpenPages(new Pages.Auditories.Add(this, null));
         }
     }

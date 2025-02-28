@@ -21,48 +21,63 @@ namespace YP02.Pages.Inventory
     /// </summary>
     public partial class Inventory : Page
     {
+        // Контекст для работы с инвентаризациями
         public InventoryContext InventoryContext = new InventoryContext();
 
         public Inventory()
         {
-            InitializeComponent();
-            parent.Children.Clear();
+            InitializeComponent(); 
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
+
+            // Заполнение родительского контейнера элементами Item для каждой инвентаризации из контекста
             foreach (Models.Inventory item in InventoryContext.Inventory)
             {
-                parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this)); // Добавление нового элемента Item для каждой инвентаризации
             }
         }
 
+        // Обработчик события нажатия клавиши в поле поиска
         private void KeyDown_Search(object sender, KeyEventArgs e)
         {
-            string searchText = search.Text.ToLower();
+            string searchText = search.Text.ToLower(); // Получение текста поиска в нижнем регистре
+
+            // Поиск инвентаризаций, имя которых содержит текст поиска
             var result = InventoryContext.Inventory.Where(x =>
                 x.Name.ToLower().Contains(searchText)
             );
-            parent.Children.Clear();
+
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением результатов поиска
+
+            // Добавление найденных инвентаризаций в родительский контейнер
             foreach (var item in result)
             {
-                parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this)); // Создание элемента Item для каждой найденной инвентаризации
             }
         }
 
+        // Обработчик события нажатия кнопки "Сортировать по возрастанию"
         private void SortUp(object sender, RoutedEventArgs e)
         {
-
+            // Здесь должна быть логика сортировки инвентаризаций по возрастанию
         }
 
+        // Обработчик события нажатия кнопки "Сортировать по убыванию"
         private void SortDown(object sender, RoutedEventArgs e)
         {
-
+            // Здесь должна быть логика сортировки инвентаризаций по убыванию
         }
 
+        // Обработчик события нажатия кнопки "Назад"
         private void Back(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу меню
             MainWindow.init.OpenPages(new Pages.Menu());
         }
 
+        // Обработчик события нажатия кнопки "Добавить"
         private void Add(object sender, RoutedEventArgs e)
         {
+            // Переход на страницу добавления новой инвентаризации
             MainWindow.init.OpenPages(new Pages.Inventory.Add(this, null));
         }
     }
