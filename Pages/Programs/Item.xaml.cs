@@ -44,10 +44,10 @@ namespace YP02.Pages.Programs
             lb_VersionPO.Content = Programs.VersionPO; // Установка версии ПО
 
             // Получение имени разработчика по ID программы и установка в элемент управления
-            lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.Id).FirstOrDefault()?.Name;
+            lb_Developer.Content = developersContext.Developers.Where(x => x.Id == Programs.DeveloperId).FirstOrDefault()?.Name;
 
             // Получение имени оборудования по ID программы и установка в элемент управления
-            lb_Obor.Content = oborudovanieContext.Oborudovanie.Where(x => x.Id == Programs.Id).FirstOrDefault()?.Name;
+            lb_Obor.Content = oborudovanieContext.Oborudovanie.Where(x => x.Id == Programs.OborrId).FirstOrDefault()?.Name;
         }
 
         // Обработчик события нажатия кнопки "Редактировать"
