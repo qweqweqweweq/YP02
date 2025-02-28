@@ -20,9 +20,32 @@ namespace YP02.Pages.TypeCharacteristics
     /// </summary>
     public partial class Item : UserControl
     {
-        public Item()
+        TypeCharacteristics MainTypeCharacteristics;
+        Models.TypeCharacteristics typeCharacteristics;
+
+        public Item(Models.TypeCharacteristics typeCharacteristics, TypeCharacteristics MainTypeCharacteristics)
         {
             InitializeComponent();
+            this.typeCharacteristics = typeCharacteristics;
+            this.MainTypeCharacteristics = MainTypeCharacteristics;
+            lb_Name.Content = typeCharacteristics.Name;
+        }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.TypeCharacteristics.Add(MainTypeCharacteristics, typeCharacteristics));
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("При удалении типа характеристики все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                //MainTypeCharacteristics..Characteristics.Remove(typeCharacteristics);
+                //MainTypeCharacteristics.characteristicsContext.SaveChanges();
+                (this.Parent as Panel).Children.Remove(this);
+            }
+            else MessageBox.Show("Действие отменено.");
         }
     }
 }

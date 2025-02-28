@@ -96,5 +96,10 @@ namespace YP02.Pages
         {
             MainWindow.init.OpenPages(new Status.Status());
         }
+
+        private void OpenTypeChar(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new TypeCharacteristics.TypeCharacteristics());
+        }
     }
 }

@@ -24,5 +24,30 @@ namespace YP02.Pages.TypeCharacteristics
         {
             InitializeComponent();
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Back(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SortUp(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SortDown(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }
