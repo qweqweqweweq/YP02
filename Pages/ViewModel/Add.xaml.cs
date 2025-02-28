@@ -44,7 +44,7 @@ namespace YP02.Pages.ViewModel
                 lb_title.Content = "Изменение вида модели"; // Установка заголовка
                 bt_click.Content = "Изменить"; // Изменение текста кнопки
                 tb_Name.Text = viewModel.Name; // Заполнение поля имени типа оборудования
-                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.Id).FirstOrDefault()?.Name; // Установка выбранного типа оборудования
+                cm_OborType.SelectedItem = oborTypeContext.OborType.Where(x => x.Id == viewModel.OborType).FirstOrDefault()?.Name; // Установка выбранного типа оборудования
             }
 
             // Заполнение выпадающего списка типов оборудования

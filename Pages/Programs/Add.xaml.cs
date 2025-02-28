@@ -48,8 +48,8 @@ namespace YP02.Pages.Programs
                 tb_VersionPO.Text = programs.VersionPO; // Заполнение поля версии ПО
 
                 // Установка выбранного разработчика и оборудования на основе текущей программы
-                cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.Id).FirstOrDefault()?.Name;
-                cm_OborId.SelectedItem = oborudovanieContext.Oborudovanie.Where(x => x.Id == programs.Id).FirstOrDefault()?.Name;
+                cm_DeveloperId.SelectedItem = developersContext.Developers.Where(x => x.Id == programs.DeveloperId).FirstOrDefault()?.Name;
+                cm_OborId.SelectedItem = oborudovanieContext.Oborudovanie.Where(x => x.Id == programs.OborrId).FirstOrDefault()?.Name;
             }
 
             // Заполнение выпадающего списка разработчиков

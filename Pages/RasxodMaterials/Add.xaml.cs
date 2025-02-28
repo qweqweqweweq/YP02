@@ -41,9 +41,9 @@ namespace YP02.Pages.RasxodMaterials
                 tb_Des.Text = rasxodMaterials.Description;
                 tb_DatePost.Text = rasxodMaterials.DatePostupleniya.ToString("dd.MM.yyyy");
                 tb_Quantity.Text = rasxodMaterials.Quantity.ToString();
-                tb_responUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.Id).FirstOrDefault().FIO;
-                tb_timeResponUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.Id).FirstOrDefault().FIO;
-                tb_typeRasMat.SelectedItem = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == rasxodMaterials.Id).FirstOrDefault().Name;
+                tb_responUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.UserRespon).FirstOrDefault().FIO;
+                tb_timeResponUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.ResponUserTime).FirstOrDefault().FIO;
+                tb_typeRasMat.SelectedItem = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == rasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
             }
             foreach (var item in usersContext.Users)
             {
