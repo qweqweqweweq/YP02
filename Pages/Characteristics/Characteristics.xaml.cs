@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Characteristics
 {
@@ -20,9 +21,61 @@ namespace YP02.Pages.Characteristics
     /// </summary>
     public partial class Characteristics : Page
     {
+        public CharacteristicsContext characteristicsContext = new CharacteristicsContext();
+
         public Characteristics()
         {
             InitializeComponent();
+            parent.Children.Clear();
+            foreach (Models.Characteristics item in characteristicsContext.Characteristics)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
+        }
+
+        private void SortUp(object sender, RoutedEventArgs e)
+        {
+            var sortUp = characteristicsContext.Characteristics.OrderBy(x => x.Name);
+            parent.Children.Clear();
+
+            foreach (var program in sortUp)
+            {
+                parent.Children.Add(new Item(program, this));
+            }
+        }
+
+        private void SortDown(object sender, RoutedEventArgs e)
+        {
+            var sortDown = characteristicsContext.Characteristics.OrderByDescending(x => x.Name);
+            parent.Children.Clear();
+
+            foreach (var program in sortDown)
+            {
+                parent.Children.Add(new Item(program, this));
+            }
+        }
+
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Menu());
+        }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Characteristics.Add(this, null));
+        }
+
+        private void KeyDown_Search(object sender, KeyEventArgs e)
+        {
+            string searchText = search.Text.ToLower();
+            var result = characteristicsContext.Characteristics.Where(x =>
+                x.Name.ToLower().Contains(searchText)
+            );
+            parent.Children.Clear();
+            foreach (var item in result)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
     }
 }
