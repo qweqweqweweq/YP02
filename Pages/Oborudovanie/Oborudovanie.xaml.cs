@@ -28,7 +28,7 @@ namespace YP02.Pages.Oborudovanie
             parent.Children.Clear();
             foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
             {
-                parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this)); 
             }
         }
 
