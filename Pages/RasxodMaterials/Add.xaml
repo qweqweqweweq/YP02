@@ -320,7 +320,7 @@
         <ComboBox x:Name="tb_responUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,390,20,0" Background="White" BorderBrush="#0060AC" Style="{DynamicResource ComboBoxStyle1}"/>
         <Label Content="Временно-ответственный пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,185,20,0" Grid.Column="1"/>
         <ComboBox x:Name="tb_timeResponUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"/>
-        <Label Content="Тип расходного материала:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,255,20,0" Grid.Column="1"/>
+        <Label Content="Тип:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,255,20,0" Grid.Column="1"/>
         <ComboBox x:Name="tb_typeRasMat" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,287,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"/>
         <Label Content="Характеристики:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,322,20,0" Grid.Column="1"/>
         <ComboBox x:Name="tb_characters" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,355,20,0" Background="White" BorderBrush="#0060AC" Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"/>
