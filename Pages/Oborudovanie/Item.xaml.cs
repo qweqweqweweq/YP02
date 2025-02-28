@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using YP02.Context;
+using System.Drawing.Imaging;
 
 namespace YP02.Pages.Oborudovanie
 {
@@ -36,14 +39,15 @@ namespace YP02.Pages.Oborudovanie
             this.MainOborudovanie = MainOborudovanie;
             lb_Name.Content = Oborudovanie.Name;
             lb_invNum.Content = Oborudovanie.InventNumber;
-            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.Id).First().Name;
-            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.Id).First().FIO;
-            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.Id).First().FIO;
+            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).First().Name;
+            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).First().FIO;
+            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).First().FIO;
             lb_Price.Content = Oborudovanie.PriceObor;
-            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.Id).First().Name;
-            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.Id).First().Name;
-            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.Id).First().Name;
+            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).First().Name;
+            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).First().Name;
+            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).First().Name;
             lb_Comment.Content = Oborudovanie.Comments;
+            DisplayImage(Oborudovanie.Photo);
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)
@@ -66,6 +70,42 @@ namespace YP02.Pages.Oborudovanie
         private void Click_history(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor());
+        }
+
+        private void DisplayImage(byte[] imageData)
+        {
+            if (imageData != null && imageData.Length > 0)
+            {
+                try
+                {
+                    using (var ms = new MemoryStream(imageData))
+                    {
+                        var image = System.Drawing.Image.FromStream(ms);
+                        var bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        MemoryStream memoryStream = new MemoryStream();
+                        image.Save(memoryStream, ImageFormat.Png);
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+                        bitmapImage.StreamSource = memoryStream;
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapImage.EndInit();
+
+                        imgObor.Source = bitmapImage;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
+                    imgObor.Source = new BitmapImage(uri);
+
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
+                imgObor.Source = new BitmapImage(uri);
+            }
         }
     }
 }

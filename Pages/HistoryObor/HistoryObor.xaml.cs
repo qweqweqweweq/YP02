@@ -40,5 +40,10 @@ namespace YP02.Pages.HistoryObor
         {
 
         }
+
+        private void Add(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

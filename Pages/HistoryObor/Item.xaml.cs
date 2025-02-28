@@ -33,5 +33,15 @@ namespace YP02.Pages.HistoryObor
             lb_Date.Content = HistoryObor.Date.ToString();
             lb_Comment.Content = HistoryObor.Comment;
         }
+
+        private void Click_redact(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Click_remove(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

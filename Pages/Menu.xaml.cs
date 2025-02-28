@@ -64,7 +64,7 @@ namespace YP02.Pages
 
         private void OpenCharRMat(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new CharacteristicsMaterials.CharacteristicsMaterials());
+            MainWindow.init.OpenPages(new Characteristics.Characteristics());
         }
 
         private void OpenModType(object sender, RoutedEventArgs e)

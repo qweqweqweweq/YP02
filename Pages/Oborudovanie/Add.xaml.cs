@@ -137,7 +137,8 @@ namespace YP02.Pages.Oborudovanie
                     IdNapravObor = napravlenieContext.Napravlenie.Where(x => x.Name == tb_Direction.SelectedItem).First().Id,
                     IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id,
                     IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id,
-                    Comments = tb_Comment.Text
+                    Comments = tb_Comment.Text,
+                    Photo = oborudovanie.Photo
                 };
                 //
                 historyObor = new Models.HistoryObor();
@@ -160,6 +161,7 @@ namespace YP02.Pages.Oborudovanie
                 oborudovanie.IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id;
                 oborudovanie.IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id;
                 oborudovanie.Comments = tb_Comment.Text;
+                oborudovanie.Photo = oborudovanie.Photo;
                 //
                 historyObor = new Models.HistoryObor();
                 historyObor.IdUserr = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
@@ -187,8 +189,13 @@ namespace YP02.Pages.Oborudovanie
             {
                 try
                 {
-                    
-                    
+                    using (var fileStream = File.OpenRead(ofd.FileName))
+                    {
+                        MemoryStream memoryStream = new MemoryStream();
+                        fileStream.CopyTo(memoryStream);
+                        oborudovanie.Photo = memoryStream.ToArray();
+                    }
+
                 }
                 catch (Exception ex)
                 {
