@@ -27,10 +27,10 @@ namespace YP02.Pages.RasxodMaterials
         {
             InitializeComponent();
             parent.Children.Clear();
-            //foreach (Models.RasxodMaterials item in rasxodMaterialsContext.)
-            //{
-            //    parent.Children.Add(new Item(item, this));
-            //}
+            foreach (Models.RasxodMaterials item in rasxodMaterialsContext.RasxodMaterials)
+            {
+                parent.Children.Add(new Item(item, this));
+            }
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
@@ -42,7 +42,7 @@ namespace YP02.Pages.RasxodMaterials
             parent.Children.Clear();
             foreach (var item in result)
             {
-                //parent.Children.Add(new Item(item, this));
+                parent.Children.Add(new Item(item, this));
             }
         }
 
@@ -53,17 +53,29 @@ namespace YP02.Pages.RasxodMaterials
 
         private void SortUp(object sender, RoutedEventArgs e)
         {
+            var sortUp = rasxodMaterialsContext.RasxodMaterials.OrderBy(x => x.Name);
+            parent.Children.Clear();
 
+            foreach (var auditories in sortUp)
+            {
+                parent.Children.Add(new Item(auditories, this)); 
+            }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
+            var sortDown = rasxodMaterialsContext.RasxodMaterials.OrderByDescending(x => x.Name);
+            parent.Children.Clear(); 
 
+            foreach (var auditories in sortDown)
+            {
+                parent.Children.Add(new Item(auditories, this)); 
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)
         {
-            //MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(this, null));
+            MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(this, null));
         }
     }
 }

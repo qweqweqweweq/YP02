@@ -15,7 +15,7 @@ namespace YP02.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime DatePostupleniya { get; set; }
-        public Blob Photo { get; set; }
+        public byte[] Photo { get; set; }
         public double Quantity { get; set; }
         public int UserRespon { get; set; }
         public int ResponUserTime { get; set; }
