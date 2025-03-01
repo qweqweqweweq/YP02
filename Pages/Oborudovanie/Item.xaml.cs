@@ -69,7 +69,8 @@ namespace YP02.Pages.Oborudovanie
 
         private void Click_history(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor());
+            // Переход на страницу истории, передавая Id оборудования
+            MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
         }
 
         private void DisplayImage(byte[] imageData)
