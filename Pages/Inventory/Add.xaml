@@ -302,11 +302,13 @@
         <Label Content="Наименование:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,80,20,0"/>
         <TextBox x:Name="tb_Name" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,110,20,0" BorderBrush="#0060AC" Style="{DynamicResource TextBoxStyle1}"/>
         <Label Content="Дата начала инвентаризации:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,150,20,0"/>
-        <TextBox x:Name="tb_DateStart" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,180,20,0" BorderBrush="#0060AC" Style="{DynamicResource TextBoxStyle1}"/>
+        <DatePicker x:Name="tb_DateStart" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,180,20,0" BorderBrush="#0060AC"/>
         <Label Content="Дата окончания инвентаризации:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,220,20,0"/>
-        <TextBox x:Name="tb_DateEnd" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" BorderBrush="#0060AC" Style="{DynamicResource TextBoxStyle1}"/>
-        <Label Content="Пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,290,20,0"/>
-        <ComboBox x:Name="cb_IdUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,320,20,0" Background="White" BorderBrush="#0060AC" Style="{DynamicResource ComboBoxStyle1}"/>
+        <DatePicker x:Name="tb_DateEnd" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,250,20,0" BorderBrush="#0060AC"/>
+        <Label Content="Оборудование:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,288,20,0"/>
+        <ComboBox x:Name="cb_IdOb" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,318,20,0" Background="White" BorderBrush="#0060AC" Style="{DynamicResource ComboBoxStyle1}"/>
+        <Label Content="Пользователь:" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,353,20,0"/>
+        <ComboBox x:Name="cb_IdUser" Height="30" FontSize="15" VerticalAlignment="Top" Margin="20,383,20,0" Background="White" BorderBrush="#0060AC" Style="{DynamicResource ComboBoxStyle1}"/>
         <Button x:Name="text2" Style="{DynamicResource ButtonStyle1}" Content="Добавить" Background="#0060AC" Foreground="White" Margin="20,20,140,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Redact"/>
         <Button Style="{DynamicResource ButtonStyle1}" Content="Назад"  Background="#9EA1A2" Foreground="White" Margin="20,20,20,20" VerticalAlignment="Bottom" Height="35" FontSize="15" HorizontalAlignment="Right" Width="105" Click="Click_Cancel_Redact"/>
     </Grid>

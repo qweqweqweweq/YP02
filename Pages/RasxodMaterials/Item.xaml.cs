@@ -103,15 +103,5 @@ namespace YP02.Pages.RasxodMaterials
                 imgObor.Source = new BitmapImage(uri);
             }
         }
-
-        private void Click_redact(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Click_remove(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

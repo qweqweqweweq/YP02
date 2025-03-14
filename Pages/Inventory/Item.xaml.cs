@@ -29,6 +29,7 @@ namespace YP02.Pages.Inventory
 
         // Контекст для работы с пользователями
         UsersContext usersContext = new UsersContext();
+        OborudovanieContext obContext = new OborudovanieContext();
 
         // Конструктор класса, который принимает модель инвентаризации и основную страницу инвентаризации
         public Item(Models.Inventory inventory, Inventory MainInventory)
@@ -40,9 +41,10 @@ namespace YP02.Pages.Inventory
 
             // Заполнение элементов управления данными инвентаризации
             lb_Name.Content = inventory.Name; // Установка имени инвентаризации
-            lb_DateStart.Content = inventory.StartDate; // Установка даты начала инвентаризации
-            lb_DateEnd.Content = inventory.EndDate; // Установка даты окончания инвентаризации
-                                                    // Установка ответственного пользователя по ID
+            lb_DateStart.Content = "Дата начала инвентаризации: " + inventory.StartDate.ToString("dd.MM.yyyy"); // Установка даты начала инвентаризации
+            lb_DateEnd.Content = "Дата окончания инвентаризации: " + inventory.EndDate.ToString("dd.MM.yyyy"); // Установка даты окончания инвентаризации
+                                                                                                               // Установка ответственного пользователя по ID
+            lb_IdOborrud.Content = obContext.Oborudovanie.Where(x => x.Id == inventory.IdOborrud).FirstOrDefault()?.Name;
             lb_UserId.Content = usersContext.Users.Where(x => x.Id == inventory.UserId).FirstOrDefault()?.FIO; // Исправлено на inventory.UserId
         }
 

@@ -58,13 +58,29 @@ namespace YP02.Pages.Inventory
         // Обработчик события нажатия кнопки "Сортировать по возрастанию"
         private void SortUp(object sender, RoutedEventArgs e)
         {
-            // Здесь должна быть логика сортировки инвентаризаций по возрастанию
+            // Сортировка инвентаризаций по имени в порядке возрастания
+            var sortUp = InventoryContext.Inventory.OrderBy(x => x.Name);
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением отсортированных инвентаризаций
+
+            // Добавление отсортированных инвентаризаций в родительский контейнер
+            foreach (var inventorys in sortUp)
+            {
+                parent.Children.Add(new Item(inventorys, this)); // Создание элемента Item для каждой отсортированной инвентаризации
+            }
         }
 
         // Обработчик события нажатия кнопки "Сортировать по убыванию"
         private void SortDown(object sender, RoutedEventArgs e)
         {
-            // Здесь должна быть логика сортировки инвентаризаций по убыванию
+            // Сортировка инвентаризаций по имени в порядке убывания
+            var sortDown = InventoryContext.Inventory.OrderByDescending(x => x.Name);
+            parent.Children.Clear(); // Очистка родительского контейнера перед добавлением отсортированных инвентаризаций
+
+            // Добавление отсортированных инвентаризаций в родительский контейнер
+            foreach (var inventorys in sortDown)
+            {
+                parent.Children.Add(new Item(inventorys, this)); // Создание элемента Item для каждой отсортированной инвентаризации
+            }
         }
 
         // Обработчик события нажатия кнопки "Назад"

@@ -69,6 +69,7 @@
                 <Label x:Name="lb_Name" Content="Инвентаризация" Height="40" FontSize="20" FontWeight="Bold"/>
                 <Label x:Name="lb_DateStart" Content="Дата начала инвентаризации" Height="30" FontSize="15"/>
                 <Label x:Name="lb_DateEnd" Content="Дата окончания инвентаризации" Height="30" FontSize="15"/>
+                <Label x:Name="lb_IdOborrud" Content="Оборудование" Height="30" FontSize="15"/>
                 <Label x:Name="lb_UserId" Content="Пользователь" Height="30" FontSize="15"/>
             </StackPanel>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">

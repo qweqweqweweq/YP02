@@ -29,6 +29,7 @@ namespace YP02.Pages.Inventory
 
         // Контекст для работы с пользователями
         UsersContext usersContext = new UsersContext();
+        OborudovanieContext obContext = new OborudovanieContext();
 
         // Конструктор класса, который принимает основную страницу инвентаризации и (опционально) инвентаризацию для редактирования
         public Add(Inventory MainInventory, Models.Inventory inventory = null)
@@ -44,9 +45,15 @@ namespace YP02.Pages.Inventory
                 text1.Content = "Изменение инвентаризации"; // Установка заголовка
                 text2.Content = "Изменить"; // Изменение текста кнопки
                 tb_Name.Text = inventory.Name; // Заполнение поля имени инвентаризации
-                tb_DateStart.Text = inventory.StartDate; // Заполнение поля даты начала инвентаризации
-                tb_DateEnd.Text = inventory.EndDate; // Заполнение поля даты окончания инвентаризации
+                tb_DateStart.Text = inventory.StartDate.ToString("dd.MM.yyyy"); // Заполнение поля даты начала инвентаризации
+                tb_DateEnd.Text = inventory.EndDate.ToString("dd.MM.yyyy"); // Заполнение поля даты окончания инвентаризации
+                cb_IdOb.SelectedItem = obContext.Oborudovanie.Where(x => x.Id == inventory.IdOborrud).FirstOrDefault()?.Name;
                 cb_IdUser.SelectedItem = usersContext.Users.Where(x => x.Id == inventory.UserId).FirstOrDefault()?.FIO; // Установка выбранного пользователя по ID
+            }
+
+            foreach (var item in obContext.Oborudovanie)
+            {
+                cb_IdOb.Items.Add(item.Name);
             }
 
             // Заполнение выпадающего списка пользователей
@@ -65,14 +72,19 @@ namespace YP02.Pages.Inventory
                 MessageBox.Show("Введите наименование инвентаризации"); // Сообщение об ошибке, если поле пустое
                 return; // Прерывание выполнения метода
             }
-            if (string.IsNullOrEmpty(tb_DateStart.Text))
+            if (tb_DateStart.SelectedDate == null)
             {
                 MessageBox.Show("Введите дату начала инвентаризации"); // Сообщение об ошибке, если поле пустое
                 return; // Прерывание выполнения метода
             }
-            if (string.IsNullOrEmpty(tb_DateEnd.Text))
+            if (tb_DateEnd.SelectedDate == null)
             {
                 MessageBox.Show("Выберите дату окончания инвентаризации"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
+            }
+            if (cb_IdOb.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите оборудование для инвентаризации");
                 return; // Прерывание выполнения метода
             }
             if (cb_IdUser.SelectedItem == null)
@@ -81,13 +93,17 @@ namespace YP02.Pages.Inventory
                 return; // Прерывание выполнения метода
             }
 
+            DateTime startDate = tb_DateStart.SelectedDate.Value;
+            DateTime endDate = tb_DateEnd.SelectedDate.Value;
+
             // Если инвентаризация не была передана (т.е. мы добавляем новую)
             if (inventory == null)
             {
                 inventory = new Models.Inventory(); // Создание новой модели инвентаризации
                 inventory.Name = tb_Name.Text; // Установка имени инвентаризации
-                inventory.StartDate = tb_DateStart.Text; // Установка даты начала инвентаризации
-                inventory.EndDate = tb_DateEnd.Text; // Установка даты окончания инвентаризации
+                inventory.StartDate = startDate; // Установка даты начала инвентаризации
+                inventory.EndDate = endDate; // Установка даты окончания инвентаризации
+                inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
                 inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Получение ID пользователя по имени
                 MainInventory.InventoryContext.Inventory.Add(inventory); // Добавление новой инвентаризации в контекст
             }
@@ -95,8 +111,9 @@ namespace YP02.Pages.Inventory
             {
                 // Обновление данных существующей инвентаризации
                 inventory.Name = tb_Name.Text; // Обновление имени инвентаризации
-                inventory.StartDate = tb_DateStart.Text; // Обновление даты начала инвентаризации
-                inventory.EndDate = tb_DateEnd.Text; // Обновление даты окончания инвентаризации
+                inventory.StartDate = startDate; // Обновление даты начала инвентаризации
+                inventory.EndDate = endDate; // Обновление даты окончания инвентаризации
+                inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
                 inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Обновление ID пользователя
             }
 
