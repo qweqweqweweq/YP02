@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
+using YP02.Models;
 
 namespace YP02.Pages.NetworkSettings
 {
@@ -20,9 +22,113 @@ namespace YP02.Pages.NetworkSettings
     /// </summary>
     public partial class Add : Page
     {
-        public Add()
+        public NetworkSettings MainNetworkSettings;
+
+        public Models.NetworkSettings networkSettings;
+
+        OborudovanieContext obContext = new OborudovanieContext();
+
+        public Add(NetworkSettings MainNetworkSettings, Models.NetworkSettings networkSettings = null)
         {
             InitializeComponent();
+            this.MainNetworkSettings = MainNetworkSettings;
+            this.networkSettings = networkSettings;
+
+            if (networkSettings != null)
+            {
+                text1.Content = "Изменение сетевых настроек"; // Установка заголовка
+                text2.Content = "Изменить"; // Изменение текста кнопки
+                tb_IpAddress.Text = networkSettings.IpAddress; 
+                tb_Mask.Text = networkSettings.SubnetMask; 
+                tb_MainShluz.Text = networkSettings.MainGateway; 
+                tb_DNSServers.Text = networkSettings.DNSServer1;
+                tb_DNSServers1.Text = networkSettings.DNSServer2;
+                tb_DNSServers2.Text = networkSettings.DNSServer3;
+                tb_DNSServers3.Text = networkSettings.DNSServer4;
+                cb_IdOb.SelectedItem = obContext.Oborudovanie.Where(x => x.Id == networkSettings.OborudovanieId).FirstOrDefault()?.Name;
+            }
+
+            foreach (var item in obContext.Oborudovanie)
+            {
+                cb_IdOb.Items.Add(item.Name);
+            }
+        }
+
+        private void Click_Redact(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tb_IpAddress.Text))
+            {
+                MessageBox.Show("Введите IP-адрес"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_Mask.Text))
+            {
+                MessageBox.Show("Введите маску подсети"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_MainShluz.Text))
+            {
+                MessageBox.Show("Введите главный шлюз"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_DNSServers.Text))
+            {
+                MessageBox.Show("Введите DNS-Server 1");
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_DNSServers1.Text))
+            {
+                MessageBox.Show("Введите DNS-Server 2");
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_DNSServers2.Text))
+            {
+                MessageBox.Show("Введите DNS-Server 3");
+                return; // Прерывание выполнения метода
+            }
+            if (string.IsNullOrEmpty(tb_DNSServers3.Text))
+            {
+                MessageBox.Show("Введите DNS-Server 4");
+                return; // Прерывание выполнения метода
+            }
+            if (cb_IdOb.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите оборудование");
+                return; // Прерывание выполнения метода
+            }
+
+            if (networkSettings == null)
+            {
+                networkSettings = new Models.NetworkSettings();
+                networkSettings.IpAddress = tb_IpAddress.Text;
+                networkSettings.SubnetMask = tb_Mask.Text;
+                networkSettings.MainGateway = tb_MainShluz.Text;
+                networkSettings.DNSServer1 = tb_DNSServers.Text;
+                networkSettings.DNSServer2 = tb_DNSServers1.Text;
+                networkSettings.DNSServer3 = tb_DNSServers2.Text;
+                networkSettings.DNSServer4 = tb_DNSServers3.Text;
+                networkSettings.OborudovanieId = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
+                MainNetworkSettings.NetworkSettingsContext.NetworkSettings.Add(networkSettings); 
+            }
+            else 
+            {
+                networkSettings.IpAddress = tb_IpAddress.Text;
+                networkSettings.SubnetMask = tb_Mask.Text;
+                networkSettings.MainGateway = tb_MainShluz.Text;
+                networkSettings.DNSServer1 = tb_DNSServers.Text;
+                networkSettings.DNSServer2 = tb_DNSServers1.Text;
+                networkSettings.DNSServer3 = tb_DNSServers2.Text;
+                networkSettings.DNSServer4 = tb_DNSServers3.Text;
+                networkSettings.OborudovanieId = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
+            }
+
+            MainNetworkSettings.NetworkSettingsContext.SaveChanges();
+            MainWindow.init.OpenPages(new Pages.NetworkSettings.NetworkSettings());
+        }
+
+        private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.NetworkSettings.NetworkSettings());
         }
     }
 }
