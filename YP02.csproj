@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Fonts\Montserrat-VariableFont_wght.ttf" />
+    <None Remove="Images\NoneImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <Resource Include="Fonts\Montserrat-VariableFont_wght.ttf" />
+    <Resource Include="Images\NoneImage.png" />
   </ItemGroup>
 
 </Project>

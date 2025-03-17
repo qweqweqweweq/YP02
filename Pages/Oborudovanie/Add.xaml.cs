@@ -2,18 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Win32;
 using YP02.Context;
 
@@ -32,6 +23,8 @@ namespace YP02.Pages.Oborudovanie
         StatusContext statusContext = new();
         ViewModelContext viewModelContext = new();
 
+        private byte[] tempPhoto = null;
+
         //
         public Models.HistoryObor historyObor;
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
@@ -39,42 +32,33 @@ namespace YP02.Pages.Oborudovanie
             InitializeComponent();
             this.MainOborudovanie = MainOborudovanie;
             this.oborudovanie = oborudovanie;
+
             if (oborudovanie != null)
             {
-                text1.Content = "Изменение обороудования";
+                text1.Content = "Изменение оборудования";
                 text2.Content = "Изменить";
                 tb_Name.Text = oborudovanie.Name;
                 tb_invNum.Text = oborudovanie.InventNumber;
-                tb_Audience.Text = auditoriesContext.Auditories.Where(x => x.Id == oborudovanie.IdClassroom).FirstOrDefault().Name;
-                tb_User.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.IdResponUser).FirstOrDefault().FIO;
-                tb_tempUser.SelectedItem = usersContext.Users.Where(x => x.Id == oborudovanie.IdTimeResponUser).FirstOrDefault().FIO;
+                tb_Audience.SelectedItem = auditoriesContext.Auditories.FirstOrDefault(x => x.Id == oborudovanie.IdClassroom)?.Name;
+                tb_User.SelectedItem = usersContext.Users.FirstOrDefault(x => x.Id == oborudovanie.IdResponUser)?.FIO;
+                tb_tempUser.SelectedItem = usersContext.Users.FirstOrDefault(x => x.Id == oborudovanie.IdTimeResponUser)?.FIO;
                 tb_Price.Text = oborudovanie.PriceObor;
-                tb_Direction.SelectedItem = napravlenieContext.Napravlenie.Where(x => x.Id == oborudovanie.IdNapravObor).FirstOrDefault().Name;
-                tb_Status.SelectedItem = statusContext.Status.Where(x => x.Id == oborudovanie.IdStatusObor).FirstOrDefault().Name;
-                tb_Model.SelectedItem = viewModelContext.ViewModel.Where(x => x.Id == oborudovanie.IdModelObor).FirstOrDefault().Name;
+                tb_Direction.SelectedItem = napravlenieContext.Napravlenie.FirstOrDefault(x => x.Id == oborudovanie.IdNapravObor)?.Name;
+                tb_Status.SelectedItem = statusContext.Status.FirstOrDefault(x => x.Id == oborudovanie.IdStatusObor)?.Name;
+                tb_Model.SelectedItem = viewModelContext.ViewModel.FirstOrDefault(x => x.Id == oborudovanie.IdModelObor)?.Name;
                 tb_Comment.Text = oborudovanie.Comments;
+
             }
-            foreach (var item in auditoriesContext.Auditories)
-            {
-                tb_Audience.Items.Add(item.Name);
-            }
+
+            foreach (var item in auditoriesContext.Auditories) tb_Audience.Items.Add(item.Name);
             foreach (var item in usersContext.Users)
             {
                 tb_User.Items.Add(item.FIO);
                 tb_tempUser.Items.Add(item.FIO);
             }
-            foreach (var item in napravlenieContext.Napravlenie)
-            {
-                tb_Direction.Items.Add(item.Name);
-            }
-            foreach (var item in statusContext.Status)
-            {
-                tb_Status.Items.Add(item.Name);
-            }
-            foreach (var item in viewModelContext.ViewModel)
-            {
-                tb_Model.Items.Add(item.Name);
-            }
+            foreach (var item in napravlenieContext.Napravlenie) tb_Direction.Items.Add(item.Name);
+            foreach (var item in statusContext.Status) tb_Status.Items.Add(item.Name);
+            foreach (var item in viewModelContext.ViewModel) tb_Model.Items.Add(item.Name);
         }
 
         private void Click_Redact(object sender, RoutedEventArgs e)
@@ -124,52 +108,34 @@ namespace YP02.Pages.Oborudovanie
                 MessageBox.Show("Выберите модель");
                 return;
             }
+
             if (oborudovanie == null)
             {
-                oborudovanie = new Models.Oborudovanie
-                {
-                    Name = tb_Name.Text,
-                    InventNumber = tb_invNum.Text,
-                    IdClassroom = auditoriesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id,
-                    IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id,
-                    IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id,
-                    PriceObor = tb_Price.Text,
-                    IdNapravObor = napravlenieContext.Napravlenie.Where(x => x.Name == tb_Direction.SelectedItem).First().Id,
-                    IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id,
-                    IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id,
-                    Comments = tb_Comment.Text,
-                    Photo = oborudovanie.Photo
-                };
-                //
-                historyObor = new Models.HistoryObor();
-                historyObor.IdUserr = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
-                historyObor.IdObor = oborudovanie.Id;
-                historyObor.Date = DateTime.Now;
-                historyObor.Comment = tb_Comment.Text;
-                //
+                oborudovanie = new Models.Oborudovanie();
+            }
+
+            oborudovanie.Name = tb_Name.Text;
+            oborudovanie.InventNumber = tb_invNum.Text;
+            oborudovanie.IdClassroom = auditoriesContext.Auditories.First(x => x.Name == tb_Audience.SelectedItem).Id;
+            oborudovanie.IdResponUser = usersContext.Users.First(x => x.FIO == tb_User.SelectedItem).Id;
+            oborudovanie.IdTimeResponUser = usersContext.Users.First(x => x.FIO == tb_tempUser.SelectedItem).Id;
+            oborudovanie.PriceObor = tb_Price.Text;
+            oborudovanie.IdNapravObor = napravlenieContext.Napravlenie.First(x => x.Name == tb_Direction.SelectedItem).Id;
+            oborudovanie.IdStatusObor = statusContext.Status.First(x => x.Name == tb_Status.SelectedItem).Id;
+            oborudovanie.IdModelObor = viewModelContext.ViewModel.First(x => x.Name == tb_Model.SelectedItem).Id;
+            oborudovanie.Comments = tb_Comment.Text;
+
+            // Если фотография не была загружена, оставляем старую
+            if (tempPhoto != null)
+            {
+                oborudovanie.Photo = tempPhoto;
+            }
+
+            if (oborudovanie.Id == 0)
+            {
                 MainOborudovanie.OborudovanieContext.Oborudovanie.Add(oborudovanie);
             }
-            else
-            {
-                oborudovanie.Name = tb_Name.Text;
-                oborudovanie.InventNumber = tb_invNum.Text;
-                oborudovanie.IdClassroom = auditoriesContext.Auditories.Where(x => x.Name == tb_Audience.SelectedItem).First().Id;
-                oborudovanie.IdResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem).First().Id;
-                oborudovanie.IdTimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
-                oborudovanie.PriceObor = tb_Price.Text;
-                oborudovanie.IdNapravObor = napravlenieContext.Napravlenie.Where(x => x.Name == tb_Direction.SelectedItem).First().Id;
-                oborudovanie.IdStatusObor = statusContext.Status.Where(x => x.Name == tb_Status.SelectedItem).First().Id;
-                oborudovanie.IdModelObor = viewModelContext.ViewModel.Where(x => x.Name == tb_Model.SelectedItem).First().Id;
-                oborudovanie.Comments = tb_Comment.Text;
-                oborudovanie.Photo = oborudovanie.Photo;
-                //
-                historyObor = new Models.HistoryObor();
-                historyObor.IdUserr = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem).First().Id;
-                historyObor.IdObor = oborudovanie.Id;
-                historyObor.Date = DateTime.Now;
-                historyObor.Comment = tb_Comment.Text;
-                //
-            }
+
             MainOborudovanie.OborudovanieContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());
         }
@@ -185,19 +151,18 @@ namespace YP02.Pages.Oborudovanie
             {
                 Filter = "Image Files (*.jpg;*.jpeg;*.png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
             };
+
             if (ofd.ShowDialog() == true)
             {
                 try
                 {
-                    oborudovanie = new Models.Oborudovanie();
                     using (var fileStream = File.OpenRead(ofd.FileName))
                     {
                         MemoryStream memoryStream = new MemoryStream();
                         fileStream.CopyTo(memoryStream);
-                        oborudovanie.Photo = memoryStream.ToArray();
+                        tempPhoto = memoryStream.ToArray();
                     }
                     photobut.Content = "Фото выбрано";
-
                 }
                 catch (Exception ex)
                 {

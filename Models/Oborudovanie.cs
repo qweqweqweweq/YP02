@@ -13,7 +13,7 @@ namespace YP02.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] Photo { get; set; }
+        public byte[]? Photo { get; set; }
         public string InventNumber { get; set; }
         public int IdClassroom { get; set; }
         public int IdResponUser { get; set; }

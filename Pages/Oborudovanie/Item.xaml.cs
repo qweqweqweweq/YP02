@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using YP02.Context;
-using System.Drawing.Imaging;
+using System.Diagnostics;
 
 namespace YP02.Pages.Oborudovanie
 {
@@ -75,38 +65,35 @@ namespace YP02.Pages.Oborudovanie
 
         private void DisplayImage(byte[] imageData)
         {
-            if (imageData != null && imageData.Length > 0)
+            try
             {
-                try
+                if (imageData != null && imageData.Length > 0)
                 {
-                    using (var ms = new MemoryStream(imageData))
+                    using (MemoryStream ms = new MemoryStream(imageData))
                     {
-                        var image = System.Drawing.Image.FromStream(ms);
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        MemoryStream memoryStream = new MemoryStream();
-                        image.Save(memoryStream, ImageFormat.Png);
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        bitmapImage.StreamSource = memoryStream;
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.EndInit();
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = ms;
+                        bitmap.EndInit();
 
-                        imgObor.Source = bitmapImage;
+                        imgObor.Source = bitmap;
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                    imgObor.Source = new BitmapImage(uri);
-
-                    Debug.WriteLine(ex.Message);
+                    SetDefaultImage();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                imgObor.Source = new BitmapImage(uri);
+                Debug.WriteLine($"Ошибка загрузки изображения: {ex.Message}");
+                SetDefaultImage();
             }
+        }
+        private void SetDefaultImage()
+        {
+            imgObor.Source = new BitmapImage(new Uri("pack://application:,,,/Images/NoneImage.png"));
         }
     }
 }
