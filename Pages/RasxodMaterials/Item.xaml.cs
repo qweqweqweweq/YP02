@@ -29,6 +29,7 @@ namespace YP02.Pages.RasxodMaterials
         UsersContext usersContext = new UsersContext();
         TypeCharacteristicsContext typeCharacteristicsContext = new TypeCharacteristicsContext();
         CharacteristicsContext characteristicsContext = new CharacteristicsContext();
+        ValueCharacteristicsContext valueCharacteristicsContext = new ValueCharacteristicsContext();
 
         public Item(Models.RasxodMaterials RasxodMaterials, RasxodMaterials MainRasxodMaterials)
         {
@@ -37,12 +38,13 @@ namespace YP02.Pages.RasxodMaterials
             this.MainRasxodMaterials = MainRasxodMaterials;
             lb_Name.Content = RasxodMaterials.Name;
             lb_desc.Content = "Описание: " + RasxodMaterials.Description;
-            lb_posDate.Content = "Дата поступления: " + RasxodMaterials.DatePostupleniya;
-            lb_kolvo.Content = "Количество: " + RasxodMaterials.Quantity + " штук";
+            lb_posDate.Content = "Дата поступления: " + RasxodMaterials.DatePostupleniya.ToString("dd.MM.yyyy");
+            lb_kolvo.Content = "Количество: " + RasxodMaterials.Quantity;
             lb_userResp.Content = "Ответственный: " + usersContext.Users.Where(x => x.Id == RasxodMaterials.UserRespon).FirstOrDefault().FIO;
             lb_userTimeResp.Content = "Временно-ответственный: " + usersContext.Users.Where(x => x.Id == RasxodMaterials.ResponUserTime).FirstOrDefault().FIO;
-            lb_type.Content = "Тип: " + typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == RasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
+            lb_type.Content = "Тип расходника: " + typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == RasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
             lb_charact.Content = "Характеристика: " + characteristicsContext.Characteristics.Where(x => x.Id == RasxodMaterials.Characteristics).FirstOrDefault().Name;
+            lb_valueCharact.Content = "Значение характеристики: " + valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Id == RasxodMaterials.IdValue).FirstOrDefault().Znachenie;
             DisplayImage(RasxodMaterials.Photo);
         }
 

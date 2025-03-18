@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="YP02.Pages.RasxodMaterials.Item"
+﻿<UserControl x:Class="YP02.Pages.ValueCharacteristics.Item"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:YP02.Pages.RasxodMaterials"
+             xmlns:local="clr-namespace:YP02.Pages.ValueCharacteristics"
              mc:Ignorable="d" FontFamily="/Fonts/#Montserrat">
     <UserControl.Resources>
         <Style x:Key="FocusVisual">
@@ -62,25 +62,15 @@
     <Border CornerRadius="10" Background="White" Margin="10" BorderBrush="#0060AC" BorderThickness="1">
         <Grid Margin="10,5,10,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="530"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel VerticalAlignment="Center">
-                <Image x:Name="imgObor" Height="100" Width="100"/>
+                <Label x:Name="lb_Value" Content="Значение" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label x:Name="lb_RasxMat" Content="Расходный материал" Height="30" FontSize="15"/>
+                <Label x:Name="lb_Charact" Content="Характеристика" Height="30" FontSize="15"/>
             </StackPanel>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Label x:Name="lb_Name" Content="Расходные материалы" Height="40" FontSize="20" FontWeight="Bold"/>
-                <Label x:Name="lb_desc" Content="Описание" Height="30" FontSize="15"/>
-                <Label x:Name="lb_posDate" Content="Дата поступления" Height="30" FontSize="15"/>
-                <Label x:Name="lb_kolvo" Content="Количество" Height="30" FontSize="15"/>
-                <Label x:Name="lb_userResp" Content="Ответственный пользователь" Height="30" FontSize="15"/>
-                <Label x:Name="lb_userTimeResp" Content="Временно-ответственный пользователь" Height="30" FontSize="15"/>
-                <Label x:Name="lb_type" Content="Тип расходника" Height="30" FontSize="15"/>
-                <Label x:Name="lb_charact" Content="Характеристика" Height="30" FontSize="15"/>
-                <Label x:Name="lb_valueCharact" Content="Значение характеристики" Height="30" FontSize="15"/>
-            </StackPanel>
-            <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <Button Style="{DynamicResource ButtonStyle1}" Click="Click_redact" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,10,10,5" Background="#0060AC" Foreground="White"/>
                 <Button Style="{DynamicResource ButtonStyle1}" Click="Click_remove" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,10" Background="#E41613" Foreground="White"/>
             </StackPanel>

@@ -136,15 +136,17 @@
                     </StackPanel>
                     <Button Click="OpenProgr" Style="{DynamicResource ButtonStyle1}" Content="Программы" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                     <Button Click="OpenDevel" Style="{DynamicResource ButtonStyle1}" Content="Разработчики" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
+                    <Button Click="OpenUsers" Style="{DynamicResource ButtonStyle1}" Content="Пользователи" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                 </StackPanel>
                 <StackPanel>
                     <Button Click="OpenRMat" Style="{DynamicResource ButtonStyle1}" Content="Расходные материалы" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,0" BorderBrush="White"/>
                     <Button Click="OpenCharRMat" Style="{DynamicResource ButtonStyle2}" Content="Характеристики" Height="35" Width="200" FontSize="18" Background="#FFDADBDC" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="#9EA1A2"/>
                     <Button Click="OpenTypeChar" Style="{DynamicResource ButtonStyle2}" Content="Тип характеристики" Height="35" Width="200" FontSize="18" Background="#FFDADBDC" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="#9EA1A2"/>
+                    <Button Click="OpenValueChar" Style="{DynamicResource ButtonStyle2}" Content="Значение характеристики" Height="35" Width="254" FontSize="18" Background="#FFDADBDC" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="#9EA1A2"/>
                     <Button Click="OpenModType" Style="{DynamicResource ButtonStyle1}" Content="Вид модели" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                     <Button Click="OpenInvent" Style="{DynamicResource ButtonStyle1}" Content="Инвентаризация" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                     <Button Click="OpenSettings" Style="{DynamicResource ButtonStyle1}" Content="Сетевые настройки" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
-                    <Button Click="OpenUsers" Style="{DynamicResource ButtonStyle1}" Content="Пользователи" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
+                    
                 </StackPanel>
             </StackPanel>
         </Border>

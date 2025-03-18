@@ -27,8 +27,8 @@ namespace YP02.Pages.RasxodMaterials
         public Models.RasxodMaterials rasxodMaterials;
         UsersContext usersContext = new UsersContext();
         CharacteristicsContext characteristicsContext = new CharacteristicsContext();
-        RasxodMaterialsContext rasxodMaterialsContext = new RasxodMaterialsContext();
         TypeCharacteristicsContext typeCharacteristicsContext = new TypeCharacteristicsContext();
+        ValueCharacteristicsContext valueCharacteristicsContext = new ValueCharacteristicsContext();
 
         public Add(RasxodMaterials MainRasxodMaterials, Models.RasxodMaterials rasxodMaterials = null)
         {
@@ -47,6 +47,7 @@ namespace YP02.Pages.RasxodMaterials
                 tb_timeResponUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.ResponUserTime).FirstOrDefault().FIO;
                 tb_typeRasMat.SelectedItem = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == rasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
                 tb_characters.SelectedItem = characteristicsContext.Characteristics.Where(x => x.Id == rasxodMaterials.Characteristics).FirstOrDefault().Name;
+                tb_valueChar.SelectedItem = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Id == rasxodMaterials.IdValue).FirstOrDefault().Znachenie;
             }
             foreach (var item in usersContext.Users)
             {
@@ -60,6 +61,10 @@ namespace YP02.Pages.RasxodMaterials
             foreach (var item in characteristicsContext.Characteristics)
             {
                 tb_characters.Items.Add(item.Name);
+            }
+            foreach (var item in valueCharacteristicsContext.ValueCharacteristics)
+            {
+                tb_valueChar.Items.Add(item.Znachenie);
             }
         }
 
@@ -129,37 +134,44 @@ namespace YP02.Pages.RasxodMaterials
             }
             if (tb_characters.SelectedItem == null)
             {
-                MessageBox.Show("Выберите характеристики расходного материала");
+                MessageBox.Show("Выберите характеристику");
                 return;
             }
+            if (tb_valueChar.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите значение характеристики");
+                return;
+            }
+
+            DateTime datePos = tb_DatePost.SelectedDate.Value;
+
             if (rasxodMaterials == null)
             {
-                rasxodMaterials = new Models.RasxodMaterials
-                {
-                    Name = tb_Name.Text,
-                    Description = tb_Des.Text,
-                    DatePostupleniya = DateTime.Parse(tb_DatePost.Text),
-                    Quantity = double.Parse(tb_Quantity.Text),
-                    UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id,
-                    ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id,
-                    Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem).First().Id,
-                    CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_characters.SelectedItem).First().Id,
-                    Photo = rasxodMaterials.Photo
-                };
-                MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
-                MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
-            }
-            else
-            {
+                rasxodMaterials = new Models.RasxodMaterials();
                 rasxodMaterials.Name = tb_Name.Text;
                 rasxodMaterials.Description = tb_Des.Text;
-                rasxodMaterials.DatePostupleniya = DateTime.Parse(tb_DatePost.Text);
+                rasxodMaterials.DatePostupleniya = datePos;
                 rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
                 rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id;
                 rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id;
                 rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem).First().Id;
                 rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem).First().Id;
                 rasxodMaterials.Photo = rasxodMaterials.Photo;
+                rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem).First().Id;
+                MainRasxodMaterials.rasxodMaterialsContext.RasxodMaterials.Add(rasxodMaterials);            
+            }
+            else
+            {
+                rasxodMaterials.Name = tb_Name.Text;
+                rasxodMaterials.Description = tb_Des.Text;
+                rasxodMaterials.DatePostupleniya = datePos;
+                rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
+                rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem.ToString()).First().Id;
+                rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem.ToString()).First().Id;
+                rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem.ToString()).First().Id;
+                rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem.ToString()).First().Id;
+                rasxodMaterials.Photo = rasxodMaterials.Photo;
+                rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem.ToString()).First().Id;
             }
             MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
             MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());

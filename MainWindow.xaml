@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YP02"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="900" MinHeight="750" MinWidth="1100" FontFamily="/Fonts/#Montserrat" WindowStartupLocation="CenterScreen">
+        Title="Система инвентаризации" Height="550" Width="900" MinHeight="750" MinWidth="1100" FontFamily="/Fonts/#Montserrat" WindowStartupLocation="CenterScreen">
     <Grid>
         <Frame x:Name="frame" NavigationUIVisibility="Hidden"/>
     </Grid>
