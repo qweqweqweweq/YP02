@@ -61,9 +61,19 @@ namespace YP02.Pages.NetworkSettings
                 MessageBox.Show("Введите IP-адрес"); // Сообщение об ошибке, если поле пустое
                 return; // Прерывание выполнения метода
             }
+            if (!IsValidIpAddress(tb_IpAddress.Text))
+            {
+                MessageBox.Show("Введите корректный IP-адрес в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
+                return; // Прерывание выполнения метода
+            }
             if (string.IsNullOrEmpty(tb_Mask.Text))
             {
                 MessageBox.Show("Введите маску подсети"); // Сообщение об ошибке, если поле пустое
+                return; // Прерывание выполнения метода
+            }
+            if (!IsValidIpAddress(tb_Mask.Text))
+            {
+                MessageBox.Show("Введите корректную маску подсети в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
                 return; // Прерывание выполнения метода
             }
             if (string.IsNullOrEmpty(tb_MainShluz.Text))
@@ -71,9 +81,19 @@ namespace YP02.Pages.NetworkSettings
                 MessageBox.Show("Введите главный шлюз"); // Сообщение об ошибке, если поле пустое
                 return; // Прерывание выполнения метода
             }
+            if (!IsValidIpAddress(tb_MainShluz.Text))
+            {
+                MessageBox.Show("Введите корректный главный шлюз в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
+                return; // Прерывание выполнения метода
+            }
             if (string.IsNullOrEmpty(tb_DNSServers.Text))
             {
                 MessageBox.Show("Введите DNS-Server 1");
+                return; // Прерывание выполнения метода
+            }
+            if (!IsValidIpAddress(tb_DNSServers.Text))
+            {
+                MessageBox.Show("Введите корректный DNS-Server 1 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
                 return; // Прерывание выполнения метода
             }
             if (string.IsNullOrEmpty(tb_DNSServers1.Text))
@@ -81,14 +101,19 @@ namespace YP02.Pages.NetworkSettings
                 MessageBox.Show("Введите DNS-Server 2");
                 return; // Прерывание выполнения метода
             }
+            if (!IsValidIpAddress(tb_DNSServers1.Text))
+            {
+                MessageBox.Show("Введите корректный DNS-Server 2 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
+                return; // Прерывание выполнения метода
+            }
             if (string.IsNullOrEmpty(tb_DNSServers2.Text))
             {
-                MessageBox.Show("Введите DNS-Server 3");
+                MessageBox.Show("Введите DNS-Server 3 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.\nЕсли он отсутствует, поставьте: -");
                 return; // Прерывание выполнения метода
             }
             if (string.IsNullOrEmpty(tb_DNSServers3.Text))
             {
-                MessageBox.Show("Введите DNS-Server 4");
+                MessageBox.Show("Введите DNS-Server 4 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.\nЕсли он отсутствует, поставьте: -");
                 return; // Прерывание выполнения метода
             }
             if (cb_IdOb.SelectedItem == null)
@@ -129,6 +154,27 @@ namespace YP02.Pages.NetworkSettings
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Pages.NetworkSettings.NetworkSettings());
+        }
+
+        private bool IsValidIpAddress(string ip)
+        {
+            if (string.IsNullOrEmpty(ip))
+                return false;
+
+            var parts = ip.Split('.');
+            if (parts.Length != 4)
+                return false;
+
+            foreach (var part in parts)
+            {
+                if (!int.TryParse(part, out int number))
+                    return false;
+
+                if (number < 0 || number > 255)
+                    return false;
+            }
+
+            return true;
         }
     }
 }
