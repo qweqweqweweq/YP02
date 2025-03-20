@@ -22,10 +22,18 @@ namespace YP02.Pages.Characteristics
     public partial class Characteristics : Page
     {
         public CharacteristicsContext characteristicsContext = new CharacteristicsContext();
+        private Models.Users currentUser;
 
         public Characteristics()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear();
             foreach (Models.Characteristics item in characteristicsContext.Characteristics)
             {

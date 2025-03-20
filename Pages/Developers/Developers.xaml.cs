@@ -23,10 +23,17 @@ namespace YP02.Pages.Developers
     {
         // Создание контекста разработчиков для работы с данными
         public DevelopersContext DevelopersContext = new DevelopersContext();
+        private Models.Users currentUser;
 
         public Developers()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
 
             // Очистка дочерних элементов родительского контейнера
             parent.Children.Clear();

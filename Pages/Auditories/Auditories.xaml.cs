@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using YP02.Context;
 using YP02.Models;
+using YP02.Pages.Users;
 
 namespace YP02.Pages.Auditories
 {
@@ -24,11 +25,19 @@ namespace YP02.Pages.Auditories
     {
         // Контекст для работы с аудиториями
         public AuditoriesContext auditoriesContext = new AuditoriesContext();
+        private Models.Users currentUser;
 
         // Конструктор класса, инициализирующий страницу
         public Auditories()
         {
             InitializeComponent(); // Инициализация компонентов страницы
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждой аудитории из контекста

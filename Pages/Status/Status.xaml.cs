@@ -23,10 +23,18 @@ namespace YP02.Pages.Status
     {
         // Контекст для работы со статусами
         public StatusContext StatusContext = new();
+        private Models.Users currentUser;
 
         public Status()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждого статуса из контекста

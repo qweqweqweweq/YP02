@@ -28,29 +28,34 @@ namespace YP02.Pages
 
         private void AuthorizationClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Menu());
             string Login = login.Text;
             string Password = password.Password;
-            if (Login != "")
+
+            if (string.IsNullOrWhiteSpace(Login))
             {
-                if (Password != "")
-                {
-                    using (var usersContext = new UsersContext())
-                    {
-                        var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
-                        if (user != null)
-                        {
-                            MainWindow.init.OpenPages(new Menu());
-                        }
-                        else
-                        {
-                            MessageBox.Show("Некорректный ввод логина или пароля.");
-                        }
-                    }
-                }
-                else MessageBox.Show("Введите пароль.");
+                MessageBox.Show("Введите логин.");
+                return;
             }
-            else MessageBox.Show("Введите логин.");
+
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                MessageBox.Show("Введите пароль.");
+                return;
+            }
+
+            using (var usersContext = new UsersContext())
+            {
+                var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                if (user != null)
+                {
+                    MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
+                    MainWindow.init.OpenPages(new Menu()); // Передаём пользователя в меню
+                }
+                else
+                {
+                    MessageBox.Show("Некорректный ввод логина или пароля.");
+                }
+            }
         }
     }
 }

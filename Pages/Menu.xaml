@@ -136,7 +136,7 @@
                     </StackPanel>
                     <Button Click="OpenProgr" Style="{DynamicResource ButtonStyle1}" Content="Программы" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                     <Button Click="OpenDevel" Style="{DynamicResource ButtonStyle1}" Content="Разработчики" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
-                    <Button Click="OpenUsers" Style="{DynamicResource ButtonStyle1}" Content="Пользователи" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
+                    <Button x:Name="users" Visibility="Hidden" Click="OpenUsers" Style="{DynamicResource ButtonStyle1}" Content="Пользователи" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,10" BorderBrush="White"/>
                 </StackPanel>
                 <StackPanel>
                     <Button Click="OpenRMat" Style="{DynamicResource ButtonStyle1}" Content="Расходные материалы" Height="35" Width="220" FontSize="18" Background="White" Foreground="#0060AC" Margin="0,0,0,0" BorderBrush="White"/>

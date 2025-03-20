@@ -22,10 +22,18 @@ namespace YP02.Pages.RasxodMaterials
     public partial class RasxodMaterials : Page
     {
         public RasxodMaterialsContext rasxodMaterialsContext = new RasxodMaterialsContext();
+        private Models.Users currentUser;
 
         public RasxodMaterials()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear();
             foreach (Models.RasxodMaterials item in rasxodMaterialsContext.RasxodMaterials)
             {

@@ -69,7 +69,7 @@
                 <Label x:Name="lb_Name" Content="Вид модели" Height="40" FontSize="20" FontWeight="Bold"/>
                 <Label x:Name="lb_OborType" Content="Тип оборудования" Height="30" FontSize="15"/>
             </StackPanel>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <StackPanel x:Name="buttons" Visibility="Hidden" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <Button Style="{DynamicResource ButtonStyle1}" Click="Click_redact" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,10,10,5" Background="#0060AC" Foreground="White"/>
                 <Button Style="{DynamicResource ButtonStyle1}" Click="Click_remove" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,10" Background="#E41613" Foreground="White"/>
             </StackPanel>

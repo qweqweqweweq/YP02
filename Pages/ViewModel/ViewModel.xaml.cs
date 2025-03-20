@@ -23,10 +23,18 @@ namespace YP02.Pages.ViewModel
     {
         // Контекст для работы с моделями представления
         public ViewModelContext ViewModelContext = new ViewModelContext();
+        private Models.Users currentUser;
 
         public ViewModel()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждой модели представления из контекста

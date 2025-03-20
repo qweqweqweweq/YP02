@@ -23,10 +23,18 @@ namespace YP02.Pages.Inventory
     {
         // Контекст для работы с инвентаризациями
         public InventoryContext InventoryContext = new InventoryContext();
+        private Models.Users currentUser;
 
         public Inventory()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждой инвентаризации из контекста

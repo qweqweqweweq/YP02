@@ -23,10 +23,18 @@ namespace YP02.Pages.Programs
     {
         // Контекст для работы с программами
         public ProgramsContext ProgramsContext = new ProgramsContext();
+        private Models.Users currentUser;
 
         public Programs()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждой программы из контекста

@@ -22,10 +22,18 @@ namespace YP02.Pages.ValueCharacteristics
     public partial class ValueCharacteristics : Page
     {
         public ValueCharacteristicsContext ValueCharacteristicsContext = new ValueCharacteristicsContext();
+        private Models.Users currentUser;
 
         public ValueCharacteristics()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             foreach (Models.ValueCharacteristics item in ValueCharacteristicsContext.ValueCharacteristics)

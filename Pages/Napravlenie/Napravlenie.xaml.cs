@@ -23,10 +23,18 @@ namespace YP02.Pages.Napravlenie
     {
         // Контекст для работы с направлениями
         public NapravlenieContext NapravlenieContext = new();
+        private Models.Users currentUser;
 
         public Napravlenie()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); // Очистка родительского контейнера перед добавлением новых элементов
 
             // Заполнение родительского контейнера элементами Item для каждого направления из контекста

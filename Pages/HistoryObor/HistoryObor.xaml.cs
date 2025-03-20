@@ -22,10 +22,18 @@ namespace YP02.Pages.HistoryObor
     public partial class HistoryObor : Page
     {
         private int _oborudovanieId;
+        private Models.Users currentUser;
 
         public HistoryObor(int oborudovanieId)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             _oborudovanieId = oborudovanieId;
             LoadHistory();
         }

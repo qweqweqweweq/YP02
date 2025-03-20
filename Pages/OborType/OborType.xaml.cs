@@ -21,10 +21,19 @@ namespace YP02.Pages.OborType
     /// </summary>
     public partial class OborType : Page
     {
-        public OborTypeContext OborTypeContext = new();        
+        public OborTypeContext OborTypeContext = new();
+        private Models.Users currentUser;
+
         public OborType()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear();
             foreach(Models.OborType item in OborTypeContext.OborType)
             {

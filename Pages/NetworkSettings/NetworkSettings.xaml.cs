@@ -22,10 +22,18 @@ namespace YP02.Pages.NetworkSettings
     public partial class NetworkSettings : Page
     {
         public NetworkSettingsContext NetworkSettingsContext = new NetworkSettingsContext();
+        private Models.Users currentUser;
 
         public NetworkSettings()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear(); 
 
             foreach (Models.NetworkSettings item in NetworkSettingsContext.NetworkSettings)

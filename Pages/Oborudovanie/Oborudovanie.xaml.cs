@@ -22,9 +22,18 @@ namespace YP02.Pages.Oborudovanie
     public partial class Oborudovanie : Page
     {
         public OborudovanieContext OborudovanieContext = new OborudovanieContext();
+        private Models.Users currentUser;
+
         public Oborudovanie()
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                addBtn.Visibility = Visibility.Visible;
+            }
+
             parent.Children.Clear();
             foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
             {

@@ -22,9 +22,16 @@ namespace YP02.Pages
     /// </summary>
     public partial class Menu : Page
     {
+        private Models.Users currentUser;
+
         public Menu()
         {
             InitializeComponent();
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                users.Visibility = Visibility.Visible;
+            }
         }
 
         private void Exit(object sender, RoutedEventArgs e)
