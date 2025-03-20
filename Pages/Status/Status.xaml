@@ -130,6 +130,6 @@
 
             </StackPanel>
         </ScrollViewer>
-        <Button Style="{DynamicResource ButtonStyle1}" Click="Add" Content="Добавить" Height="35" Width="150" FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,10" Background="White"/>
+        <Button x:Name="addBtn" Style="{DynamicResource ButtonStyle1}" Click="Add" Content="Добавить" Height="35" Width="150" FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,10" Background="White"/>
     </Grid>
 </Page>

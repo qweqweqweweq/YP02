@@ -18,11 +18,12 @@ namespace YP02
     {
         public static MainWindow init;
         public static Pages.Menu menu;
-        public MainWindow()
+        public MainWindow(string role)
         {
             InitializeComponent();
             init = this;
             OpenPages(new Pages.Authorization());
+
         }
         public void OpenPages(Page page)
         {
