@@ -49,7 +49,7 @@ namespace YP02.Pages
                 if (user != null)
                 {
                     MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
-                    MainWindow.init.OpenPages(new Menu()); // Передаём пользователя в меню
+                    MainWindow.init.OpenPages(new Menu());
                 }
                 else
                 {
