@@ -24,10 +24,18 @@ namespace YP02.Pages.Characteristics
         Characteristics MainCharacteristics;
         Models.Characteristics characteristics;
         TypeCharacteristicsContext typeCharacteristicsContext = new TypeCharacteristicsContext();
+        private Models.Users currentUser;
 
         public Item(Models.Characteristics characteristics, Characteristics MainCharacteristics)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.characteristics = characteristics;
             this.MainCharacteristics = MainCharacteristics;
             lb_Name.Content = characteristics.Name;

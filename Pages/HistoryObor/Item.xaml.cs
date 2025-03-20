@@ -24,9 +24,17 @@ namespace YP02.Pages.HistoryObor
         HistoryObor MainHistoryObor;
         Models.HistoryObor HistoryObor;
         UsersContext usersContext = new UsersContext();
+        private Models.Users currentUser;
         public Item(Models.HistoryObor HistoryObor, HistoryObor MainHistoryObor)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.HistoryObor = HistoryObor;
             this.MainHistoryObor = MainHistoryObor;
             lb_Users.Content = usersContext.Users.Where(x => x.Id == HistoryObor.Id).First().FIO;

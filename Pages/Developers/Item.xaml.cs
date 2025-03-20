@@ -25,10 +25,17 @@ namespace YP02.Pages.Developers
 
         // Поле для хранения информации о конкретном разработчике
         Models.Developers Developers;
+        private Models.Users currentUser;
 
         public Item(Models.Developers Developers, Developers MainDevelopers)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             // Присваивание переданных параметров полям класса
             this.Developers = Developers;

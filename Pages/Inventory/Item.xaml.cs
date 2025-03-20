@@ -26,6 +26,7 @@ namespace YP02.Pages.Inventory
 
         // Модель инвентаризации, которую представляет данный элемент
         Models.Inventory inventory;
+        private Models.Users currentUser;
 
         // Контекст для работы с пользователями
         UsersContext usersContext = new UsersContext();
@@ -34,7 +35,13 @@ namespace YP02.Pages.Inventory
         // Конструктор класса, который принимает модель инвентаризации и основную страницу инвентаризации
         public Item(Models.Inventory inventory, Inventory MainInventory)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.inventory = inventory; // Сохранение ссылки на модель инвентаризации
             this.MainInventory = MainInventory; // Сохранение ссылки на основную страницу инвентаризации

@@ -29,11 +29,18 @@ namespace YP02.Pages.ViewModel
 
         // Контекст для работы с типами оборудования
         OborTypeContext oborTypeContext = new OborTypeContext();
+        private Models.Users currentUser;
 
         // Конструктор класса, который принимает модель представления и основную модель представления
         public Item(Models.ViewModel ViewModel, ViewModel MainViewModel)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.ViewModel = ViewModel; // Сохранение ссылки на модель представления
             this.MainViewModel = MainViewModel; // Сохранение ссылки на основную модель представления

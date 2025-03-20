@@ -30,11 +30,18 @@ namespace YP02.Pages.Programs
         // Контексты для работы с базами данных разработчиков и оборудования
         DevelopersContext developersContext = new DevelopersContext();
         OborudovanieContext oborudovanieContext = new OborudovanieContext();
+        private Models.Users currentUser;
 
         // Конструктор класса, который принимает модель программы и основную программу
         public Item(Models.Programs Programs, Programs MainPrograms)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.Programs = Programs; // Сохранение ссылки на модель программы
             this.MainPrograms = MainPrograms; // Сохранение ссылки на основную программу

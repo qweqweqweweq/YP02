@@ -25,11 +25,18 @@ namespace YP02.Pages.Status
 
         // Модель статуса, которую представляет данный элемент
         Models.Status Status;
+        private Models.Users currentUser;
 
         // Конструктор класса, который принимает модель статуса и основную страницу статусов
         public Item(Models.Status Status, Status MainStatus)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.MainStatus = MainStatus; // Сохранение ссылки на основную страницу статусов
             this.Status = Status; // Сохранение ссылки на модель статуса

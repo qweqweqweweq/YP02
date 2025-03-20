@@ -30,10 +30,18 @@ namespace YP02.Pages.RasxodMaterials
         TypeCharacteristicsContext typeCharacteristicsContext = new TypeCharacteristicsContext();
         CharacteristicsContext characteristicsContext = new CharacteristicsContext();
         ValueCharacteristicsContext valueCharacteristicsContext = new ValueCharacteristicsContext();
+        private Models.Users currentUser;
 
         public Item(Models.RasxodMaterials RasxodMaterials, RasxodMaterials MainRasxodMaterials)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.RasxodMaterials = RasxodMaterials;
             this.MainRasxodMaterials = MainRasxodMaterials;
             lb_Name.Content = RasxodMaterials.Name;

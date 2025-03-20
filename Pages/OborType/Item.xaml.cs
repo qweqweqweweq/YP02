@@ -22,9 +22,17 @@ namespace YP02.Pages.OborType
     {
         OborType MainOborType;
         Models.OborType OborType;
+        private Models.Users currentUser;
         public Item(Models.OborType OborType, OborType MainOborType)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.OborType = OborType;
             this.MainOborType = MainOborType;
             lb_Name.Content = OborType.Name;

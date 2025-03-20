@@ -27,10 +27,18 @@ namespace YP02.Pages.ValueCharacteristics
 
         RasxodMaterialsContext rasxodMaterialsContext = new RasxodMaterialsContext();
         CharacteristicsContext characteristicsContext = new CharacteristicsContext();
+        private Models.Users currentUser;
 
         public Item(Models.ValueCharacteristics valueCharacteristics, ValueCharacteristics MainValueCharacteristics)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.valueCharacteristics = valueCharacteristics;
             this.MainValueCharacteristics = MainValueCharacteristics;
 

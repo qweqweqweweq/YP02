@@ -25,11 +25,18 @@ namespace YP02.Pages.Napravlenie
 
         // Модель направления, которую представляет данный элемент
         Models.Napravlenie Napravlenie;
+        private Models.Users currentUser;
 
         // Конструктор класса, который принимает модель направления и основную страницу направлений
         public Item(Models.Napravlenie Napravlenie, Napravlenie MainNapravlenie)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.MainNapravlenie = MainNapravlenie; // Сохранение ссылки на основную страницу направлений
             this.Napravlenie = Napravlenie; // Сохранение ссылки на модель направления

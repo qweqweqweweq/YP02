@@ -22,10 +22,18 @@ namespace YP02.Pages.TypeCharacteristics
     {
         TypeCharacteristics MainTypeCharacteristics;
         Models.TypeCharacteristics typeCharacteristics;
+        private Models.Users currentUser;
 
         public Item(Models.TypeCharacteristics typeCharacteristics, TypeCharacteristics MainTypeCharacteristics)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.typeCharacteristics = typeCharacteristics;
             this.MainTypeCharacteristics = MainTypeCharacteristics;
             lb_Name.Content = typeCharacteristics.Name;

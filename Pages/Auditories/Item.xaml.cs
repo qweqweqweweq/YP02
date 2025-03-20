@@ -29,11 +29,18 @@ namespace YP02.Pages.Auditories
 
         // Контекст для работы с пользователями
         UsersContext usersContext = new();
+        private Models.Users currentUser;
 
         // Конструктор класса, который принимает модель аудитории и основную страницу аудиторий
         public Item(Models.Auditories Auditories, Auditories MainAuditories)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
 
             this.Auditories = Auditories; // Сохранение ссылки на модель аудитории
             this.MainAuditories = MainAuditories; // Сохранение ссылки на основную страницу аудиторий

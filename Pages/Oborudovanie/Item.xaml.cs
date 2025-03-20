@@ -21,10 +21,19 @@ namespace YP02.Pages.Oborudovanie
         NapravlenieContext napravlenieContext = new();
         StatusContext statusContext = new();
         ViewModelContext viewModelContext = new();
+        private Models.Users currentUser;
 
         public Item(Models.Oborudovanie Oborudovanie, Oborudovanie MainOborudovanie)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                button1.Visibility = Visibility.Visible;
+                button2.Visibility = Visibility.Visible;
+            }
+
             this.Oborudovanie = Oborudovanie;
             this.MainOborudovanie = MainOborudovanie;
             lb_Name.Content = Oborudovanie.Name;

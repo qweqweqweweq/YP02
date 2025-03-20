@@ -23,12 +23,20 @@ namespace YP02.Pages.NetworkSettings
     {
         NetworkSettings MainNetworkSettings;
         Models.NetworkSettings networkSettings;
+        private Models.Users currentUser;
 
         OborudovanieContext obContext = new OborudovanieContext();
 
         public Item(Models.NetworkSettings networkSettings, NetworkSettings MainNetworkSettings)
         {
             InitializeComponent();
+
+            currentUser = MainWindow.init.CurrentUser;
+            if (currentUser != null && currentUser.Role == "Администратор")
+            {
+                buttons.Visibility = Visibility.Visible;
+            }
+
             this.networkSettings = networkSettings;
             this.MainNetworkSettings = MainNetworkSettings;
 
