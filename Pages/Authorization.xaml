@@ -166,7 +166,7 @@
                 <Label Content="Логин:" Height="30" FontSize="15" Foreground="White" Margin="20,0,20,0"/>
                 <TextBox Style="{DynamicResource TextBoxStyle1}" x:Name="login" Height="35" FontSize="15" Margin="20,0,20,10" BorderBrush="#0060AC" VerticalContentAlignment="Center"/>
                 <Label Content="Пароль:" Height="30" FontSize="15" Foreground="White" Margin="20,0,20,0"/>
-                <PasswordBox Style="{DynamicResource PasswordBoxStyle1}" x:Name="password" Height="35" FontSize="15" Margin="20,0,20,40" BorderBrush="#0060AC" VerticalContentAlignment="Center"/>
+                <PasswordBox Style="{DynamicResource PasswordBoxStyle1}" x:Name="password" Height="35" FontSize="15" Margin="20,0,20,40" BorderBrush="#0060AC" VerticalContentAlignment="Center" PasswordChar="*"/>
                 <Button Style="{DynamicResource ButtonStyle1}" Content="Войти" Click="AuthorizationClick" Height="40" FontSize="18" Width="200" FontFamily="/Fonts/#Montserrat Bold" Background="White" BorderBrush="#0060AC" Foreground="#0060AC" Margin="0,0,0,20"/>
             </StackPanel>
         </Border>
