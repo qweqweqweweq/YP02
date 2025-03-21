@@ -26,6 +26,7 @@ namespace YP02.Pages.Oborudovanie
         private byte[] tempPhoto = null;
 
         //
+
         public Models.HistoryObor historyObor;
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {
@@ -114,6 +115,8 @@ namespace YP02.Pages.Oborudovanie
                 oborudovanie = new Models.Oborudovanie();
             }
 
+            int oldIdTimeResponUser = oborudovanie.IdTimeResponUser;
+
             oborudovanie.Name = tb_Name.Text;
             oborudovanie.InventNumber = tb_invNum.Text;
             oborudovanie.IdClassroom = auditoriesContext.Auditories.First(x => x.Name == tb_Audience.SelectedItem).Id;
@@ -123,7 +126,7 @@ namespace YP02.Pages.Oborudovanie
             oborudovanie.IdNapravObor = napravlenieContext.Napravlenie.First(x => x.Name == tb_Direction.SelectedItem).Id;
             oborudovanie.IdStatusObor = statusContext.Status.First(x => x.Name == tb_Status.SelectedItem).Id;
             oborudovanie.IdModelObor = viewModelContext.ViewModel.First(x => x.Name == tb_Model.SelectedItem).Id;
-            oborudovanie.Comments = tb_Comment.Text;
+            oborudovanie.Comments = tb_Comment.Text;            
 
             // Если фотография не была загружена, оставляем старую
             if (tempPhoto != null)
@@ -135,8 +138,29 @@ namespace YP02.Pages.Oborudovanie
             {
                 MainOborudovanie.OborudovanieContext.Oborudovanie.Add(oborudovanie);
             }
-
+            
             MainOborudovanie.OborudovanieContext.SaveChanges();
+
+            // Проверяем, изменился ли IdTimeResponUser
+            if (oldIdTimeResponUser != oborudovanie.IdTimeResponUser)
+            {
+                // Создаем запись в истории
+                var historyObor = new Models.HistoryObor
+                {
+                    IdUserr = usersContext.Users.First(x => x.FIO == tb_tempUser.SelectedItem).Id,
+                    IdObor = oborudovanie.Id, // Используем Id оборудования, который был сгенерирован при сохранении
+                    Date = DateTime.Now,
+                    Comment = tb_Comment.Text
+                };
+
+                // Используем HistoryOborContext для сохранения истории
+                using (var historyContext = new HistoryOborContext())
+                {
+                    historyContext.HistoryObor.Add(historyObor);
+                    historyContext.SaveChanges();
+                }
+            }
+
             MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());
         }
 

@@ -30,26 +30,11 @@ namespace YP02.Pages.HistoryObor
             InitializeComponent();
 
             currentUser = MainWindow.init.CurrentUser;
-            if (currentUser != null && currentUser.Role == "Администратор")
-            {
-                buttons.Visibility = Visibility.Visible;
-            }
-
             this.HistoryObor = HistoryObor;
             this.MainHistoryObor = MainHistoryObor;
-            lb_Users.Content = usersContext.Users.Where(x => x.Id == HistoryObor.Id).First().FIO;
+            lb_Users.Content = usersContext.Users.Where(x => x.Id == HistoryObor.IdUserr).First().FIO;
             lb_Date.Content = HistoryObor.Date.ToString();
             lb_Comment.Content = HistoryObor.Comment;
-        }
-
-        private void Click_redact(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Click_remove(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
