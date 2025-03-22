@@ -60,19 +60,11 @@
         </Style>
     </UserControl.Resources>
     <Border CornerRadius="10" Background="White" Margin="10" BorderBrush="#0060AC" BorderThickness="1">
-        <Grid Margin="10,5,10,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Margin="10,5,10,5">            
             <StackPanel VerticalAlignment="Center">
                 <Label x:Name="lb_Users" Content="Ответственный пользователь" Height="30" FontSize="15"/>
                 <Label x:Name="lb_Date" Content="Дата" Height="30" FontSize="15"/>
                 <Label x:Name="lb_Comment" Content="Комментарий" Height="30" FontSize="15"/>
-            </StackPanel>
-            <StackPanel x:Name="buttons" Visibility="Hidden" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <Button Style="{DynamicResource ButtonStyle1}" Click="Click_redact" Content="Изменить" Height="30" Width="100" FontSize="15" Margin="10,10,10,5" Background="#0060AC" Foreground="White"/>
-                <Button Style="{DynamicResource ButtonStyle1}" Click="Click_remove" Content="Удалить" Height="30" Width="100" FontSize="15" Margin="10,5,10,10" Background="#E41613" Foreground="White"/>
             </StackPanel>
         </Grid>
     </Border>

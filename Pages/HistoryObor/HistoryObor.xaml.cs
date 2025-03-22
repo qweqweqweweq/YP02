@@ -29,11 +29,7 @@ namespace YP02.Pages.HistoryObor
             InitializeComponent();
 
             currentUser = MainWindow.init.CurrentUser;
-            if (currentUser != null && currentUser.Role == "Администратор")
-            {
-                addBtn.Visibility = Visibility.Visible;
-            }
-
+            
             _oborudovanieId = oborudovanieId;
             LoadHistory();
         }
@@ -61,23 +57,7 @@ namespace YP02.Pages.HistoryObor
 
         private void Back(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Menu());
-        }
-
-        //Сделать сортировку
-        private void SortUp(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SortDown(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Add(object sender, RoutedEventArgs e)
-        {
-
-        }
+            MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());
+        }        
     }
 }
