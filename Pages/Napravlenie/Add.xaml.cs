@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Napravlenie
 {
@@ -46,38 +47,96 @@ namespace YP02.Pages.Napravlenie
         // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка на заполненность поля имени направления
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                MessageBox.Show("Введите наименование направления"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-
-            // Если направление не было передано (т.е. мы добавляем новое)
-            if (napravlenie == null)
-            {
-                napravlenie = new Models.Napravlenie // Создание новой модели направления
+                // Проверка на заполненность поля имени направления
+                if (string.IsNullOrEmpty(tb_Name.Text))
                 {
-                    Name = tb_Name.Text // Установка имени направления
-                };
-                MainNapravlenie.NapravlenieContext.Napravlenie.Add(napravlenie); // Добавление новой модели в контекст
-            }
-            else // Если направление уже существует (редактируем)
-            {
-                napravlenie.Name = tb_Name.Text; // Обновление имени направления
-            }
+                    MessageBox.Show("Введите наименование направления"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
 
-            // Сохранение изменений в базе данных
-            MainNapravlenie.NapravlenieContext.SaveChanges();
-            // Переход на страницу со списком направлений
-            MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
+                // Если направление не было передано (т.е. мы добавляем новое)
+                if (napravlenie == null)
+                {
+                    napravlenie = new Models.Napravlenie // Создание новой модели направления
+                    {
+                        Name = tb_Name.Text // Установка имени направления
+                    };
+                    MainNapravlenie.NapravlenieContext.Napravlenie.Add(napravlenie); // Добавление новой модели в контекст
+                }
+                else // Если направление уже существует (редактируем)
+                {
+                    napravlenie.Name = tb_Name.Text; // Обновление имени направления
+                }
+
+                // Сохранение изменений в базе данных
+                MainNapravlenie.NapravlenieContext.SaveChanges();
+                // Переход на страницу со списком направлений
+                MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу со списком направлений без сохранения изменений
-            MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
+            try
+            {
+                // Переход на страницу со списком направлений без сохранения изменений
+                MainWindow.init.OpenPages(new Pages.Napravlenie.Napravlenie());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

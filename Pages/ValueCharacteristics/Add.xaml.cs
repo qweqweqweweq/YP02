@@ -55,45 +55,103 @@ namespace YP02.Pages.ValueCharacteristics
 
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tb_Value.Text))
+            try
             {
-                MessageBox.Show("Введите значение характеристики"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (cb_RasxMat.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите расходный материал"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (cb_Characteristic.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите характеристику"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
+                if (string.IsNullOrEmpty(tb_Value.Text))
+                {
+                    MessageBox.Show("Введите значение характеристики"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (cb_RasxMat.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите расходный материал"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (cb_Characteristic.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите характеристику"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
 
-            if (valueCharacteristics == null)
-            {
-                valueCharacteristics = new Models.ValueCharacteristics();
-                valueCharacteristics.Znachenie = tb_Value.Text;
-                valueCharacteristics.IdRasxod = rasxodMaterialsContext.RasxodMaterials.Where(x => x.Name == cb_RasxMat.SelectedItem.ToString()).First().Id;
-                valueCharacteristics.IdCharacter = characteristicsContext.Characteristics.Where(x => x.Name == cb_Characteristic.SelectedItem.ToString()).First().Id;
-                MainValueCharacteristics.ValueCharacteristicsContext.ValueCharacteristics.Add(valueCharacteristics);
-            }
-            else 
-            {
-                valueCharacteristics.Znachenie = tb_Value.Text;
-                valueCharacteristics.IdRasxod = rasxodMaterialsContext.RasxodMaterials.Where(x => x.Name == cb_RasxMat.SelectedItem.ToString()).First().Id;
-                valueCharacteristics.IdCharacter = characteristicsContext.Characteristics.Where(x => x.Name == cb_Characteristic.SelectedItem.ToString()).First().Id;
-            }
+                if (valueCharacteristics == null)
+                {
+                    valueCharacteristics = new Models.ValueCharacteristics();
+                    valueCharacteristics.Znachenie = tb_Value.Text;
+                    valueCharacteristics.IdRasxod = rasxodMaterialsContext.RasxodMaterials.Where(x => x.Name == cb_RasxMat.SelectedItem.ToString()).First().Id;
+                    valueCharacteristics.IdCharacter = characteristicsContext.Characteristics.Where(x => x.Name == cb_Characteristic.SelectedItem.ToString()).First().Id;
+                    MainValueCharacteristics.ValueCharacteristicsContext.ValueCharacteristics.Add(valueCharacteristics);
+                }
+                else
+                {
+                    valueCharacteristics.Znachenie = tb_Value.Text;
+                    valueCharacteristics.IdRasxod = rasxodMaterialsContext.RasxodMaterials.Where(x => x.Name == cb_RasxMat.SelectedItem.ToString()).First().Id;
+                    valueCharacteristics.IdCharacter = characteristicsContext.Characteristics.Where(x => x.Name == cb_Characteristic.SelectedItem.ToString()).First().Id;
+                }
 
-            // Сохранение изменений в базе данных
-            MainValueCharacteristics.ValueCharacteristicsContext.SaveChanges();
-            MainWindow.init.OpenPages(new Pages.ValueCharacteristics.ValueCharacteristics());
+                // Сохранение изменений в базе данных
+                MainValueCharacteristics.ValueCharacteristicsContext.SaveChanges();
+                MainWindow.init.OpenPages(new Pages.ValueCharacteristics.ValueCharacteristics());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.ValueCharacteristics.ValueCharacteristics());
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.ValueCharacteristics.ValueCharacteristics());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }           
         }
     }
 }

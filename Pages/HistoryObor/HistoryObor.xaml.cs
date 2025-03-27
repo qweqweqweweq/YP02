@@ -36,19 +36,48 @@ namespace YP02.Pages.HistoryObor
 
         private void LoadHistory()
         {
-            // Загрузка истории для данного оборудования
-            var historyList = GetHistoryForOborudovanie(_oborudovanieId);
-            foreach (var history in historyList)
+            try
             {
-                // Создание пользовательского элемента для каждой записи истории
-                var item = new Item(history, this);
-                // Добавление элемента на страницу
-                parent.Children.Add(item);
+                // Загрузка истории для данного оборудования
+                var historyList = GetHistoryForOborudovanie(_oborudovanieId);
+                foreach (var history in historyList)
+                {
+                    // Создание пользовательского элемента для каждой записи истории
+                    var item = new Item(history, this);
+                    // Добавление элемента на страницу
+                    parent.Children.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
 
         private List<Models.HistoryObor> GetHistoryForOborudovanie(int oborudovanieId)
-        {            
+        {
             using (var context = new HistoryOborContext())
             {
                 return context.HistoryObor.Where(h => h.IdObor == oborudovanieId).ToList();
@@ -57,7 +86,36 @@ namespace YP02.Pages.HistoryObor
 
         private void Back(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.Oborudovanie.Oborudovanie());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }        
     }
 }

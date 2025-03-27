@@ -66,68 +66,126 @@ namespace YP02.Pages.Inventory
         // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка на заполненность полей
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                MessageBox.Show("Введите наименование инвентаризации"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (tb_DateStart.SelectedDate == null)
-            {
-                MessageBox.Show("Введите дату начала инвентаризации"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (tb_DateEnd.SelectedDate == null)
-            {
-                MessageBox.Show("Выберите дату окончания инвентаризации"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (cb_IdOb.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите оборудование для инвентаризации");
-                return; // Прерывание выполнения метода
-            }
-            if (cb_IdUser.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите пользователя"); // Сообщение об ошибке, если пользователь не выбран
-                return; // Прерывание выполнения метода
-            }
+                // Проверка на заполненность полей
+                if (string.IsNullOrEmpty(tb_Name.Text))
+                {
+                    MessageBox.Show("Введите наименование инвентаризации"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (tb_DateStart.SelectedDate == null)
+                {
+                    MessageBox.Show("Введите дату начала инвентаризации"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (tb_DateEnd.SelectedDate == null)
+                {
+                    MessageBox.Show("Выберите дату окончания инвентаризации"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (cb_IdOb.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите оборудование для инвентаризации");
+                    return; // Прерывание выполнения метода
+                }
+                if (cb_IdUser.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите пользователя"); // Сообщение об ошибке, если пользователь не выбран
+                    return; // Прерывание выполнения метода
+                }
 
-            DateTime startDate = tb_DateStart.SelectedDate.Value;
-            DateTime endDate = tb_DateEnd.SelectedDate.Value;
+                DateTime startDate = tb_DateStart.SelectedDate.Value;
+                DateTime endDate = tb_DateEnd.SelectedDate.Value;
 
-            // Если инвентаризация не была передана (т.е. мы добавляем новую)
-            if (inventory == null)
-            {
-                inventory = new Models.Inventory(); // Создание новой модели инвентаризации
-                inventory.Name = tb_Name.Text; // Установка имени инвентаризации
-                inventory.StartDate = startDate; // Установка даты начала инвентаризации
-                inventory.EndDate = endDate; // Установка даты окончания инвентаризации
-                inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
-                inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Получение ID пользователя по имени
-                MainInventory.InventoryContext.Inventory.Add(inventory); // Добавление новой инвентаризации в контекст
-            }
-            else // Если инвентаризация уже существует (редактируем)
-            {
-                // Обновление данных существующей инвентаризации
-                inventory.Name = tb_Name.Text; // Обновление имени инвентаризации
-                inventory.StartDate = startDate; // Обновление даты начала инвентаризации
-                inventory.EndDate = endDate; // Обновление даты окончания инвентаризации
-                inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
-                inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Обновление ID пользователя
-            }
+                // Если инвентаризация не была передана (т.е. мы добавляем новую)
+                if (inventory == null)
+                {
+                    inventory = new Models.Inventory(); // Создание новой модели инвентаризации
+                    inventory.Name = tb_Name.Text; // Установка имени инвентаризации
+                    inventory.StartDate = startDate; // Установка даты начала инвентаризации
+                    inventory.EndDate = endDate; // Установка даты окончания инвентаризации
+                    inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
+                    inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Получение ID пользователя по имени
+                    MainInventory.InventoryContext.Inventory.Add(inventory); // Добавление новой инвентаризации в контекст
+                }
+                else // Если инвентаризация уже существует (редактируем)
+                {
+                    // Обновление данных существующей инвентаризации
+                    inventory.Name = tb_Name.Text; // Обновление имени инвентаризации
+                    inventory.StartDate = startDate; // Обновление даты начала инвентаризации
+                    inventory.EndDate = endDate; // Обновление даты окончания инвентаризации
+                    inventory.IdOborrud = obContext.Oborudovanie.Where(x => x.Name == cb_IdOb.SelectedItem.ToString()).First().Id;
+                    inventory.UserId = usersContext.Users.Where(x => x.FIO == cb_IdUser.SelectedItem.ToString()).First().Id; // Обновление ID пользователя
+                }
 
-            // Сохранение изменений в базе данных
-            MainInventory.InventoryContext.SaveChanges();
-            // Переход на страницу со списком инвентаризаций
-            MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
+                // Сохранение изменений в базе данных
+                MainInventory.InventoryContext.SaveChanges();
+                // Переход на страницу со списком инвентаризаций
+                MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки " Отмена" 
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу со списком инвентаризаций без сохранения изменений
-            MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
+            try
+            {
+                // Переход на страницу со списком инвентаризаций без сохранения изменений
+                MainWindow.init.OpenPages(new Pages.Inventory.Inventory());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

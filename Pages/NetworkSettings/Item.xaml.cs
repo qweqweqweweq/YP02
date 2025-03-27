@@ -53,25 +53,83 @@ namespace YP02.Pages.NetworkSettings
 
         private void Click_redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.NetworkSettings.Add(MainNetworkSettings, networkSettings));
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.NetworkSettings.Add(MainNetworkSettings, networkSettings));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("При удалении сетевых настроек все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            try
             {
-                MainNetworkSettings.NetworkSettingsContext.NetworkSettings.Remove(networkSettings);
-                MainNetworkSettings.NetworkSettingsContext.SaveChanges(); // Сохранение изменений в базе данных
+                MessageBoxResult result = MessageBox.Show("При удалении сетевых настроек все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                // Удаление текущего элемента из родительского контейнера
-                (this.Parent as Panel).Children.Remove(this);
+                if (result == MessageBoxResult.Yes)
+                {
+                    MainNetworkSettings.NetworkSettingsContext.NetworkSettings.Remove(networkSettings);
+                    MainNetworkSettings.NetworkSettingsContext.SaveChanges(); // Сохранение изменений в базе данных
+
+                    // Удаление текущего элемента из родительского контейнера
+                    (this.Parent as Panel).Children.Remove(this);
+                }
+                else
+                {
+                    // Сообщение о том, что действие отменено
+                    MessageBox.Show("Действие отменено.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Сообщение о том, что действие отменено
-                MessageBox.Show("Действие отменено.");
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
     }

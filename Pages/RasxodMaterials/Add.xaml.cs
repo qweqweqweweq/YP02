@@ -70,116 +70,203 @@ namespace YP02.Pages.RasxodMaterials
 
         private void OpenPhoto(object sender, RoutedEventArgs e)
         {
-            var ofd = new OpenFileDialog
+            try
             {
-                Filter = "Image Files (*.jpg;*.jpeg;*.png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
-            };
-            if (ofd.ShowDialog() == true)
+                var ofd = new OpenFileDialog
+                {
+                    Filter = "Image Files (*.jpg;*.jpeg;*.png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
+                };
+                if (ofd.ShowDialog() == true)
+                {
+                    try
+                    {
+                        rasxodMaterials = new Models.RasxodMaterials();
+                        using (var fileStream = File.OpenRead(ofd.FileName))
+                        {
+                            MemoryStream memoryStream = new MemoryStream();
+                            fileStream.CopyTo(memoryStream);
+                            rasxodMaterials.Photo = memoryStream.ToArray();
+                        }
+                        photobut.Content = "Фото выбрано";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка загрузки фотографии: \n{ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 try
                 {
-                    rasxodMaterials = new Models.RasxodMaterials();
-                    using (var fileStream = File.OpenRead(ofd.FileName))
+                    using (var errorsContext = new ErrorsContext())
                     {
-                        MemoryStream memoryStream = new MemoryStream();
-                        fileStream.CopyTo(memoryStream);
-                        rasxodMaterials.Photo = memoryStream.ToArray();
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
                     }
-                    photobut.Content = "Фото выбрано";
 
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
                 }
-                catch (Exception ex)
+                catch (Exception logEx)
                 {
-                    MessageBox.Show($"Ошибка загрузки фотографии: \n{ex.Message}");
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
                 }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
 
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                MessageBox.Show("Введите наименование расходного материала");
-                return;
-            }
-            if (string.IsNullOrEmpty(tb_Des.Text))
-            {
-                MessageBox.Show("Введите описание расходного материала");
-                return;
-            }
-            if (tb_DatePost.SelectedDate == null)
-            {
-                MessageBox.Show("Введите дату поступления расходного материала");
-                return;
-            }
-            if (string.IsNullOrEmpty(tb_Quantity.Text))
-            {
-                MessageBox.Show("Выберите количество расходного материала");
-                return;
-            }
-            if (tb_responUser.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите ответственного пользователя");
-                return;
-            }
-            if (tb_timeResponUser.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите временно-ответственного пользователя");
-                return;
-            }
-            if (tb_typeRasMat.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите тип материала");
-                return;
-            }
-            if (tb_characters.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите характеристику");
-                return;
-            }
-            if (tb_valueChar.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите значение характеристики");
-                return;
-            }
+                if (string.IsNullOrEmpty(tb_Name.Text))
+                {
+                    MessageBox.Show("Введите наименование расходного материала");
+                    return;
+                }
+                if (string.IsNullOrEmpty(tb_Des.Text))
+                {
+                    MessageBox.Show("Введите описание расходного материала");
+                    return;
+                }
+                if (tb_DatePost.SelectedDate == null)
+                {
+                    MessageBox.Show("Введите дату поступления расходного материала");
+                    return;
+                }
+                if (string.IsNullOrEmpty(tb_Quantity.Text))
+                {
+                    MessageBox.Show("Выберите количество расходного материала");
+                    return;
+                }
+                if (tb_responUser.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите ответственного пользователя");
+                    return;
+                }
+                if (tb_timeResponUser.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите временно-ответственного пользователя");
+                    return;
+                }
+                if (tb_typeRasMat.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите тип материала");
+                    return;
+                }
+                if (tb_characters.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите характеристику");
+                    return;
+                }
+                if (tb_valueChar.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите значение характеристики");
+                    return;
+                }
 
-            DateTime datePos = tb_DatePost.SelectedDate.Value;
+                DateTime datePos = tb_DatePost.SelectedDate.Value;
 
-            if (rasxodMaterials == null)
-            {
-                rasxodMaterials = new Models.RasxodMaterials();
-                rasxodMaterials.Name = tb_Name.Text;
-                rasxodMaterials.Description = tb_Des.Text;
-                rasxodMaterials.DatePostupleniya = datePos;
-                rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
-                rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id;
-                rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id;
-                rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem).First().Id;
-                rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem).First().Id;
-                rasxodMaterials.Photo = rasxodMaterials.Photo;
-                rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem).First().Id;
-                MainRasxodMaterials.rasxodMaterialsContext.RasxodMaterials.Add(rasxodMaterials);            
+                if (rasxodMaterials == null)
+                {
+                    rasxodMaterials = new Models.RasxodMaterials();
+                    rasxodMaterials.Name = tb_Name.Text;
+                    rasxodMaterials.Description = tb_Des.Text;
+                    rasxodMaterials.DatePostupleniya = datePos;
+                    rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
+                    rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem).First().Id;
+                    rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem).First().Id;
+                    rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem).First().Id;
+                    rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem).First().Id;
+                    rasxodMaterials.Photo = rasxodMaterials.Photo;
+                    rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem).First().Id;
+                    MainRasxodMaterials.rasxodMaterialsContext.RasxodMaterials.Add(rasxodMaterials);
+                }
+                else
+                {
+                    rasxodMaterials.Name = tb_Name.Text;
+                    rasxodMaterials.Description = tb_Des.Text;
+                    rasxodMaterials.DatePostupleniya = datePos;
+                    rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
+                    rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem.ToString()).First().Id;
+                    rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem.ToString()).First().Id;
+                    rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem.ToString()).First().Id;
+                    rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem.ToString()).First().Id;
+                    rasxodMaterials.Photo = rasxodMaterials.Photo;
+                    rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem.ToString()).First().Id;
+                }
+                MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
+                MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
             }
-            else
+            catch (Exception ex)
             {
-                rasxodMaterials.Name = tb_Name.Text;
-                rasxodMaterials.Description = tb_Des.Text;
-                rasxodMaterials.DatePostupleniya = datePos;
-                rasxodMaterials.Quantity = double.Parse(tb_Quantity.Text);
-                rasxodMaterials.UserRespon = usersContext.Users.Where(x => x.FIO == tb_responUser.SelectedItem.ToString()).First().Id;
-                rasxodMaterials.ResponUserTime = usersContext.Users.Where(x => x.FIO == tb_timeResponUser.SelectedItem.ToString()).First().Id;
-                rasxodMaterials.Characteristics = characteristicsContext.Characteristics.Where(x => x.Name == tb_characters.SelectedItem.ToString()).First().Id;
-                rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem.ToString()).First().Id;
-                rasxodMaterials.Photo = rasxodMaterials.Photo;
-                rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem.ToString()).First().Id;
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
-            MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
-            MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
         }
 
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

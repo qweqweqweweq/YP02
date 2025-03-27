@@ -85,7 +85,6 @@ namespace YP02.Pages
                 }
 
                 MessageBox.Show("Ошибка: " + ex.Message);
-
             }
         }
     }

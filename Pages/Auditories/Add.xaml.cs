@@ -62,56 +62,114 @@ namespace YP02.Pages.Auditories
         // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка на заполненность полей
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                MessageBox.Show("Введите наименование аудитории"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_shortName.Text))
-            {
-                MessageBox.Show("Введите сокращённое наименование аудитории"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (tb_User.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите ответственного пользователя"); // Сообщение об ошибке, если ответственный не выбран
-                return; // Прерывание выполнения метода
-            }
-            if (tb_tempUser.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите временно-ответственного пользователя"); // Сообщение об ошибке, если временно-ответственный не выбран
-                return; // Прерывание выполнения метода
-            }
-
-            // Если аудитория не была передана (т.е. мы добавляем новую)
-            if (auditories == null)
-            {
-                auditories = new Models.Auditories // Создание новой модели аудитории
+                // Проверка на заполненность полей
+                if (string.IsNullOrEmpty(tb_Name.Text))
                 {
-                    Name = tb_Name.Text, // Установка имени аудитории
-                    ShortName = tb_shortName.Text, // Установка сокращённого имени аудитории
-                    ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id, // Получение ID ответственного пользователя
-                    TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id // Получение ID временно-ответственного пользователя
-                };
-                MainAuditories.auditoriesContext.Auditories.Add(auditories); // Добавление новой аудитории в контекст
+                    MessageBox.Show("Введите наименование аудитории"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_shortName.Text))
+                {
+                    MessageBox.Show("Введите сокращённое наименование аудитории"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (tb_User.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите ответственного пользователя"); // Сообщение об ошибке, если ответственный не выбран
+                    return; // Прерывание выполнения метода
+                }
+                if (tb_tempUser.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите временно-ответственного пользователя"); // Сообщение об ошибке, если временно-ответственный не выбран
+                    return; // Прерывание выполнения метода
+                }
+
+                // Если аудитория не была передана (т.е. мы добавляем новую)
+                if (auditories == null)
+                {
+                    auditories = new Models.Auditories // Создание новой модели аудитории
+                    {
+                        Name = tb_Name.Text, // Установка имени аудитории
+                        ShortName = tb_shortName.Text, // Установка сокращённого имени аудитории
+                        ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id, // Получение ID ответственного пользователя
+                        TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id // Получение ID временно-ответственного пользователя
+                    };
+                    MainAuditories.auditoriesContext.Auditories.Add(auditories); // Добавление новой аудитории в контекст
+                }
+                else // Если аудитория уже существует (редактируем)
+                {
+                    // Обновление данных существующей аудитории
+                    auditories.Name = tb_Name.Text; // Обновление имени аудитории
+                    auditories.ShortName = tb_shortName.Text; // Обновление сокращённого имени аудитории
+                    auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id; // Обновление ID ответственного пользователя
+                    auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id; // Обновление ID временно-ответственного пользователя
+                }
+                MainAuditories.auditoriesContext.SaveChanges(); // Сохранение изменений в контексте базы данных
+                MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий после сохранения
             }
-            else // Если аудитория уже существует (редактируем)
+            catch (Exception ex)
             {
-                // Обновление данных существующей аудитории
-                auditories.Name = tb_Name.Text; // Обновление имени аудитории
-                auditories.ShortName = tb_shortName.Text; // Обновление сокращённого имени аудитории
-                auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id; // Обновление ID ответственного пользователя
-                auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id; // Обновление ID временно-ответственного пользователя
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
-            MainAuditories.auditoriesContext.SaveChanges(); // Сохранение изменений в контексте базы данных
-            MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий после сохранения
         }
 
         // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий без сохранения изменений
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий без сохранения изменений
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

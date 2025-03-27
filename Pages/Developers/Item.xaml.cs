@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Developers
 {
@@ -48,30 +49,88 @@ namespace YP02.Pages.Developers
         // Обработчик события нажатия кнопки "Редактировать"
         private void Click_redact(object sender, RoutedEventArgs e)
         {
-            // Открытие страницы редактирования выбранного разработчика
-            MainWindow.init.OpenPages(new Pages.Developers.Add(MainDevelopers, Developers));
+            try
+            {
+                // Открытие страницы редактирования выбранного разработчика
+                MainWindow.init.OpenPages(new Pages.Developers.Add(MainDevelopers, Developers));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки "Удалить"
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            // Вывод сообщения с подтверждением удаления
-            MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            try
+            {
+                // Вывод сообщения с подтверждением удаления
+                MessageBoxResult result = MessageBox.Show("При удалении все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            // Если пользователь подтвердил удаление
-            if (result == MessageBoxResult.Yes)
-            {
-                // Удаление разработчика из контекста
-                MainDevelopers.DevelopersContext.Developers.Remove(Developers);
-                // Сохранение изменений в контексте
-                MainDevelopers.DevelopersContext.SaveChanges();
-                // Удаление текущего элемента из родительского контейнера
-                (this.Parent as Panel).Children.Remove(this);
+                // Если пользователь подтвердил удаление
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Удаление разработчика из контекста
+                    MainDevelopers.DevelopersContext.Developers.Remove(Developers);
+                    // Сохранение изменений в контексте
+                    MainDevelopers.DevelopersContext.SaveChanges();
+                    // Удаление текущего элемента из родительского контейнера
+                    (this.Parent as Panel).Children.Remove(this);
+                }
+                else
+                {
+                    // Если действие отменено, выводим сообщение
+                    MessageBox.Show("Действие отменено.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Если действие отменено, выводим сообщение
-                MessageBox.Show("Действие отменено.");
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
     }

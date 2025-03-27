@@ -57,43 +57,101 @@ namespace YP02.Pages.ViewModel
         // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка на заполненность полей
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                MessageBox.Show("Введите название типа оборудования"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (cm_OborType.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите тип оборудования"); // Сообщение об ошибке, если тип не выбран
-                return; // Прерывание выполнения метода
-            }
+                // Проверка на заполненность полей
+                if (string.IsNullOrEmpty(tb_Name.Text))
+                {
+                    MessageBox.Show("Введите название типа оборудования"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (cm_OborType.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите тип оборудования"); // Сообщение об ошибке, если тип не выбран
+                    return; // Прерывание выполнения метода
+                }
 
-            // Если модель представления не была передана (т.е. мы добавляем новую)
-            if (viewModel == null)
-            {
-                viewModel = new Models.ViewModel(); // Создание новой модели представления
-                viewModel.Name = tb_Name.Text; // Установка имени типа оборудования
-                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Получение ID типа оборудования по имени
-                MainViewModel.ViewModelContext.ViewModel.Add(viewModel); // Добавление новой модели в контекст
-            }
-            else // Если модель уже существует (редактируем)
-            {
-                viewModel.Name = tb_Name.Text; // Обновление имени типа оборудования
-                viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Обновление ID типа оборудования
-            }
+                // Если модель представления не была передана (т.е. мы добавляем новую)
+                if (viewModel == null)
+                {
+                    viewModel = new Models.ViewModel(); // Создание новой модели представления
+                    viewModel.Name = tb_Name.Text; // Установка имени типа оборудования
+                    viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Получение ID типа оборудования по имени
+                    MainViewModel.ViewModelContext.ViewModel.Add(viewModel); // Добавление новой модели в контекст
+                }
+                else // Если модель уже существует (редактируем)
+                {
+                    viewModel.Name = tb_Name.Text; // Обновление имени типа оборудования
+                    viewModel.OborType = oborTypeContext.OborType.Where(x => x.Name == cm_OborType.SelectedItem.ToString()).First().Id; // Обновление ID типа оборудования
+                }
 
-            // Сохранение изменений в базе данных
-            MainViewModel.ViewModelContext.SaveChanges();
-            // Переход на страницу со списком моделей представления
-            MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
+                // Сохранение изменений в базе данных
+                MainViewModel.ViewModelContext.SaveChanges();
+                // Переход на страницу со списком моделей представления
+                MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }            
         }
 
         // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу со списком моделей представления без сохранения изменений
-            MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
+            try
+            {
+                // Переход на страницу со списком моделей представления без сохранения изменений
+                MainWindow.init.OpenPages(new Pages.ViewModel.ViewModel());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }            
         }
     }
 }

@@ -58,59 +58,146 @@ namespace YP02.Pages.RasxodMaterials
 
         private void Click_redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(MainRasxodMaterials, RasxodMaterials));
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.RasxodMaterials.Add(MainRasxodMaterials, RasxodMaterials));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }            
         }
 
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("При удалении расходного материала все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            try
             {
-                MainRasxodMaterials.rasxodMaterialsContext.RasxodMaterials.Remove(RasxodMaterials);
-                MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
+                MessageBoxResult result = MessageBox.Show("При удалении расходного материала все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                (this.Parent as Panel).Children.Remove(this);
+                if (result == MessageBoxResult.Yes)
+                {
+                    MainRasxodMaterials.rasxodMaterialsContext.RasxodMaterials.Remove(RasxodMaterials);
+                    MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
+
+                    (this.Parent as Panel).Children.Remove(this);
+                }
+                else
+                {
+                    MessageBox.Show("Действие отменено.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Действие отменено.");
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
 
         private void DisplayImage(byte[] imageData)
         {
-            if (imageData != null && imageData.Length > 0)
+            try
             {
-                try
+                if (imageData != null && imageData.Length > 0)
                 {
-                    using (var ms = new MemoryStream(imageData))
+                    try
                     {
-                        var image = System.Drawing.Image.FromStream(ms);
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        MemoryStream memoryStream = new MemoryStream();
-                        image.Save(memoryStream, ImageFormat.Png);
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        bitmapImage.StreamSource = memoryStream;
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.EndInit();
+                        using (var ms = new MemoryStream(imageData))
+                        {
+                            var image = System.Drawing.Image.FromStream(ms);
+                            var bitmapImage = new BitmapImage();
+                            bitmapImage.BeginInit();
+                            MemoryStream memoryStream = new MemoryStream();
+                            image.Save(memoryStream, ImageFormat.Png);
+                            memoryStream.Seek(0, SeekOrigin.Begin);
+                            bitmapImage.StreamSource = memoryStream;
+                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapImage.EndInit();
 
-                        imgObor.Source = bitmapImage;
+                            imgObor.Source = bitmapImage;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
+                        imgObor.Source = new BitmapImage(uri);
+
+                        Debug.WriteLine(ex.Message);
                     }
                 }
-                catch (Exception ex)
+                else
                 {
                     Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
                     imgObor.Source = new BitmapImage(uri);
-
-                    Debug.WriteLine(ex.Message);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                imgObor.Source = new BitmapImage(uri);
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
     }

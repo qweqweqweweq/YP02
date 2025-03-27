@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YP02.Context;
 
 namespace YP02.Pages.Developers
 {
@@ -46,39 +47,97 @@ namespace YP02.Pages.Developers
         // Обработчик события нажатия кнопки "Редактировать"
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка, введено ли название разработчика
-            if (string.IsNullOrEmpty(tb_Name.Text))
+            try
             {
-                // Если нет, выводим сообщение об ошибке
-                MessageBox.Show("Введите название типа оборудования");
-                return; // Прерываем выполнение метода
-            }
+                // Проверка, введено ли название разработчика
+                if (string.IsNullOrEmpty(tb_Name.Text))
+                {
+                    // Если нет, выводим сообщение об ошибке
+                    MessageBox.Show("Введите название типа оборудования");
+                    return; // Прерываем выполнение метода
+                }
 
-            // Если объект разработчика равен null, создаем новый объект
-            if (developers == null)
+                // Если объект разработчика равен null, создаем новый объект
+                if (developers == null)
+                {
+                    developers = new Models.Developers();
+                    developers.Name = tb_Name.Text; // Устанавливаем имя разработчика
+                    MainDevelopers.DevelopersContext.Developers.Add(developers); // Добавляем нового разработчика в контекст
+                }
+                else
+                {
+                    // Если объект разработчика существует, обновляем его имя
+                    developers.Name = tb_Name.Text;
+                }
+
+                // Сохраняем изменения в контексте разработчиков
+                MainDevelopers.DevelopersContext.SaveChanges();
+
+                // Открываем страницу со списком разработчиков
+                MainWindow.init.OpenPages(new Pages.Developers.Developers());
+            }
+            catch (Exception ex)
             {
-                developers = new Models.Developers();
-                developers.Name = tb_Name.Text; // Устанавливаем имя разработчика
-                MainDevelopers.DevelopersContext.Developers.Add(developers); // Добавляем нового разработчика в контекст
-            }
-            else
-            {
-                // Если объект разработчика существует, обновляем его имя
-                developers.Name = tb_Name.Text;
-            }
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
 
-            // Сохраняем изменения в контексте разработчиков
-            MainDevelopers.DevelopersContext.SaveChanges();
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
 
-            // Открываем страницу со списком разработчиков
-            MainWindow.init.OpenPages(new Pages.Developers.Developers());
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            // Открываем страницу со списком разработчиков без сохранения изменений
-            MainWindow.init.OpenPages(new Pages.Developers.Developers());
+            try
+            {
+                // Открываем страницу со списком разработчиков без сохранения изменений
+                MainWindow.init.OpenPages(new Pages.Developers.Developers());
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

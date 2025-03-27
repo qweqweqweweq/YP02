@@ -57,78 +57,136 @@ namespace YP02.Pages.Users
         // Обработчик события нажатия кнопки "Сохранить" (или "Изменить")
         private void Click_Redact(object sender, RoutedEventArgs e)
         {
-            // Проверка на заполненность полей
-            if (string.IsNullOrEmpty(tb_FIO.Text))
+            try
             {
-                MessageBox.Show("Введите ФИО пользователя"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_Login.Text))
-            {
-                MessageBox.Show("Введите логин"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_Password.Text))
-            {
-                MessageBox.Show("Введите пароль"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_Phone.Text))
-            {
-                MessageBox.Show("Введите номер телефона"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_Email.Text))
-            {
-                MessageBox.Show("Введите эл. почту"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (string.IsNullOrEmpty(tb_Address.Text))
-            {
-                MessageBox.Show("Введите адрес"); // Сообщение об ошибке, если поле пустое
-                return; // Прерывание выполнения метода
-            }
-            if (tb_Role.SelectedItem == null)
-            {
-                MessageBox.Show("Выберите роль"); // Сообщение об ошибке, если роль не выбрана
-                return; // Прерывание выполнения метода
-            }
-
-            // Если пользователь не был передан (т.е. мы добавляем нового)
-            if (users == null)
-            {
-                users = new Models.Users // Создание новой модели пользователя
+                // Проверка на заполненность полей
+                if (string.IsNullOrEmpty(tb_FIO.Text))
                 {
-                    FIO = tb_FIO.Text, // Установка ФИО
-                    Login = tb_Login.Text, // Установка логина
-                    Password = tb_Password.Text, // Установка пароля
-                    Number = tb_Phone.Text, // Установка номера телефона
-                    Email = tb_Email.Text, // Установка электронной почты
-                    Address = tb_Address.Text, // Установка адреса
-                    Role = tb_Role.Text // Установка роли
-                };
-                MainUsers.UsersContext.Users.Add(users); // Добавление нового пользователя в контекст
-            }
-            else // Если пользователь уже существует (редактируем)
-            {
-                // Обновление данных существующего пользователя
-                users.FIO = tb_FIO.Text; // Обновление ФИО
-                users.Login = tb_Login.Text; // Обновление логина
-                users.Password = tb_Password.Text; // Обновление пароля
-                users.Email = tb_Email.Text; // Обновление электронной почты
-                users.Address = tb_Address.Text; // Обновление адреса
-                users.Role = tb_Role.Text; // Обновление роли
-                users.Number = tb_Phone.Text; // Обновление номера телефона
-            }
+                    MessageBox.Show("Введите ФИО пользователя"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_Login.Text))
+                {
+                    MessageBox.Show("Введите логин"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_Password.Text))
+                {
+                    MessageBox.Show("Введите пароль"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_Phone.Text))
+                {
+                    MessageBox.Show("Введите номер телефона"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_Email.Text))
+                {
+                    MessageBox.Show("Введите эл. почту"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (string.IsNullOrEmpty(tb_Address.Text))
+                {
+                    MessageBox.Show("Введите адрес"); // Сообщение об ошибке, если поле пустое
+                    return; // Прерывание выполнения метода
+                }
+                if (tb_Role.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите роль"); // Сообщение об ошибке, если роль не выбрана
+                    return; // Прерывание выполнения метода
+                }
 
-            MainUsers.UsersContext.SaveChanges(); // Сохранение изменений в контексте
-            MainWindow.init.OpenPages(new Pages.Users.Users()); // Переход на страницу пользователей
+                // Если пользователь не был передан (т.е. мы добавляем нового)
+                if (users == null)
+                {
+                    users = new Models.Users // Создание новой модели пользователя
+                    {
+                        FIO = tb_FIO.Text, // Установка ФИО
+                        Login = tb_Login.Text, // Установка логина
+                        Password = tb_Password.Text, // Установка пароля
+                        Number = tb_Phone.Text, // Установка номера телефона
+                        Email = tb_Email.Text, // Установка электронной почты
+                        Address = tb_Address.Text, // Установка адреса
+                        Role = tb_Role.Text // Установка роли
+                    };
+                    MainUsers.UsersContext.Users.Add(users); // Добавление нового пользователя в контекст
+                }
+                else // Если пользователь уже существует (редактируем)
+                {
+                    // Обновление данных существующего пользователя
+                    users.FIO = tb_FIO.Text; // Обновление ФИО
+                    users.Login = tb_Login.Text; // Обновление логина
+                    users.Password = tb_Password.Text; // Обновление пароля
+                    users.Email = tb_Email.Text; // Обновление электронной почты
+                    users.Address = tb_Address.Text; // Обновление адреса
+                    users.Role = tb_Role.Text; // Обновление роли
+                    users.Number = tb_Phone.Text; // Обновление номера телефона
+                }
+
+                MainUsers.UsersContext.SaveChanges(); // Сохранение изменений в контексте
+                MainWindow.init.OpenPages(new Pages.Users.Users()); // Переход на страницу пользователей
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки "Отмена"
         private void Click_Cancel_Redact(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Users.Users()); // Переход на страницу пользователей без сохранения изменений
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.Users.Users()); // Переход на страницу пользователей без сохранения изменений
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
     }
 }

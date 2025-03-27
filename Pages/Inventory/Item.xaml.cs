@@ -58,30 +58,88 @@ namespace YP02.Pages.Inventory
         // Обработчик события нажатия кнопки "Редактировать"
         private void Click_redact(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу редактирования инвентаризации, передавая основную страницу и текущую инвентаризацию
-            MainWindow.init.OpenPages(new Pages.Inventory.Add(MainInventory, inventory));
+            try
+            {
+                // Переход на страницу редактирования инвентаризации, передавая основную страницу и текущую инвентаризацию
+                MainWindow.init.OpenPages(new Pages.Inventory.Add(MainInventory, inventory));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
+            }
         }
 
         // Обработчик события нажатия кнопки "Удалить"
         private void Click_remove(object sender, RoutedEventArgs e)
         {
-            // Запрос подтверждения на удаление
-            MessageBoxResult result = MessageBox.Show("При удалении инвентаризации все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            // Если пользователь подтвердил удаление
-            if (result == MessageBoxResult.Yes)
+            try
             {
-                // Удаление инвентаризации из контекста
-                MainInventory.InventoryContext.Inventory.Remove(inventory);
-                MainInventory.InventoryContext.SaveChanges(); // Сохранение изменений в базе данных
+                // Запрос подтверждения на удаление
+                MessageBoxResult result = MessageBox.Show("При удалении инвентаризации все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                // Удаление текущего элемента из родительского контейнера
-                (this.Parent as Panel).Children.Remove(this);
+                // Если пользователь подтвердил удаление
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Удаление инвентаризации из контекста
+                    MainInventory.InventoryContext.Inventory.Remove(inventory);
+                    MainInventory.InventoryContext.SaveChanges(); // Сохранение изменений в базе данных
+
+                    // Удаление текущего элемента из родительского контейнера
+                    (this.Parent as Panel).Children.Remove(this);
+                }
+                else
+                {
+                    // Сообщение о том, что действие отменено
+                    MessageBox.Show("Действие отменено.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Сообщение о том, что действие отменено
-                MessageBox.Show("Действие отменено.");
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
     }
