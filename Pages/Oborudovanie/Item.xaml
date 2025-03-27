@@ -58,8 +58,22 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="SelectedBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#0060AC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF3C7FB1"/>
+                    <Setter Property="BorderThickness" Value="3"/>
+                    <Setter Property="Background" Value="#FFE1F5FE"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-    <Border CornerRadius="10" Background="White" Margin="10" BorderBrush="#0060AC" BorderThickness="1">
+
+    <Border CornerRadius="10" Margin="10" Style="{StaticResource SelectedBorderStyle}">
         <Grid Margin="10,5,10,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>

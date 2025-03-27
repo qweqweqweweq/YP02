@@ -26,9 +26,6 @@ using ExcelDataReader;
 
 namespace YP02.Pages.Oborudovanie
 {
-    /// <summary>
-    /// Логика взаимодействия для Oborudovanie.xaml
-    /// </summary>
     public partial class Oborudovanie : Page
     {
         public OborudovanieContext OborudovanieContext = new OborudovanieContext();
@@ -39,6 +36,8 @@ namespace YP02.Pages.Oborudovanie
         public UsersContext usContext = new UsersContext();
         public Models.ViewModel ViewModel;
         public ViewModelContext ViewModelContext = new ViewModelContext();
+
+        private Item _selectedItem;
 
         public Oborudovanie()
         {
@@ -53,11 +52,42 @@ namespace YP02.Pages.Oborudovanie
                 import.Visibility = Visibility.Visible;
             }
 
+            LoadEquipment();
+        }
+
+        private void LoadEquipment()
+        {
             parent.Children.Clear();
             foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
             {
-                parent.Children.Add(new Item(item, this));
+                var itemControl = new Item(item, this);
+                itemControl.SelectionChanged += ItemControl_SelectionChanged;
+                parent.Children.Add(itemControl);
             }
+        }
+
+        private void ItemControl_SelectionChanged(object sender, EventArgs e)
+        {
+            var item = (Item)sender;
+
+            if (item.IsSelected)
+            {
+                // Снимаем выделение с предыдущего выбранного элемента
+                if (_selectedItem != null && _selectedItem != item)
+                {
+                    _selectedItem.IsSelected = false;
+                }
+                _selectedItem = item;
+            }
+            else if (_selectedItem == item)
+            {
+                _selectedItem = null;
+            }
+        }
+
+        private Models.Oborudovanie GetSelectedEquipment()
+        {
+            return _selectedItem?.Oborudovanie;
         }
 
         private void KeyDown_Search(object sender, KeyEventArgs e)
@@ -69,7 +99,9 @@ namespace YP02.Pages.Oborudovanie
             parent.Children.Clear();
             foreach (var item in result)
             {
-                parent.Children.Add(new Item(item, this));
+                var itemControl = new Item(item, this);
+                itemControl.SelectionChanged += ItemControl_SelectionChanged;
+                parent.Children.Add(itemControl);
             }
         }
 
@@ -84,17 +116,21 @@ namespace YP02.Pages.Oborudovanie
             parent.Children.Clear();
             foreach (var oborudovanie in sortUp)
             {
-                parent.Children.Add(new Item(oborudovanie, this));
+                var itemControl = new Item(oborudovanie, this);
+                itemControl.SelectionChanged += ItemControl_SelectionChanged;
+                parent.Children.Add(itemControl);
             }
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-            var sortDown = OborudovanieContext.Oborudovanie.OrderBy(x => x.Name);
+            var sortDown = OborudovanieContext.Oborudovanie.OrderByDescending(x => x.Name);
             parent.Children.Clear();
             foreach (var oborudovanie in sortDown)
             {
-                parent.Children.Add(new Item(oborudovanie, this));
+                var itemControl = new Item(oborudovanie, this);
+                itemControl.SelectionChanged += ItemControl_SelectionChanged;
+                parent.Children.Add(itemControl);
             }
         }
 
@@ -105,18 +141,20 @@ namespace YP02.Pages.Oborudovanie
 
         private void ExportObor(object sender, RoutedEventArgs e)
         {
+            var selectedEquipment = GetSelectedEquipment();
+            if (selectedEquipment == null)
+            {
+                MessageBox.Show("Пожалуйста, выберите оборудование для генерации отчета.");
+                return;
+            }
+
             // Получаем текущую дату
             string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
 
-            // Создаем экземпляр контекста
             using (var obContext = new OborudovanieContext())
             {
-                // Получаем ID оборудования
-                int selectedEquipmentId = GetSelectedEquipmentId(); // Метод для получения ID выбранного оборудования
-
-                // Получаем данные об оборудовании из базы данных по ID
                 var oborudovanie = obContext.Oborudovanie
-                    .FirstOrDefault(x => x.Id == selectedEquipmentId);
+                    .FirstOrDefault(x => x.Id == selectedEquipment.Id);
 
                 if (oborudovanie == null)
                 {
@@ -124,10 +162,8 @@ namespace YP02.Pages.Oborudovanie
                     return;
                 }
 
-                // Получаем текущего пользователя
                 var currentUser = usContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
 
-                // Создаем новый документ
                 using (DocX document = DocX.Create("Akt_Priema_Peredachi.docx"))
                 {
                     // Добавляем заголовок
@@ -150,9 +186,8 @@ namespace YP02.Pages.Oborudovanie
                     if (currentUser != null)
                     {
                         var fioParts = currentUser.FIO.Split(' ');
-                        string lastName = fioParts[0]; // Фамилия
-                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}."; // Инициалы (Имя и Отчество)
-                        // Добавляем основной текст с отступом
+                        string lastName = fioParts[0];
+                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}.";
                         var mainText = document.InsertParagraph($"КГАПОУ Пермский Авиационный техникум им. А.Д. Швецова в целях\nобеспечения необходимым оборудованием для исполнения должностных обязанностей\nпередаёт сотруднику {lastName} {initials}, а сотрудник принимает от учебного учреждения\nследующее оборудование:\n\n");
                         mainText.Font("Times New Roman");
                         mainText.FontSize(12);
@@ -162,30 +197,26 @@ namespace YP02.Pages.Oborudovanie
 
                     using (var viewContext = new ViewModelContext())
                     {
-                        int selectEquipmentId = GetSelectEquipmentId();
-                        // Получаем модель оборудования по IdModelObor
                         var model = viewContext.ViewModel
-                            .FirstOrDefault(x => x.Id == selectEquipmentId);
+                            .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
 
-                        // Добавляем информацию об оборудовании в одной строке и по центру
-                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n\n")
+                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n\n")
                             .Font("Times New Roman")
                             .FontSize(12)
                             .Alignment = Alignment.center;
                     }
-                    // Извлекаем фамилию и инициалы
+
                     if (currentUser != null)
                     {
                         var fioParts = currentUser.FIO.Split(' ');
-                        string lastName = fioParts[0]; // Фамилия
-                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}."; // Инициалы (Имя и Отчество)
+                        string lastName = fioParts[0];
+                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}.";
                         var paragraph = document.InsertParagraph($"{lastName} {initials}       ____________________     ________________")
                             .Font("Times New Roman")
                             .FontSize(12)
                             .Alignment = Alignment.left;
                     }
 
-                    // Сохраняем документ
                     document.Save();
                 }
 
@@ -193,31 +224,21 @@ namespace YP02.Pages.Oborudovanie
             }
         }
 
-        private int GetSelectEquipmentId()
-        {
-            return 2;
-        }
-
-        // Метод для получения ID выбранного оборудования
-        private int GetSelectedEquipmentId()
-        {
-            return 1; 
-        }
-
         private void ExportObor1(object sender, RoutedEventArgs e)
         {
-            // Получаем текущую дату
+            var selectedEquipment = GetSelectedEquipment();
+            if (selectedEquipment == null)
+            {
+                MessageBox.Show("Пожалуйста, выберите оборудование для генерации отчета.");
+                return;
+            }
+
             string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
 
-            // Создаем экземпляр контекста
             using (var obContext = new OborudovanieContext())
             {
-                // Получаем ID оборудования
-                int selectedEquipmentId = GetSelectedEquipmentId1(); // Метод для получения ID выбранного оборудования
-
-                // Получаем данные об оборудовании из базы данных по ID
                 var oborudovanie = obContext.Oborudovanie
-                    .FirstOrDefault(x => x.Id == selectedEquipmentId);
+                    .FirstOrDefault(x => x.Id == selectedEquipment.Id);
 
                 if (oborudovanie == null)
                 {
@@ -225,19 +246,15 @@ namespace YP02.Pages.Oborudovanie
                     return;
                 }
 
-                // Получаем текущего пользователя
                 var currentUser = usContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
 
-                // Создаем новый документ
                 using (DocX document = DocX.Create("Akt_Priema_Peredachi_Vrem_Polz.docx"))
                 {
-                    // Добавляем заголовок
                     document.InsertParagraph("АКТ\nприема-передачи оборудования на временное пользование\n\n")
                         .Font("Times New Roman")
                         .FontSize(12)
                         .Alignment = Alignment.center;
 
-                    // Добавляем информацию о месте и дате
                     var locationAndDate = document.InsertParagraph($"г. Пермь")
                         .Font("Times New Roman")
                         .FontSize(12)
@@ -251,9 +268,8 @@ namespace YP02.Pages.Oborudovanie
                     if (currentUser != null)
                     {
                         var fioParts = currentUser.FIO.Split(' ');
-                        string lastName = fioParts[0]; // Фамилия
-                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}."; // Инициалы (Имя и Отчество)
-                        // Добавляем основной текст с отступом
+                        string lastName = fioParts[0];
+                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}.";
                         var mainText = document.InsertParagraph($"КГАПОУ Пермский Авиационный техникум им. А.Д. Швецова в целях\nобеспечения необходимым оборудованием для исполнения должностных обязанностей\nпередаёт сотруднику {lastName} {initials}, а сотрудник принимает от учебного учреждения\nследующее оборудование:\n\n");
                         mainText.Font("Times New Roman");
                         mainText.FontSize(12);
@@ -263,38 +279,32 @@ namespace YP02.Pages.Oborudovanie
 
                     using (var viewContext = new ViewModelContext())
                     {
-                        int selectEquipmentId = GetSelectEquipmentId();
-                        // Получаем модель оборудования по IdModelObor
                         var model = viewContext.ViewModel
-                            .FirstOrDefault(x => x.Id == selectEquipmentId);
+                            .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
 
-                        // Добавляем информацию об оборудовании в одной строке и по центру
-                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n")
-                        .Font("Times New Roman")
-                        .FontSize(12)
-                        .Alignment = Alignment.center;
+                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n")
+                            .Font("Times New Roman")
+                            .FontSize(12)
+                            .Alignment = Alignment.center;
                     }
-                        
-                    // Добавляем основной текст с отступом
+
                     var lastText = document.InsertParagraph($"По окончанию должностных работ  «__»  ____________  20___  года, работник\nобязуется вернуть полученное оборудование.\n\n");
                     lastText.Font("Times New Roman");
                     lastText.FontSize(12);
                     lastText.IndentationFirstLine = 26;
                     lastText.Alignment = Alignment.both;
 
-                    // Извлекаем фамилию и инициалы
                     if (currentUser != null)
                     {
                         var fioParts = currentUser.FIO.Split(' ');
-                        string lastName = fioParts[0]; // Фамилия
-                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}."; // Инициалы (Имя и Отчество)
+                        string lastName = fioParts[0];
+                        string initials = $"{fioParts[1][0]}.{fioParts[2][0]}.";
                         var paragraph = document.InsertParagraph($"{lastName} {initials}       ____________________     ________________")
                             .Font("Times New Roman")
                             .FontSize(12)
                             .Alignment = Alignment.left;
                     }
 
-                    // Сохраняем документ
                     document.Save();
                 }
 
@@ -302,11 +312,6 @@ namespace YP02.Pages.Oborudovanie
             }
         }
 
-        // Метод для получения ID выбранного оборудования
-        private int GetSelectedEquipmentId1()
-        {
-            return 1;
-        }
         private List<Models.Oborudovanie> ReadExcelFile(string filePath)
         {
             List<Models.Oborudovanie> equipmentList = new List<Models.Oborudovanie>();
@@ -318,34 +323,29 @@ namespace YP02.Pages.Oborudovanie
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     var result = reader.AsDataSet();
-                    var table = result.Tables[0]; // Первая таблица
+                    var table = result.Tables[0];
 
-                    using (var context = new UsersContext()) // Подключаемся к БД
+                    using (var context = new UsersContext())
                     {
-                        for (int i = 1; i < table.Rows.Count; i++) // Пропускаем заголовки
+                        for (int i = 1; i < table.Rows.Count; i++)
                         {
                             var row = table.Rows[i];
-
-                            // Получаем ФИО пользователя из Excel (первая колонка)
                             string userFIO = row[0].ToString().Trim();
-
-                            // Ищем пользователя по ФИО в БД
                             var user = context.Users.FirstOrDefault(u => u.FIO == userFIO);
 
                             if (user == null)
                             {
                                 MessageBox.Show($"Ошибка: Пользователь '{userFIO}' не найден в базе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue; // Пропускаем запись, если пользователь не найден
+                                continue;
                             }
 
-                            // Создаем объект оборудования и заполняем поля
                             equipmentList.Add(new Models.Oborudovanie
                             {
-                                Name = row[1].ToString(), // Основное средство (оборудование)
-                                InventNumber = row[2].ToString(), // Инвентарный номер
+                                Name = row[1].ToString(),
+                                InventNumber = row[2].ToString(),
                                 PriceObor = "Не указано",
-                                IdResponUser = user.Id, // ID пользователя
-                                IdTimeResponUser = user.Id, // Используем тот же ID
+                                IdResponUser = user.Id,
+                                IdTimeResponUser = user.Id,
                                 IdClassroom = 8,
                                 IdNapravObor = 7,
                                 IdStatusObor = 9,
@@ -358,9 +358,10 @@ namespace YP02.Pages.Oborudovanie
             }
             return equipmentList;
         }
+
         private void SaveToDatabase(List<Models.Oborudovanie> equipmentList)
         {
-            using (var context = new OborudovanieContext()) // Ваш DbContext
+            using (var context = new OborudovanieContext())
             {
                 context.Oborudovanie.AddRange(equipmentList);
                 context.SaveChanges();
@@ -379,15 +380,10 @@ namespace YP02.Pages.Oborudovanie
                 string filePath = openFileDialog.FileName;
                 List<Models.Oborudovanie> equipmentList = ReadExcelFile(filePath);
 
-                // Сохраняем данные в базу
                 SaveToDatabase(equipmentList);
 
                 MessageBox.Show("Импорт завершён успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                parent.Children.Clear();
-                foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
-                {
-                    parent.Children.Add(new Item(item, this));
-                }
+                LoadEquipment();
             }
         }
     }

@@ -9,13 +9,20 @@ using System.Diagnostics;
 
 namespace YP02.Pages.Oborudovanie
 {
-    /// <summary>
-    /// Логика взаимодействия для Item.xaml
-    /// </summary>
     public partial class Item : UserControl
     {
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(Item),
+                new PropertyMetadata(false, OnIsSelectedChanged));
+
+        public bool IsSelected
+        {
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
+        }
+
         Oborudovanie MainOborudovanie;
-        Models.Oborudovanie Oborudovanie;
+        public Models.Oborudovanie Oborudovanie;
         AuditoriesContext auditoriesContext = new();
         UsersContext usersContext = new();
         NapravlenieContext napravlenieContext = new();
@@ -26,6 +33,8 @@ namespace YP02.Pages.Oborudovanie
         public Item(Models.Oborudovanie Oborudovanie, Oborudovanie MainOborudovanie)
         {
             InitializeComponent();
+            this.Oborudovanie = Oborudovanie;
+            this.MainOborudovanie = MainOborudovanie;
 
             currentUser = MainWindow.init.CurrentUser;
             if (currentUser != null && currentUser.Role == "Администратор")
@@ -34,19 +43,39 @@ namespace YP02.Pages.Oborudovanie
                 button2.Visibility = Visibility.Visible;
             }
 
-            this.Oborudovanie = Oborudovanie;
-            this.MainOborudovanie = MainOborudovanie;
             lb_Name.Content = Oborudovanie.Name;
             lb_invNum.Content = Oborudovanie.InventNumber;
-            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).FirstOrDefault().Name;
-            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).FirstOrDefault().FIO;
-            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).FirstOrDefault().FIO;
+            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).FirstOrDefault()?.Name;
+            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).FirstOrDefault()?.FIO;
+            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).FirstOrDefault()?.FIO;
             lb_Price.Content = Oborudovanie.PriceObor;
-            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).FirstOrDefault().Name;
-            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).FirstOrDefault().Name;
-            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).FirstOrDefault().Name;
+            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).FirstOrDefault()?.Name;
+            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).FirstOrDefault()?.Name;
+            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).FirstOrDefault()?.Name;
             lb_Comment.Content = Oborudovanie.Comments;
             DisplayImage(Oborudovanie.Photo);
+
+            // Добавляем обработчик клика по всему элементу
+            this.MouseLeftButtonDown += Item_MouseLeftButtonDown;
+        }
+
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var item = (Item)d;
+            item.RaiseSelectionChanged();
+        }
+
+        public event EventHandler SelectionChanged;
+
+        private void RaiseSelectionChanged()
+        {
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            IsSelected = !IsSelected;
+            e.Handled = true;
         }
 
         private void Click_redact(object sender, RoutedEventArgs e)
@@ -68,7 +97,6 @@ namespace YP02.Pages.Oborudovanie
 
         private void Click_history(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу истории, передавая Id оборудования
             MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
         }
 
@@ -101,6 +129,7 @@ namespace YP02.Pages.Oborudovanie
                 SetDefaultImage();
             }
         }
+
         private void SetDefaultImage()
         {
             try
