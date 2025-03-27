@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.Logging;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;

@@ -21,6 +21,7 @@ namespace YP02.Pages
     /// </summary>
     public partial class Authorization : Page
     {
+
         public Authorization()
         {
             InitializeComponent();
@@ -28,33 +29,50 @@ namespace YP02.Pages
 
         private void AuthorizationClick(object sender, RoutedEventArgs e)
         {
-            string Login = login.Text;
-            string Password = password.Password;
-
-            if (string.IsNullOrWhiteSpace(Login))
+            try
             {
-                MessageBox.Show("Введите логин.");
-                return;
-            }
+                string Login = login.Text;
+                string Password = password.Password;
 
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                MessageBox.Show("Введите пароль.");
-                return;
-            }
-
-            using (var usersContext = new UsersContext())
-            {
-                var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
-                if (user != null)
+                if (string.IsNullOrWhiteSpace(Login))
                 {
-                    MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
-                    MainWindow.init.OpenPages(new Menu());
+                    MessageBox.Show("Введите логин.");
+                    return;
                 }
-                else
+
+                if (string.IsNullOrWhiteSpace(Password))
                 {
-                    MessageBox.Show("Некорректный ввод логина или пароля.");
+                    MessageBox.Show("Введите пароль.");
+                    return;
                 }
+
+                using (var usersContext = new UsersContext())
+                {
+                    var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                    if (user != null)
+                    {
+                        MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
+                        MainWindow.init.OpenPages(new Menu());
+                    }
+                    else
+                    {
+                        MessageBox.Show("Некорректный ввод логина или пароля.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                using (var errorsContext = new ErrorsContext())
+                {
+                    var error = new Models.Errors
+                    {
+                        Message = ex.Message
+                    };
+                    errorsContext.Errors.Add(error);
+                    errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                }
+                MessageBox.Show("Ошибка." +  ex.Message);
+
             }
         }
     }

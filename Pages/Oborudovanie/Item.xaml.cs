@@ -72,7 +72,7 @@ namespace YP02.Pages.Oborudovanie
             MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
         }
 
-        private void DisplayImage(byte[] imageData)
+        private async void DisplayImage(byte[] imageData)
         {
             try
             {
@@ -85,6 +85,7 @@ namespace YP02.Pages.Oborudovanie
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.StreamSource = ms;
                         bitmap.EndInit();
+                        bitmap.Freeze();
 
                         imgObor.Source = bitmap;
                     }
@@ -102,7 +103,19 @@ namespace YP02.Pages.Oborudovanie
         }
         private void SetDefaultImage()
         {
-            imgObor.Source = new BitmapImage(new Uri("pack://application:,,,/Images/NoneImage.png"));
+            try
+            {
+                BitmapImage defaultImage = new BitmapImage();
+                defaultImage.BeginInit();
+                defaultImage.UriSource = new Uri("pack://application:,,,/Images/NoneImage.png", UriKind.Absolute);
+                defaultImage.EndInit();
+                defaultImage.Freeze();
+                imgObor.Source = defaultImage;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка загрузки стандартного изображения: {ex.Message}");
+            }
         }
     }
 }

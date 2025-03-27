@@ -22,6 +22,7 @@ using Page = System.Windows.Controls.Page;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 using YP02.Models;
+using ExcelDataReader;
 
 namespace YP02.Pages.Oborudovanie
 {
@@ -31,6 +32,7 @@ namespace YP02.Pages.Oborudovanie
     public partial class Oborudovanie : Page
     {
         public OborudovanieContext OborudovanieContext = new OborudovanieContext();
+        public UsersContext UsersContext = new UsersContext();
         private Models.Users currentUser;
         public Models.Users Users;
         public Models.Oborudovanie Oborud;
@@ -48,6 +50,7 @@ namespace YP02.Pages.Oborudovanie
                 addBtn.Visibility = Visibility.Visible;
                 exportDoc.Visibility = Visibility.Visible;
                 exportDoc1.Visibility = Visibility.Visible;
+                import.Visibility = Visibility.Visible;
             }
 
             parent.Children.Clear();
@@ -98,11 +101,6 @@ namespace YP02.Pages.Oborudovanie
         private void Add(object sender, RoutedEventArgs e)
         {
             MainWindow.init.OpenPages(new Pages.Oborudovanie.Add(this, null));
-        }
-
-        private void GoImport(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void ExportObor(object sender, RoutedEventArgs e)
@@ -308,6 +306,89 @@ namespace YP02.Pages.Oborudovanie
         private int GetSelectedEquipmentId1()
         {
             return 1;
+        }
+        private List<Models.Oborudovanie> ReadExcelFile(string filePath)
+        {
+            List<Models.Oborudovanie> equipmentList = new List<Models.Oborudovanie>();
+
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var table = result.Tables[0]; // Первая таблица
+
+                    using (var context = new UsersContext()) // Подключаемся к БД
+                    {
+                        for (int i = 1; i < table.Rows.Count; i++) // Пропускаем заголовки
+                        {
+                            var row = table.Rows[i];
+
+                            // Получаем ФИО пользователя из Excel (первая колонка)
+                            string userFIO = row[0].ToString().Trim();
+
+                            // Ищем пользователя по ФИО в БД
+                            var user = context.Users.FirstOrDefault(u => u.FIO == userFIO);
+
+                            if (user == null)
+                            {
+                                MessageBox.Show($"Ошибка: Пользователь '{userFIO}' не найден в базе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                continue; // Пропускаем запись, если пользователь не найден
+                            }
+
+                            // Создаем объект оборудования и заполняем поля
+                            equipmentList.Add(new Models.Oborudovanie
+                            {
+                                Name = row[1].ToString(), // Основное средство (оборудование)
+                                InventNumber = row[2].ToString(), // Инвентарный номер
+                                PriceObor = "Не указано",
+                                IdResponUser = user.Id, // ID пользователя
+                                IdTimeResponUser = user.Id, // Используем тот же ID
+                                IdClassroom = 8,
+                                IdNapravObor = 7,
+                                IdStatusObor = 9,
+                                IdModelObor = 6,
+                                Comments = "Импортировано из Excel"
+                            });
+                        }
+                    }
+                }
+            }
+            return equipmentList;
+        }
+        private void SaveToDatabase(List<Models.Oborudovanie> equipmentList)
+        {
+            using (var context = new OborudovanieContext()) // Ваш DbContext
+            {
+                context.Oborudovanie.AddRange(equipmentList);
+                context.SaveChanges();
+            }
+        }
+
+        private void GoImport(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xls;*.xlsx",
+                Title = "Выберите файл Excel"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                List<Models.Oborudovanie> equipmentList = ReadExcelFile(filePath);
+
+                // Сохраняем данные в базу
+                SaveToDatabase(equipmentList);
+
+                MessageBox.Show("Импорт завершён успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                parent.Children.Clear();
+                foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
+                {
+                    parent.Children.Add(new Item(item, this));
+                }
+            }
         }
     }
 }

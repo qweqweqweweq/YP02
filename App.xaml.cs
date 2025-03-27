@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
 namespace YP02
 {
@@ -9,6 +7,7 @@ namespace YP02
     /// </summary>
     public partial class App : Application
     {
+        
     }
 
 }
