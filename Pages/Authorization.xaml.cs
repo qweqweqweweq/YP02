@@ -62,16 +62,29 @@ namespace YP02.Pages
             }
             catch (Exception ex)
             {
-                using (var errorsContext = new ErrorsContext())
+                try
                 {
-                    var error = new Models.Errors
+                    using (var errorsContext = new ErrorsContext())
                     {
-                        Message = ex.Message
-                    };
-                    errorsContext.Errors.Add(error);
-                    errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
                 }
-                MessageBox.Show("Ошибка." +  ex.Message);
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
 
             }
         }
