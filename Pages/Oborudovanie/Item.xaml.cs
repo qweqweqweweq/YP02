@@ -155,9 +155,24 @@ namespace YP02.Pages.Oborudovanie
 
         private void Click_history(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу истории, передавая Id оборудования
-            MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
-        }
+            try
+            {
+                // Переход на страницу истории, передавая Id оборудования
+                MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
 
                     // Логирование ошибки в файл log.txt
                     string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
@@ -177,22 +192,21 @@ namespace YP02.Pages.Oborudovanie
         {
             try
             {
-                try
+                
+                if (imageData != null && imageData.Length > 0)
                 {
-                    if (imageData != null && imageData.Length > 0)
+                    using (MemoryStream ms = new MemoryStream(imageData))
                     {
-                        using (MemoryStream ms = new MemoryStream(imageData))
-                        {
-                            BitmapImage bitmap = new BitmapImage();
-                            bitmap.BeginInit();
-                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmap.StreamSource = ms;
-                            bitmap.EndInit();
-                            bitmap.Freeze();
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = ms;
+                        bitmap.EndInit();
+                        bitmap.Freeze();
 
                         imgObor.Source = bitmap;
                     }
-                }
+                }                
                 else
                 {
                     SetDefaultImage();
@@ -204,6 +218,7 @@ namespace YP02.Pages.Oborudovanie
                 SetDefaultImage();
             }
         }
+
         private void SetDefaultImage()
         {
             try

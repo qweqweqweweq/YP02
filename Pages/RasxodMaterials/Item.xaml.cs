@@ -105,7 +105,7 @@ namespace YP02.Pages.RasxodMaterials
                 }
 
                 MessageBox.Show("Ошибка: " + ex.Message);
-            }            
+            }
         }
 
         private void Click_remove(object sender, RoutedEventArgs e)
@@ -174,22 +174,49 @@ namespace YP02.Pages.RasxodMaterials
                             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                             bitmapImage.EndInit();
 
-                        imgObor.Source = bitmapImage;
+                            imgObor.Source = bitmapImage;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
+                        imgObor.Source = new BitmapImage(uri);
+
+                        Debug.WriteLine(ex.Message);
                     }
                 }
-                catch (Exception ex)
+                else
                 {
                     Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
                     imgObor.Source = new BitmapImage(uri);
-
-                    Debug.WriteLine(ex.Message);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                imgObor.Source = new BitmapImage(uri);
+                try
+                {
+                    using (var errorsContext = new ErrorsContext())
+                    {
+                        var error = new Models.Errors
+                        {
+                            Message = ex.Message
+                        };
+                        errorsContext.Errors.Add(error);
+                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
+                    }
+
+                    // Логирование ошибки в файл log.txt
+                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
+                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                }
+                catch (Exception logEx)
+                {
+                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                }
+
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
-    }
+    }    
 }
