@@ -84,29 +84,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка редактирования оборудования", ex);
             }
         }
 
@@ -114,40 +92,32 @@ namespace YP02.Pages.Oborudovanie
         {
             try
             {
-                MessageBoxResult result = MessageBox.Show("При удалении оборудования все связанные данные также будут удалены!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
+                MessageBoxResult result = MessageBox.Show(
+                    "При удалении оборудования все связанные данные также будут удалены!",
+                    "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
+                );
+
+                if (result != MessageBoxResult.Yes)
                 {
-                    MainOborudovanie.OborudovanieContext.Oborudovanie.Remove(Oborudovanie);
-                    MainOborudovanie.OborudovanieContext.SaveChanges();
-                    (this.Parent as Panel).Children.Remove(this);
+                    MessageBox.Show("Действие отменено.");
+                    return;
                 }
-                else MessageBox.Show("Действие отменено.");
+
+                using var context = MainOborudovanie.OborudovanieContext;
+                context.Oborudovanie.Remove(Oborudovanie);
+                context.SaveChanges();
+
+                Dispatcher.Invoke(() =>
+                {
+                    if (Parent is Panel parentPanel)
+                    {
+                        parentPanel.Children.Remove(this);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка удаления оборудования", ex);
             }
         }
 
@@ -155,111 +125,76 @@ namespace YP02.Pages.Oborudovanie
         {
             try
             {
-                // Переход на страницу истории, передавая Id оборудования
                 MainWindow.init.OpenPages(new Pages.HistoryObor.HistoryObor(Oborudovanie.Id));
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка открытия истории оборудования", ex);
             }
         }
 
         private async void DisplayImage(byte[] imageData)
         {
-            try
+            if (imageData is { Length: > 0 })
             {
-                
-                if (imageData != null && imageData.Length > 0)
+                try
                 {
-                    using (MemoryStream ms = new MemoryStream(imageData))
+                    var bitmap = new BitmapImage();
+                    using (var ms = new MemoryStream(imageData))
                     {
-                        BitmapImage bitmap = new BitmapImage();
                         bitmap.BeginInit();
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.StreamSource = ms;
                         bitmap.EndInit();
                         bitmap.Freeze();
-
-                        imgObor.Source = bitmap;
                     }
-                }                
-                else
+
+                    imgObor.Source = bitmap;
+                    return;
+                }
+                catch (Exception ex)
                 {
-                    SetDefaultImage();
+                    LogError($"Ошибка загрузки изображения: {ex.Message}", ex);
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Ошибка загрузки изображения: {ex.Message}");
-                SetDefaultImage();
-            }
+
+            SetDefaultImage();
         }
 
         private void SetDefaultImage()
         {
             try
             {
-                try
-                {
-                    BitmapImage defaultImage = new BitmapImage();
-                    defaultImage.BeginInit();
-                    defaultImage.UriSource = new Uri("pack://application:,,,/Images/NoneImage.png", UriKind.Absolute);
-                    defaultImage.EndInit();
-                    defaultImage.Freeze();
-                    imgObor.Source = defaultImage;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Ошибка загрузки стандартного изображения: {ex.Message}");
-                }
+                var defaultImage = new BitmapImage();
+                defaultImage.BeginInit();
+                defaultImage.UriSource = new Uri("pack://application:,,,/Images/NoneImage.png", UriKind.Absolute);
+                defaultImage.EndInit();
+                defaultImage.Freeze();
+
+                imgObor.Source = defaultImage;
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
+                LogError($"Ошибка загрузки стандартного изображения: {ex.Message}", ex);
+            }
+        }
+        private void LogError(string message, Exception ex)
+        {
+            Debug.WriteLine(message);
 
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
+            try
+            {
+                using var errorsContext = new ErrorsContext();
+                errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
+                errorsContext.SaveChanges();
 
-                MessageBox.Show("Ошибка: " + ex.Message);
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath) ?? string.Empty);
+                File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+            }
+            catch (Exception logEx)
+            {
+                Debug.WriteLine($"Ошибка при записи в лог-файл: {logEx.Message}");
             }
         }
     }

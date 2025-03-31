@@ -8,6 +8,7 @@ using Xceed.Document.NET;
 using Xceed.Words.NET;
 using YP02.Models;
 using ExcelDataReader;
+using System.Diagnostics;
 
 namespace YP02.Pages.Oborudovanie
 {
@@ -79,10 +80,9 @@ namespace YP02.Pages.Oborudovanie
         {
             try
             {
-                string searchText = search.Text.ToLower();
-                var result = OborudovanieContext.Oborudovanie.Where(x =>
-                    x.Name.ToLower().Contains(searchText)
-                );
+                string searchText = search.Text?.ToLowerInvariant();
+                var result = OborudovanieContext.Oborudovanie.ToList().Where(x => x.Name != null && x.Name.ToLowerInvariant().Contains(searchText)).ToList();
+
                 parent.Children.Clear();
                 foreach (var item in result)
                 {
@@ -91,29 +91,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка поиска", ex);
             }
         }
 
@@ -125,108 +103,43 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
+                LogError("Ошибка при возврате в меню", ex);
+            }
+        }
+        private void Sort(bool ascending)
+        {
+            try
+            {
+                var sortedItems = ascending
+                    ? OborudovanieContext.Oborudovanie
+                        .Where(x => x.Name != null) // Фильтрация null
+                        .OrderBy(x => x.Name)
+                        .ToList()
+                    : OborudovanieContext.Oborudovanie
+                        .Where(x => x.Name != null) // Фильтрация null
+                        .OrderByDescending(x => x.Name)
+                        .ToList();
 
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
+                parent.Children.Clear();
+                foreach (var oborudovanie in sortedItems)
                 {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
+                    parent.Children.Add(new Item(oborudovanie, this));
                 }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LogError("Ошибка", ex);
             }
         }
 
         private void SortUp(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var sortUp = OborudovanieContext.Oborudovanie.OrderBy(x => x.Name);
-                parent.Children.Clear();
-                foreach (var oborudovanie in sortUp)
-                {
-                    parent.Children.Add(new Item(oborudovanie, this));
-                }
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
-            }
+            Sort(true);
         }
 
         private void SortDown(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var sortDown = OborudovanieContext.Oborudovanie.OrderBy(x => x.Name);
-                parent.Children.Clear();
-                foreach (var oborudovanie in sortDown)
-                {
-                    parent.Children.Add(new Item(oborudovanie, this));
-                }
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
-            }
+            Sort(false);
         }
 
         private void Add(object sender, RoutedEventArgs e)
@@ -237,29 +150,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка", ex);
             }
         }
 
@@ -630,6 +521,26 @@ namespace YP02.Pages.Oborudovanie
 
                 MessageBox.Show("Ошибка: " + ex.Message);
             }
+        }
+        private void LogError(string message, Exception ex)
+        {
+            Debug.WriteLine($"{message}: {ex.Message}");
+
+            try
+            {
+                using var errorsContext = new ErrorsContext();
+                errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
+                errorsContext.SaveChanges();
+
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+                File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+            }
+            catch (Exception logEx)
+            {
+                MessageBox.Show($"Ошибка при записи в лог-файл: {logEx.Message}", "Логирование ошибки", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            MessageBox.Show($"{message}: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
