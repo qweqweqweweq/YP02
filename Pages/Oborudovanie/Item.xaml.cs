@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -19,48 +21,53 @@ namespace YP02.Pages.Oborudovanie
             set => SetValue(IsSelectedProperty, value);
         }
 
-        Oborudovanie MainOborudovanie;
-        public Models.Oborudovanie Oborudovanie;
-        AuditoriesContext auditoriesContext = new();
-        UsersContext usersContext = new();
-        NapravlenieContext napravlenieContext = new();
-        StatusContext statusContext = new();
-        ViewModelContext viewModelContext = new();
-        private Models.Users currentUser;
+        private readonly Oborudovanie _mainOborudovanie;
+        public Models.Oborudovanie Oborudovanie { get; }
+        private readonly AuditoriesContext _auditoriesContext = new();
+        private readonly UsersContext _usersContext = new();
+        private readonly NapravlenieContext _napravlenieContext = new();
+        private readonly StatusContext _statusContext = new();
+        private readonly ViewModelContext _viewModelContext = new();
+        private readonly Models.Users _currentUser;
 
-        public Item(Models.Oborudovanie Oborudovanie, Oborudovanie MainOborudovanie)
+        public Item(Models.Oborudovanie oborudovanie, Oborudovanie mainOborudovanie)
         {
             InitializeComponent();
-            this.Oborudovanie = Oborudovanie;
-            this.MainOborudovanie = MainOborudovanie;
+            Oborudovanie = oborudovanie;
+            _mainOborudovanie = mainOborudovanie;
 
-            currentUser = MainWindow.init.CurrentUser;
-            if (currentUser != null && currentUser.Role == "Администратор")
+            _currentUser = MainWindow.init.CurrentUser;
+            if (_currentUser != null && _currentUser.Role == "Администратор")
             {
                 button1.Visibility = Visibility.Visible;
                 button2.Visibility = Visibility.Visible;
             }
 
+            LoadEquipmentData();
+            this.MouseLeftButtonDown += Item_MouseLeftButtonDown;
+        }
+
+        private void LoadEquipmentData()
+        {
             lb_Name.Content = Oborudovanie.Name;
             lb_invNum.Content = Oborudovanie.InventNumber;
-            lb_Audience.Content = auditoriesContext.Auditories.Where(x => x.Id == Oborudovanie.IdClassroom).FirstOrDefault()?.Name;
-            lb_User.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdResponUser).FirstOrDefault()?.FIO;
-            lb_tempUser.Content = usersContext.Users.Where(x => x.Id == Oborudovanie.IdTimeResponUser).FirstOrDefault()?.FIO;
+            lb_Audience.Content = _auditoriesContext.Auditories.FirstOrDefault(x => x.Id == Oborudovanie.IdClassroom)?.Name;
+            lb_User.Content = _usersContext.Users.FirstOrDefault(x => x.Id == Oborudovanie.IdResponUser)?.FIO;
+            lb_tempUser.Content = _usersContext.Users.FirstOrDefault(x => x.Id == Oborudovanie.IdTimeResponUser)?.FIO;
             lb_Price.Content = Oborudovanie.PriceObor;
-            lb_Direct.Content = napravlenieContext.Napravlenie.Where(x => x.Id == Oborudovanie.IdNapravObor).FirstOrDefault()?.Name;
-            lb_Status.Content = statusContext.Status.Where(x => x.Id == Oborudovanie.IdStatusObor).FirstOrDefault()?.Name;
-            lb_Model.Content = viewModelContext.ViewModel.Where(x => x.Id == Oborudovanie.IdModelObor).FirstOrDefault()?.Name;
+            lb_Direct.Content = _napravlenieContext.Napravlenie.FirstOrDefault(x => x.Id == Oborudovanie.IdNapravObor)?.Name;
+            lb_Status.Content = _statusContext.Status.FirstOrDefault(x => x.Id == Oborudovanie.IdStatusObor)?.Name;
+            lb_Model.Content = _viewModelContext.ViewModel.FirstOrDefault(x => x.Id == Oborudovanie.IdModelObor)?.Name;
             lb_Comment.Content = Oborudovanie.Comments;
             DisplayImage(Oborudovanie.Photo);
-
-            // Добавляем обработчик клика по всему элементу
-            this.MouseLeftButtonDown += Item_MouseLeftButtonDown;
         }
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var item = (Item)d;
-            item.RaiseSelectionChanged();
+            if (d is Item item)
+            {
+                item.RaiseSelectionChanged();
+            }
         }
 
         public event EventHandler SelectionChanged;
@@ -80,7 +87,7 @@ namespace YP02.Pages.Oborudovanie
         {
             try
             {
-                MainWindow.init.OpenPages(new Pages.Oborudovanie.Add(MainOborudovanie, Oborudovanie));
+                MainWindow.init.OpenPages(new Pages.Oborudovanie.Add(_mainOborudovanie, Oborudovanie));
             }
             catch (Exception ex)
             {
@@ -88,32 +95,28 @@ namespace YP02.Pages.Oborudovanie
             }
         }
 
-        private void Click_remove(object sender, RoutedEventArgs e)
+        private async void Click_remove(object sender, RoutedEventArgs e)
         {
             try
             {
                 MessageBoxResult result = MessageBox.Show(
                     "При удалении оборудования все связанные данные также будут удалены!",
-                    "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning
-                );
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
 
-                if (result != MessageBoxResult.Yes)
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _mainOborudovanie.RemoveEquipmentAsync(Oborudovanie);
+                    if (Parent is Panel panel)
+                    {
+                        panel.Children.Remove(this);
+                    }
+                }
+                else
                 {
                     MessageBox.Show("Действие отменено.");
-                    return;
                 }
-
-                using var context = MainOborudovanie.OborudovanieContext;
-                context.Oborudovanie.Remove(Oborudovanie);
-                context.SaveChanges();
-
-                Dispatcher.Invoke(() =>
-                {
-                    if (Parent is Panel parentPanel)
-                    {
-                        parentPanel.Children.Remove(this);
-                    }
-                });
             }
             catch (Exception ex)
             {
@@ -133,32 +136,34 @@ namespace YP02.Pages.Oborudovanie
             }
         }
 
-        private async void DisplayImage(byte[] imageData)
+        private void DisplayImage(byte[] imageData)
         {
-            if (imageData is { Length: > 0 })
+            try
             {
-                try
+                if (imageData != null && imageData.Length > 0)
                 {
-                    var bitmap = new BitmapImage();
-                    using (var ms = new MemoryStream(imageData))
+                    using (MemoryStream ms = new MemoryStream(imageData))
                     {
+                        BitmapImage bitmap = new BitmapImage();
                         bitmap.BeginInit();
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.StreamSource = ms;
                         bitmap.EndInit();
                         bitmap.Freeze();
-                    }
 
-                    imgObor.Source = bitmap;
-                    return;
+                        imgObor.Source = bitmap;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    LogError($"Ошибка загрузки изображения: {ex.Message}", ex);
+                    SetDefaultImage();
                 }
             }
-
-            SetDefaultImage();
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка загрузки изображения: {ex.Message}");
+                SetDefaultImage();
+            }
         }
 
         private void SetDefaultImage()
@@ -178,19 +183,22 @@ namespace YP02.Pages.Oborudovanie
                 LogError($"Ошибка загрузки стандартного изображения: {ex.Message}", ex);
             }
         }
-        private void LogError(string message, Exception ex)
+
+        private async Task LogError(string message, Exception ex)
         {
-            Debug.WriteLine(message);
+            Debug.WriteLine($"{message}: {ex.Message}");
 
             try
             {
-                using var errorsContext = new ErrorsContext();
-                errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
-                errorsContext.SaveChanges();
-
+                await using (var errorsContext = new ErrorsContext())
+                {
+                    errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
+                    await errorsContext.SaveChangesAsync();
+                }
                 string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
                 Directory.CreateDirectory(Path.GetDirectoryName(logPath) ?? string.Empty);
-                File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+
+                await File.AppendAllTextAsync(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
             }
             catch (Exception logEx)
             {

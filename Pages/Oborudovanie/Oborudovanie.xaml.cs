@@ -14,23 +14,25 @@ namespace YP02.Pages.Oborudovanie
 {
     public partial class Oborudovanie : Page
     {
-        public OborudovanieContext OborudovanieContext = new OborudovanieContext();
-        public UsersContext UsersContext = new UsersContext();
-        private Models.Users currentUser;
-        public Models.Users Users;
-        public Models.Oborudovanie Oborud;
-        public UsersContext usContext = new UsersContext();
-        public Models.ViewModel ViewModel;
-        public ViewModelContext ViewModelContext = new ViewModelContext();
-
+        private readonly OborudovanieContext _oborudovanieContext;
+        private readonly UsersContext _usersContext;
+        private readonly ViewModelContext _viewModelContext;
+        private Models.Users _currentUser;
         private Item _selectedItem;
+        private List<Models.Oborudovanie> _allEquipment;
+
+        public OborudovanieContext OborudovanieContext => _oborudovanieContext;
 
         public Oborudovanie()
         {
             InitializeComponent();
 
-            currentUser = MainWindow.init.CurrentUser;
-            if (currentUser != null && currentUser.Role == "Администратор")
+            _oborudovanieContext = new OborudovanieContext();
+            _usersContext = new UsersContext();
+            _viewModelContext = new ViewModelContext();
+
+            _currentUser = MainWindow.init.CurrentUser;
+            if (_currentUser != null && _currentUser.Role == "Администратор")
             {
                 addBtn.Visibility = Visibility.Visible;
                 exportDoc.Visibility = Visibility.Visible;
@@ -38,37 +40,68 @@ namespace YP02.Pages.Oborudovanie
                 import.Visibility = Visibility.Visible;
             }
 
-            LoadEquipment();
+            LoadEquipmentAsync().ConfigureAwait(false);
         }
 
-        private void LoadEquipment()
+        private async Task LoadEquipmentAsync()
         {
-            parent.Children.Clear();
-            foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
+            try
             {
-                var itemControl = new Item(item, this);
-                itemControl.SelectionChanged += ItemControl_SelectionChanged;
-                parent.Children.Add(itemControl);
+                _allEquipment = await Task.Run(() => _oborudovanieContext.Oborudovanie.ToList());
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    parent.Children.Clear();
+                    foreach (var item in _allEquipment)
+                    {
+                        var itemControl = new Item(item, this);
+                        itemControl.SelectionChanged += ItemControl_SelectionChanged;
+                        parent.Children.Add(itemControl);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                await LogError("Ошибка при загрузке оборудования: ", ex);
             }
         }
+
+        public async Task RemoveEquipmentAsync(Models.Oborudovanie equipment)
+        {
+            try
+            {
+                _oborudovanieContext.Oborudovanie.Remove(equipment);
+                await _oborudovanieContext.SaveChangesAsync();
+                _allEquipment.Remove(equipment);
+            }
+            catch (Exception ex)
+            {
+                await LogError("Ошибка удаления",ex);
+                throw;
+            }
+        }        
 
         private void ItemControl_SelectionChanged(object sender, EventArgs e)
         {
-            var item = (Item)sender;
+            var clickedItem = (Item)sender;
 
-            if (item.IsSelected)
+            // Если кликнули на уже выделенный элемент - снимаем выделение
+            if (_selectedItem == clickedItem)
             {
-                // Снимаем выделение с предыдущего выбранного элемента
-                if (_selectedItem != null && _selectedItem != item)
-                {
-                    _selectedItem.IsSelected = false;
-                }
-                _selectedItem = item;
-            }
-            else if (_selectedItem == item)
-            {
+                _selectedItem.IsSelected = false;
                 _selectedItem = null;
+                return;
             }
+
+            // Снимаем выделение с предыдущего элемента
+            if (_selectedItem != null)
+            {
+                _selectedItem.IsSelected = false;
+            }
+
+            // Устанавливаем новое выделение
+            _selectedItem = clickedItem;
+            _selectedItem.IsSelected = true;
         }
 
         private Models.Oborudovanie GetSelectedEquipment()
@@ -76,22 +109,38 @@ namespace YP02.Pages.Oborudovanie
             return _selectedItem?.Oborudovanie;
         }
 
-        private void KeyDown_Search(object sender, KeyEventArgs e)
+        private async void KeyDown_Search(object sender, KeyEventArgs e)
         {
             try
             {
-                string searchText = search.Text?.ToLowerInvariant();
-                var result = OborudovanieContext.Oborudovanie.ToList().Where(x => x.Name != null && x.Name.ToLowerInvariant().Contains(searchText)).ToList();
+                string searchText = search.Text.ToLower();
 
-                parent.Children.Clear();
-                foreach (var item in result)
+                var filteredItems = string.IsNullOrWhiteSpace(searchText)
+                    ? _allEquipment
+                    : _allEquipment.Where(x => x.Name.ToLower().Contains(searchText)).ToList();
+
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    parent.Children.Add(new Item(item, this));
-                }
+                    parent.Children.Clear();
+                    foreach (var item in filteredItems)
+                    {
+                        var itemControl = new Item(item, this);
+                        itemControl.SelectionChanged += ItemControl_SelectionChanged;
+
+                        // Восстанавливаем выделение после поиска
+                        if (_selectedItem != null && item.Id == _selectedItem.Oborudovanie.Id)
+                        {
+                            itemControl.IsSelected = true;
+                            _selectedItem = itemControl;
+                        }
+
+                        parent.Children.Add(itemControl);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                LogError("Ошибка поиска", ex);
+                await LogError("Ошибка при поиске: ", ex);
             }
         }
 
@@ -103,43 +152,50 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError("Ошибка при возврате в меню", ex);
+                LogError("Ошибка при возврате в меню", ex).ConfigureAwait(false);
             }
         }
-        private void Sort(bool ascending)
+
+        private async void SortUp(object sender, RoutedEventArgs e)
         {
             try
             {
-                var sortedItems = ascending
-                    ? OborudovanieContext.Oborudovanie
-                        .Where(x => x.Name != null) // Фильтрация null
-                        .OrderBy(x => x.Name)
-                        .ToList()
-                    : OborudovanieContext.Oborudovanie
-                        .Where(x => x.Name != null) // Фильтрация null
-                        .OrderByDescending(x => x.Name)
-                        .ToList();
+                var sorted = await Task.Run(() => _allEquipment.OrderBy(x => x.Name).ToList()).ConfigureAwait(false);
 
-                parent.Children.Clear();
-                foreach (var oborudovanie in sortedItems)
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    parent.Children.Add(new Item(oborudovanie, this));
-                }
+                    parent.Children.Clear();
+                    foreach (var oborudovanie in sorted)
+                    {
+                        parent.Children.Add(new Item(oborudovanie, this));
+                    }
+                });
             }
             catch (Exception ex)
             {
-                LogError("Ошибка", ex);
+                await LogError("Ошибка при сортировке: ", ex);
             }
         }
 
-        private void SortUp(object sender, RoutedEventArgs e)
+        private async void SortDown(object sender, RoutedEventArgs e)
         {
-            Sort(true);
-        }
+            try
+            {
+                var sorted = await Task.Run(() => _allEquipment.OrderByDescending(x => x.Name).ToList()).ConfigureAwait(false);
 
-        private void SortDown(object sender, RoutedEventArgs e)
-        {
-            Sort(false);
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    parent.Children.Clear();
+                    foreach (var oborudovanie in sorted)
+                    {
+                        parent.Children.Add(new Item(oborudovanie, this));
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                await LogError("Ошибка при сортировке: ", ex);
+            }
         }
 
         private void Add(object sender, RoutedEventArgs e)
@@ -150,11 +206,11 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError("Ошибка", ex);
+                LogError("Ошибка: ", ex).ConfigureAwait(false);
             }
         }
 
-        private void ExportObor(object sender, RoutedEventArgs e)
+        private async void ExportObor(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -165,12 +221,11 @@ namespace YP02.Pages.Oborudovanie
                     return;
                 }
 
-                // Получаем текущую дату
                 string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
 
-                using (var obContext = new OborudovanieContext())
+                await Task.Run(() =>
                 {
-                    var oborudovanie = obContext.Oborudovanie
+                    var oborudovanie = _oborudovanieContext.Oborudovanie
                         .FirstOrDefault(x => x.Id == selectedEquipment.Id);
 
                     if (oborudovanie == null)
@@ -179,7 +234,7 @@ namespace YP02.Pages.Oborudovanie
                         return;
                     }
 
-                    var currentUser = usContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
+                    var currentUser = _usersContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
 
                     using (DocX document = DocX.Create("Akt_Priema_Peredachi.docx"))
                     {
@@ -212,16 +267,13 @@ namespace YP02.Pages.Oborudovanie
                             mainText.Alignment = Alignment.both;
                         }
 
-                        using (var viewContext = new ViewModelContext())
-                        {
-                            var model = viewContext.ViewModel
-                                .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
+                        var model = _viewModelContext.ViewModel
+                            .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
 
-                            var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n\n")
-                                .Font("Times New Roman")
-                                .FontSize(12)
-                                .Alignment = Alignment.center;
-                        }
+                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n\n")
+                            .Font("Times New Roman")
+                            .FontSize(12)
+                            .Alignment = Alignment.center;
 
                         if (currentUser != null)
                         {
@@ -236,39 +288,17 @@ namespace YP02.Pages.Oborudovanie
 
                         document.Save();
                     }
+                });
 
-                    MessageBox.Show("Документ успешно сгенерирован по пути: Desktop\\YP02\\bin\\Debug\\net6.0-windows");
-                }
+                MessageBox.Show("Документ успешно сгенерирован по пути: Desktop\\YP02\\bin\\Debug\\net6.0-windows");
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                await LogError("Ошибка: ", ex);
             }
         }
 
-        private void ExportObor1(object sender, RoutedEventArgs e)
+        private async void ExportObor1(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -279,11 +309,11 @@ namespace YP02.Pages.Oborudovanie
                     return;
                 }
 
-                string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
-
-                using (var obContext = new OborudovanieContext())
+                await Task.Run(() =>
                 {
-                    var oborudovanie = obContext.Oborudovanie
+                    string currentDate = DateTime.Now.ToString("dd.MM.yyyy");
+
+                    var oborudovanie = _oborudovanieContext.Oborudovanie
                         .FirstOrDefault(x => x.Id == selectedEquipment.Id);
 
                     if (oborudovanie == null)
@@ -292,7 +322,7 @@ namespace YP02.Pages.Oborudovanie
                         return;
                     }
 
-                    var currentUser = usContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
+                    var currentUser = _usersContext.Users.FirstOrDefault(x => x.Role == "Сотрудник");
 
                     using (DocX document = DocX.Create("Akt_Priema_Peredachi_Vrem_Polz.docx"))
                     {
@@ -323,16 +353,13 @@ namespace YP02.Pages.Oborudovanie
                             mainText.Alignment = Alignment.both;
                         }
 
-                        using (var viewContext = new ViewModelContext())
-                        {
-                            var model = viewContext.ViewModel
-                                .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
+                        var model = _viewModelContext.ViewModel
+                            .FirstOrDefault(x => x.Id == selectedEquipment.IdModelObor);
 
-                            var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n")
-                                .Font("Times New Roman")
-                                .FontSize(12)
-                                .Alignment = Alignment.center;
-                        }
+                        var equipmentInfo = document.InsertParagraph($" {oborudovanie.Name} {model?.Name}, серийный номер {oborudovanie.InventNumber}, стоимостью {oborudovanie.PriceObor} руб. \n\n")
+                            .Font("Times New Roman")
+                            .FontSize(12)
+                            .Alignment = Alignment.center;
 
                         var lastText = document.InsertParagraph($"По окончанию должностных работ  «__»  ____________  20___  года, работник\nобязуется вернуть полученное оборудование.\n\n");
                         lastText.Font("Times New Roman");
@@ -353,35 +380,13 @@ namespace YP02.Pages.Oborudovanie
 
                         document.Save();
                     }
+                });
 
-                    MessageBox.Show("Документ успешно сгенерирован по пути: Desktop\\YP02\\bin\\Debug\\net6.0-windows");
-                }
+                MessageBox.Show("Документ успешно сгенерирован по пути: Desktop\\YP02\\bin\\Debug\\net6.0-windows");
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                await LogError("Ошибка: ", ex);
             }
         }
 
@@ -398,79 +403,60 @@ namespace YP02.Pages.Oborudovanie
                     var result = reader.AsDataSet();
                     var table = result.Tables[0];
 
-                    using (var context = new UsersContext())
+                    for (int i = 1; i < table.Rows.Count; i++)
                     {
-                        for (int i = 1; i < table.Rows.Count; i++)
+                        var row = table.Rows[i];
+                        string userFIO = row[0].ToString().Trim();
+                        var user = _usersContext.Users.FirstOrDefault(u => u.FIO == userFIO);
+
+                        if (user == null)
                         {
-                            var row = table.Rows[i];
-                            string userFIO = row[0].ToString().Trim();
-                            var user = context.Users.FirstOrDefault(u => u.FIO == userFIO);
-
-                            if (user == null)
-                            {
-                                MessageBox.Show($"Ошибка: Пользователь '{userFIO}' не найден в базе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue;
-                            }
-
-                            equipmentList.Add(new Models.Oborudovanie
-                            {
-                                Name = row[1].ToString(),
-                                InventNumber = row[2].ToString(),
-                                PriceObor = "Не указано",
-                                IdResponUser = user.Id,
-                                IdTimeResponUser = user.Id,
-                                IdClassroom = 8,
-                                IdNapravObor = 7,
-                                IdStatusObor = 9,
-                                IdModelObor = 6,
-                                Comments = "Импортировано из Excel"
-                            });
+                            MessageBox.Show($"Ошибка: Пользователь '{userFIO}' не найден в базе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            continue;
                         }
+
+                        equipmentList.Add(new Models.Oborudovanie
+                        {
+                            Name = row[1].ToString(),
+                            InventNumber = row[2].ToString(),
+                            PriceObor = "Не указано",
+                            IdResponUser = user.Id,
+                            IdTimeResponUser = user.Id,
+                            IdClassroom = 8,
+                            IdNapravObor = 7,
+                            IdStatusObor = 9,
+                            IdModelObor = 6,
+                            Comments = "Импортировано из Excel"
+                        });
                     }
                 }
             }
             return equipmentList;
         }
 
-        private void SaveToDatabase(List<Models.Oborudovanie> equipmentList)
+        private async Task SaveToDatabaseAsync(List<Models.Oborudovanie> equipmentList)
         {
             try
             {
-                using (var context = new OborudovanieContext()) // Ваш DbContext
+                await Task.Run(() =>
                 {
-                    context.Oborudovanie.AddRange(equipmentList);
-                    context.SaveChanges();
-                }
+                    using (var context = new OborudovanieContext())
+                    {
+                        context.Oborudovanie.AddRange(equipmentList);
+                        context.SaveChanges();
+                    }
+                });
+
+                // Обновляем кэш после добавления новых записей
+                _allEquipment = await Task.Run(() => _oborudovanieContext.Oborudovanie.ToList());
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                await LogError("Ошибка: ", ex);
             }
         }
 
-        private void GoImport(object sender, RoutedEventArgs e)
+        private async void GoImport(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -479,68 +465,53 @@ namespace YP02.Pages.Oborudovanie
                     Filter = "Excel Files|*.xls;*.xlsx",
                     Title = "Выберите файл Excel"
                 };
+
                 if (openFileDialog.ShowDialog() == true)
                 {
                     string filePath = openFileDialog.FileName;
-                    List<Models.Oborudovanie> equipmentList = ReadExcelFile(filePath);
+                    var equipmentList = await Task.Run(() => ReadExcelFile(filePath));
 
                     // Сохраняем данные в базу
-                    SaveToDatabase(equipmentList);
+                    await SaveToDatabaseAsync(equipmentList);
 
                     MessageBox.Show("Импорт завершён успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    parent.Children.Clear();
-                    foreach (Models.Oborudovanie item in OborudovanieContext.Oborudovanie)
+
+                    await Dispatcher.InvokeAsync(() =>
                     {
-                        parent.Children.Add(new Item(item, this));
-                    }
+                        parent.Children.Clear();
+                        foreach (var item in _allEquipment)
+                        {
+                            parent.Children.Add(new Item(item, this));
+                        }
+                    });
                 }
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                await LogError("Ошибка: ", ex);
             }
         }
-        private void LogError(string message, Exception ex)
+
+        private async Task LogError(string message, Exception ex)
         {
             Debug.WriteLine($"{message}: {ex.Message}");
 
             try
             {
-                using var errorsContext = new ErrorsContext();
-                errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
-                errorsContext.SaveChanges();
+                await using (var errorsContext = new ErrorsContext())
+                {
+                    errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
+                    await errorsContext.SaveChangesAsync();
+                }                
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath) ?? string.Empty);
 
-                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
-                File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+                await File.AppendAllTextAsync(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
             }
             catch (Exception logEx)
             {
-                MessageBox.Show($"Ошибка при записи в лог-файл: {logEx.Message}", "Логирование ошибки", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Debug.WriteLine($"Ошибка при записи в лог-файл: {logEx.Message}");
             }
-
-            MessageBox.Show($"{message}: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
