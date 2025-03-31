@@ -86,7 +86,7 @@ namespace YP02.Pages.Auditories
                         ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id, // Получение ID ответственного пользователя
                         TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id // Получение ID временно-ответственного пользователя
                     };
-                    MainAuditories.auditoriesContext.Auditories.Add(auditories); // Добавление новой аудитории в контекст
+                    MainAuditories.AuditoriesContext.Auditories.Add(auditories); // Добавление новой аудитории в контекст
                 }
                 else // Если аудитория уже существует (редактируем)
                 {
@@ -96,7 +96,7 @@ namespace YP02.Pages.Auditories
                     auditories.ResponUser = usersContext.Users.Where(x => x.FIO == tb_User.SelectedItem.ToString()).First().Id; // Обновление ID ответственного пользователя
                     auditories.TimeResponUser = usersContext.Users.Where(x => x.FIO == tb_tempUser.SelectedItem.ToString()).First().Id; // Обновление ID временно-ответственного пользователя
                 }
-                MainAuditories.auditoriesContext.SaveChanges(); // Сохранение изменений в контексте базы данных
+                MainAuditories.AuditoriesContext.SaveChanges(); // Сохранение изменений в контексте базы данных
                 MainWindow.init.OpenPages(new Pages.Auditories.Auditories()); // Переход на страницу аудиторий после сохранения
             }
             catch (Exception ex)
