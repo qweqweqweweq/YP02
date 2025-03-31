@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 27 2025 г., 22:38
+-- Время создания: Мар 31 2025 г., 17:34
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -43,7 +43,6 @@ INSERT INTO `Auditories` (`Id`, `Name`, `ShortName`, `ResponUser`, `TimeResponUs
 (1, 'Аудитория А-422', 'А-422', 3, 2),
 (2, 'Аудитория А-424', 'А-424', 2, 1),
 (3, 'Аудитория А-418', 'А-418', 1, 1),
-(7, 'Аудитория А-502', 'А-502', 1, 3),
 (8, 'Нет аудитории', 'Нет', 1, 1);
 
 -- --------------------------------------------------------
@@ -85,11 +84,7 @@ CREATE TABLE `Developers` (
 
 INSERT INTO `Developers` (`Id`, `Name`) VALUES
 (1, 'Backend-разработчик'),
-(2, 'Frontend-разработчик'),
-(3, 'Full Stack-разработчик'),
-(4, 'Мобильный разработчик'),
-(5, 'Инженер-программист'),
-(6, 'DevOps-инженер');
+(2, 'Frontend-разработчик');
 
 -- --------------------------------------------------------
 
@@ -101,6 +96,32 @@ CREATE TABLE `Errors` (
   `Id` int NOT NULL,
   `Message` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `Errors`
+--
+
+INSERT INTO `Errors` (`Id`, `Message`) VALUES
+(1, 'An error occurred while updating the entries. See the inner exception for details.'),
+(2, 'An error occurred while updating the entries. See the inner exception for details.'),
+(3, 'An error occurred while updating the entries. See the inner exception for details.'),
+(4, 'An error occurred while updating the entries. See the inner exception for details.'),
+(5, 'An error occurred while updating the entries. See the inner exception for details.'),
+(6, 'An error occurred while updating the entries. See the inner exception for details.'),
+(7, 'An error occurred while updating the entries. See the inner exception for details.'),
+(8, 'An error occurred while updating the entries. See the inner exception for details.'),
+(9, 'An error occurred while updating the entries. See the inner exception for details.'),
+(10, 'An error occurred while updating the entries. See the inner exception for details.'),
+(11, 'An error occurred while updating the entries. See the inner exception for details.'),
+(12, 'An error occurred while updating the entries. See the inner exception for details.'),
+(13, 'An error occurred while updating the entries. See the inner exception for details.'),
+(14, 'An error occurred while updating the entries. See the inner exception for details.'),
+(15, 'An error occurred while updating the entries. See the inner exception for details.'),
+(16, 'An error occurred while updating the entries. See the inner exception for details.'),
+(17, 'An error occurred while updating the entries. See the inner exception for details.'),
+(18, 'An error occurred while updating the entries. See the inner exception for details.'),
+(19, 'An error occurred while updating the entries. See the inner exception for details.'),
+(20, 'An error occurred while updating the entries. See the inner exception for details.');
 
 -- --------------------------------------------------------
 
@@ -148,9 +169,7 @@ CREATE TABLE `Inventory` (
 --
 
 INSERT INTO `Inventory` (`Id`, `StartDate`, `EndDate`, `Name`, `UserId`, `IdOborrud`) VALUES
-(6, '2025-03-01 00:00:00', '2025-03-13 00:00:00', 'Весенняя инвентаризация', 1, 3),
-(7, '2024-06-01 00:00:00', '2024-06-07 00:00:00', 'Летняя инвентаризация', 2, 2),
-(8, '2025-01-01 00:00:00', '2025-02-18 00:00:00', 'Инвентаризация #3', 3, 1);
+(7, '2024-06-01 00:00:00', '2024-06-07 00:00:00', 'Летняя инвентаризация', 2, 2);
 
 -- --------------------------------------------------------
 
@@ -169,9 +188,7 @@ CREATE TABLE `Napravlenie` (
 
 INSERT INTO `Napravlenie` (`Id`, `Name`) VALUES
 (1, 'Офис'),
-(2, 'Производство'),
 (3, 'Информационные технологии'),
-(4, 'Мехатроника'),
 (5, 'WSR2025'),
 (7, 'Нет направления');
 
@@ -198,20 +215,7 @@ CREATE TABLE `NetworkSettings` (
 --
 
 INSERT INTO `NetworkSettings` (`Id`, `IpAddress`, `SubnetMask`, `MainGateway`, `DNSServer1`, `DNSServer2`, `DNSServer3`, `DNSServer4`, `OborudovanieId`) VALUES
-(1, '192.168.0.7', '255.255.255.255', '192.168.0.1', '123.123.123.1', '123.123.123.2', '123.123.123.3', '123.123.123.4', 4),
-(4, '111.222.7.1', '111.222.111.222', '192.168.0.2', '102.234.0.7', '192.168.1.3', '-', '-', 4);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `OborAndRasxod`
---
-
-CREATE TABLE `OborAndRasxod` (
-  `Id` int NOT NULL,
-  `IdOborudovanie` int DEFAULT NULL,
-  `IdRasxodMaterials` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+(1, '192.168.0.111', '255.255.255.255', '192.168.0.1', '123.123.123.1', '123.123.123.2', '123.123.123.3', '123.123.123.4', 4);
 
 -- --------------------------------------------------------
 
@@ -267,9 +271,7 @@ INSERT INTO `Oborudovanie` (`Id`, `Name`, `Photo`, `InventNumber`, `IdClassroom`
 (1, 'Учебный монитор', 0x6468, '123456789', 3, 2, 1, '14000', 3, 3, 2, 'Без комментариев'),
 (2, 'Учебная клавиатура', 0x68646668, '987654321', 2, 1, 3, '2999', 3, 1, 3, 'Новая'),
 (3, 'Принтер', 0x686468, '654123090', 2, 3, 2, '14599', 1, 5, 1, 'gd'),
-(4, 'Персональный компьютер', 0x686468, '238921450', 1, 2, 1, '70000', 1, 2, 2, 'dh'),
-(20, 'Компьютерный стол КСТ-109', NULL, '94503293785', 8, 2, 2, 'Не указано', 7, 9, 6, 'Импортировано из Excel'),
-(21, 'Наушники Logitech G435', NULL, '49320491743', 8, 1, 1, 'Не указано', 7, 9, 6, 'Импортировано из Excel');
+(4, 'Персональный компьютер', 0x686468, '238921450', 1, 2, 1, '70000', 1, 2, 2, 'dh');
 
 -- --------------------------------------------------------
 
@@ -291,9 +293,7 @@ CREATE TABLE `Programs` (
 
 INSERT INTO `Programs` (`Id`, `Name`, `VersionPO`, `DeveloperId`, `OborrId`) VALUES
 (9, 'My SQL Workbench', '8.0.19', 1, 4),
-(10, 'Microsoft Visual Studio', '2022', 2, 4),
-(11, 'Visio', '2019', 2, 4),
-(12, '1С: Предприятие', '8.1.0', 5, 4);
+(10, 'Microsoft Visual Studio', '2022', 2, 4);
 
 -- --------------------------------------------------------
 
@@ -326,19 +326,6 @@ INSERT INTO `RasxodMaterials` (`Id`, `Name`, `Description`, `DatePostupleniya`, 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `ResponUserAndObor`
---
-
-CREATE TABLE `ResponUserAndObor` (
-  `Id` int NOT NULL,
-  `UsId` int DEFAULT NULL,
-  `OborudId` int DEFAULT NULL,
-  `Comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `Status`
 --
 
@@ -357,9 +344,7 @@ INSERT INTO `Status` (`Id`, `Name`) VALUES
 (3, 'В ремонте'),
 (4, 'На выдаче'),
 (5, 'На учёте'),
-(6, 'Под заказом'),
 (7, 'Требуется обслуживание'),
-(8, 'Под списанием'),
 (9, 'Нет статуса');
 
 -- --------------------------------------------------------
@@ -453,7 +438,6 @@ INSERT INTO `ViewModel` (`Id`, `Name`, `OborType`) VALUES
 (2, 'MSI PRO MP273A', 1),
 (3, 'Logitech K280E', 2),
 (4, 'Logitech G102 LIGHTSYNC', 3),
-(5, 'Cougar Speeder ONE', 6),
 (6, 'Нет модели', 8);
 
 --
@@ -525,14 +509,6 @@ ALTER TABLE `NetworkSettings`
   ADD KEY `OborudovanieId_idx` (`OborudovanieId`);
 
 --
--- Индексы таблицы `OborAndRasxod`
---
-ALTER TABLE `OborAndRasxod`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `IdOborudovanie_idx` (`IdOborudovanie`),
-  ADD KEY `IdRasxodMaterials_idx` (`IdRasxodMaterials`);
-
---
 -- Индексы таблицы `OborType`
 --
 ALTER TABLE `OborType`
@@ -568,14 +544,6 @@ ALTER TABLE `RasxodMaterials`
   ADD KEY `CharacteristicsType_idx` (`CharacteristicsType`),
   ADD KEY `IdValue_idx` (`IdValue`),
   ADD KEY `Characteristics_idx` (`Characteristics`);
-
---
--- Индексы таблицы `ResponUserAndObor`
---
-ALTER TABLE `ResponUserAndObor`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `UsId_idx` (`UsId`),
-  ADD KEY `OborudId_idx` (`OborudId`);
 
 --
 -- Индексы таблицы `Status`
@@ -636,7 +604,7 @@ ALTER TABLE `Developers`
 -- AUTO_INCREMENT для таблицы `Errors`
 --
 ALTER TABLE `Errors`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT для таблицы `HistoryInventory`
@@ -669,12 +637,6 @@ ALTER TABLE `NetworkSettings`
   MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT для таблицы `OborAndRasxod`
---
-ALTER TABLE `OborAndRasxod`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT для таблицы `OborType`
 --
 ALTER TABLE `OborType`
@@ -697,12 +659,6 @@ ALTER TABLE `Programs`
 --
 ALTER TABLE `RasxodMaterials`
   MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT для таблицы `ResponUserAndObor`
---
-ALTER TABLE `ResponUserAndObor`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `Status`
@@ -779,13 +735,6 @@ ALTER TABLE `NetworkSettings`
   ADD CONSTRAINT `OborudovanieId` FOREIGN KEY (`OborudovanieId`) REFERENCES `Oborudovanie` (`Id`);
 
 --
--- Ограничения внешнего ключа таблицы `OborAndRasxod`
---
-ALTER TABLE `OborAndRasxod`
-  ADD CONSTRAINT `IdOborudovanie` FOREIGN KEY (`IdOborudovanie`) REFERENCES `Oborudovanie` (`Id`),
-  ADD CONSTRAINT `IdRasxodMaterials` FOREIGN KEY (`IdRasxodMaterials`) REFERENCES `RasxodMaterials` (`Id`);
-
---
 -- Ограничения внешнего ключа таблицы `Oborudovanie`
 --
 ALTER TABLE `Oborudovanie`
@@ -812,13 +761,6 @@ ALTER TABLE `RasxodMaterials`
   ADD CONSTRAINT `IdValue` FOREIGN KEY (`IdValue`) REFERENCES `ValueCharacteristics` (`Id`),
   ADD CONSTRAINT `ResponUserTime` FOREIGN KEY (`ResponUserTime`) REFERENCES `Users` (`Id`),
   ADD CONSTRAINT `UserRespon` FOREIGN KEY (`UserRespon`) REFERENCES `Users` (`Id`);
-
---
--- Ограничения внешнего ключа таблицы `ResponUserAndObor`
---
-ALTER TABLE `ResponUserAndObor`
-  ADD CONSTRAINT `OborudId` FOREIGN KEY (`OborudId`) REFERENCES `Oborudovanie` (`Id`),
-  ADD CONSTRAINT `UsId` FOREIGN KEY (`UsId`) REFERENCES `Users` (`Id`);
 
 --
 -- Ограничения внешнего ключа таблицы `ValueCharacteristics`
