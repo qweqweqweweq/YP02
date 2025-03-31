@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Мар 31 2025 г., 17:34
+-- Время создания: Мар 31 2025 г., 18:00
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -121,7 +121,11 @@ INSERT INTO `Errors` (`Id`, `Message`) VALUES
 (17, 'An error occurred while updating the entries. See the inner exception for details.'),
 (18, 'An error occurred while updating the entries. See the inner exception for details.'),
 (19, 'An error occurred while updating the entries. See the inner exception for details.'),
-(20, 'An error occurred while updating the entries. See the inner exception for details.');
+(20, 'An error occurred while updating the entries. See the inner exception for details.'),
+(21, 'Не удалось обнаружить компонент обработки изображений, который подходит для завершения данной операции.'),
+(22, 'Не удалось обнаружить компонент обработки изображений, который подходит для завершения данной операции.'),
+(23, 'Не удалось обнаружить компонент обработки изображений, который подходит для завершения данной операции.'),
+(24, 'Не удалось обнаружить компонент обработки изображений, который подходит для завершения данной операции.');
 
 -- --------------------------------------------------------
 
@@ -268,10 +272,9 @@ CREATE TABLE `Oborudovanie` (
 --
 
 INSERT INTO `Oborudovanie` (`Id`, `Name`, `Photo`, `InventNumber`, `IdClassroom`, `IdResponUser`, `IdTimeResponUser`, `PriceObor`, `IdNapravObor`, `IdStatusObor`, `IdModelObor`, `Comments`) VALUES
-(1, 'Учебный монитор', 0x6468, '123456789', 3, 2, 1, '14000', 3, 3, 2, 'Без комментариев'),
-(2, 'Учебная клавиатура', 0x68646668, '987654321', 2, 1, 3, '2999', 3, 1, 3, 'Новая'),
-(3, 'Принтер', 0x686468, '654123090', 2, 3, 2, '14599', 1, 5, 1, 'gd'),
-(4, 'Персональный компьютер', 0x686468, '238921450', 1, 2, 1, '70000', 1, 2, 2, 'dh');
+(1, 'Учебный монитор', NULL, '123456789', 3, 2, 1, '14000', 3, 3, 2, 'Без комментариев'),
+(2, 'Учебная клавиатура', NULL, '987654321', 2, 1, 3, '2999', 3, 1, 3, 'Новая'),
+(4, 'Персональный компьютер', NULL, '238921450', 1, 2, 1, '70000', 1, 2, 2, 'dh');
 
 -- --------------------------------------------------------
 
@@ -604,7 +607,7 @@ ALTER TABLE `Developers`
 -- AUTO_INCREMENT для таблицы `Errors`
 --
 ALTER TABLE `Errors`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT для таблицы `HistoryInventory`
