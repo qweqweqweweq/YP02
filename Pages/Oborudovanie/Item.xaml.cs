@@ -91,7 +91,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError("Ошибка редактирования оборудования", ex);
+                LogError("Ошибка редактирования оборудования", ex).ConfigureAwait(false);
             }
         }
 
@@ -120,7 +120,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError("Ошибка удаления оборудования", ex);
+                await LogError("Ошибка удаления оборудования", ex);
             }
         }
 
@@ -132,7 +132,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError("Ошибка открытия истории оборудования", ex);
+                LogError("Ошибка открытия истории оборудования", ex).ConfigureAwait(false);
             }
         }
 
@@ -180,7 +180,7 @@ namespace YP02.Pages.Oborudovanie
             }
             catch (Exception ex)
             {
-                LogError($"Ошибка загрузки стандартного изображения: {ex.Message}", ex);
+                LogError($"Ошибка загрузки стандартного изображения: {ex.Message}", ex).ConfigureAwait(false);
             }
         }
 

@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using YP02.Context;
-using YP02.Models;
 
 namespace YP02.Pages.NetworkSettings
 {
@@ -160,29 +149,7 @@ namespace YP02.Pages.NetworkSettings
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка", ex).ConfigureAwait(false);
             }
         }
 
@@ -194,29 +161,7 @@ namespace YP02.Pages.NetworkSettings
             }
             catch (Exception ex)
             {
-                try
-                {
-                    using (var errorsContext = new ErrorsContext())
-                    {
-                        var error = new Models.Errors
-                        {
-                            Message = ex.Message
-                        };
-                        errorsContext.Errors.Add(error);
-                        errorsContext.SaveChanges(); // Сохраняем ошибку в базе данных
-                    }
-
-                    // Логирование ошибки в файл log.txt
-                    string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logPath)); // Создаем папку bin, если ее нет
-                    System.IO.File.AppendAllText(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
-                }
-                catch (Exception logEx)
-                {
-                    MessageBox.Show("Ошибка при записи в лог-файл: " + logEx.Message);
-                }
-
-                MessageBox.Show("Ошибка: " + ex.Message);
+                LogError("Ошибка", ex).ConfigureAwait(false);
             }
         }
 
@@ -239,6 +184,28 @@ namespace YP02.Pages.NetworkSettings
             }
 
             return true;
+        }
+
+        private async Task LogError(string message, Exception ex)
+        {
+            Debug.WriteLine($"{message}: {ex.Message}");
+
+            try
+            {
+                await using (var errorsContext = new ErrorsContext())
+                {
+                    errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
+                    await errorsContext.SaveChangesAsync();
+                }
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath) ?? string.Empty);
+
+                await File.AppendAllTextAsync(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
+            }
+            catch (Exception logEx)
+            {
+                Debug.WriteLine($"Ошибка при записи в лог-файл: {logEx.Message}");
+            }
         }
     }
 }
