@@ -68,6 +68,12 @@ namespace YP02.Pages.NetworkSettings
                     MessageBox.Show("Введите корректный IP-адрес в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
                     return; // Прерывание выполнения метода
                 }
+                // Проверка уникальности IP-адреса
+                if (MainNetworkSettings.NetworkSettingsContext.NetworkSettings.Any(ns => ns.IpAddress == tb_IpAddress.Text && (networkSettings == null || ns.Id != networkSettings.Id)))
+                {
+                    MessageBox.Show("Этот IP-адрес уже используется другим устройством.");
+                    return;
+                }
                 if (string.IsNullOrEmpty(tb_Mask.Text))
                 {
                     MessageBox.Show("Введите маску подсети"); // Сообщение об ошибке, если поле пустое
