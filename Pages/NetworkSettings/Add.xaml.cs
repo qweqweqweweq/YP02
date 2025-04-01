@@ -93,26 +93,6 @@ namespace YP02.Pages.NetworkSettings
                     MessageBox.Show("Введите корректный DNS-Server 1 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
                     return; // Прерывание выполнения метода
                 }
-                if (string.IsNullOrEmpty(tb_DNSServers1.Text))
-                {
-                    MessageBox.Show("Введите DNS-Server 2");
-                    return; // Прерывание выполнения метода
-                }
-                if (!IsValidIpAddress(tb_DNSServers1.Text))
-                {
-                    MessageBox.Show("Введите корректный DNS-Server 2 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.");
-                    return; // Прерывание выполнения метода
-                }
-                if (string.IsNullOrEmpty(tb_DNSServers2.Text))
-                {
-                    MessageBox.Show("Введите DNS-Server 3 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.\nЕсли он отсутствует, поставьте: -");
-                    return; // Прерывание выполнения метода
-                }
-                if (string.IsNullOrEmpty(tb_DNSServers3.Text))
-                {
-                    MessageBox.Show("Введите DNS-Server 4 в формате XXX.XXX.XXX.XXX, где XXX от 0 до 255.\nЕсли он отсутствует, поставьте: -");
-                    return; // Прерывание выполнения метода
-                }
                 if (cb_IdOb.SelectedItem == null)
                 {
                     MessageBox.Show("Выберите оборудование");
