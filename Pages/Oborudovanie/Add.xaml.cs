@@ -22,6 +22,7 @@ namespace YP02.Pages.Oborudovanie
 
         private byte[] tempPhoto = null;
         public Models.HistoryObor historyObor;
+        public Models.HistoryAuditory historyAuditoryObor;
 
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {
@@ -112,7 +113,8 @@ namespace YP02.Pages.Oborudovanie
                     oborudovanie = new Models.Oborudovanie();
                 }
 
-                int oldIdTimeResponUser = oborudovanie.IdTimeResponUser;
+                int oldIdResponUser = oborudovanie.IdResponUser;
+                int oldIdClassroom = oborudovanie.IdClassroom;
 
                 oborudovanie.Name = tb_Name.Text;
                 oborudovanie.InventNumber = tb_invNum.Text;
@@ -139,12 +141,12 @@ namespace YP02.Pages.Oborudovanie
                 MainOborudovanie.OborudovanieContext.SaveChanges();
 
                 // Проверяем, изменился ли IdTimeResponUser
-                if (oldIdTimeResponUser != oborudovanie.IdTimeResponUser)
+                if (oldIdResponUser != oborudovanie.IdResponUser)
                 {
                     // Создаем запись в истории
                     var historyObor = new Models.HistoryObor
                     {
-                        IdUserr = usersContext.Users.First(x => x.FIO == tb_tempUser.SelectedItem).Id,
+                        IdUserr = usersContext.Users.First(x => x.FIO == tb_User.SelectedItem).Id,
                         IdObor = oborudovanie.Id, // Используем Id оборудования, который был сгенерирован при сохранении
                         Date = DateTime.Now,
                         Comment = tb_Comment.Text
@@ -155,6 +157,25 @@ namespace YP02.Pages.Oborudovanie
                     {
                         historyContext.HistoryObor.Add(historyObor);
                         historyContext.SaveChanges();
+                    }
+                }
+
+                // Проверяем, изменился ли IdClassroom
+                if (oldIdClassroom != oborudovanie.IdClassroom)
+                {
+                    // Создаем запись в истории
+                    var historyAuditory = new Models.HistoryAuditory
+                    {
+                        IdClassroom = auditoriesContext.Auditories.First(x => x.Name == tb_Audience.SelectedItem).Id,
+                        IdObor = oborudovanie.Id, // Используем Id оборудования, который был сгенерирован при сохранении
+                        Date = DateTime.Now,
+                    };
+
+                    // Используем HistoryAuditoryContext для сохранения истории
+                    using (var historyAuditoryContext = new HistoryAuditoryContex())
+                    {
+                        historyAuditoryContext.HistoryAuditory.Add(historyAuditory);
+                        historyAuditoryContext.SaveChanges();
                     }
                 }
 

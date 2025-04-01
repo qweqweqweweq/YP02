@@ -205,5 +205,17 @@ namespace YP02.Pages.Oborudovanie
                 Debug.WriteLine($"Ошибка при записи в лог-файл: {logEx.Message}");
             }
         }
+
+        private void Click_history_auditori(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MainWindow.init.OpenPages(new Pages.HistoryAuditory.HistoryAuditory(Oborudovanie.Id));
+            }
+            catch (Exception ex)
+            {
+                LogError("Ошибка открытия истории оборудования", ex).ConfigureAwait(false);
+            }
+        }
     }
 }

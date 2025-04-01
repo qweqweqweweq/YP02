@@ -1,21 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YP02.Context.Database;
 using YP02.Models;
 
 namespace YP02.Context
 {
-    public class HistoryOborContext : DbContext
+    public class HistoryAuditoryContex : DbContext
     {
-        public DbSet<HistoryObor> HistoryObor { get; set; }
-        public HistoryOborContext()
+        public DbSet<HistoryAuditory> HistoryAuditory { get; set; }
+        public HistoryAuditoryContex()
         {
             Database.EnsureCreated();
-            HistoryObor.Load();
+            HistoryAuditory.Load();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
