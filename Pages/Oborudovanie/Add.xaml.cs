@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -72,6 +73,12 @@ namespace YP02.Pages.Oborudovanie
                     MessageBox.Show("Введите инвентарный номер оборудования");
                     return;
                 }
+                // Валидация инвентарного номера (только цифры)
+                if (!Regex.IsMatch(tb_invNum.Text, @"^\d*$"))
+                {
+                    MessageBox.Show("Инвентарный номер должен содержать только цифры");
+                    return;
+                }
                 if (tb_Audience.SelectedItem == null)
                 {
                     MessageBox.Show("Выберите аудиторию");
@@ -90,6 +97,12 @@ namespace YP02.Pages.Oborudovanie
                 if (string.IsNullOrEmpty(tb_Price.Text))
                 {
                     MessageBox.Show("Введите стоимость оборудования");
+                    return;
+                }
+                // Валидация стоимости (только цифры и возможно десятичная точка)
+                if (!Regex.IsMatch(tb_Price.Text, @"^[\d]+([,.]?[\d]{0,2})?$"))
+                {
+                    MessageBox.Show("Стоимость должна быть числом и может содержать до двух десятичных знаков");
                     return;
                 }
                 if (tb_Direction.SelectedItem == null)
