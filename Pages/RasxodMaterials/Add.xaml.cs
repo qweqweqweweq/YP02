@@ -143,6 +143,8 @@ namespace YP02.Pages.RasxodMaterials
 
                 DateTime datePos = tb_DatePost.SelectedDate.Value;
 
+                int oldIdResponUser = rasxodMaterials.UserRespon;
+
                 if (rasxodMaterials == null)
                 {
                     rasxodMaterials = new Models.RasxodMaterials();
@@ -170,6 +172,24 @@ namespace YP02.Pages.RasxodMaterials
                     rasxodMaterials.CharacteristicsType = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Name == tb_typeRasMat.SelectedItem.ToString()).First().Id;
                     rasxodMaterials.Photo = rasxodMaterials.Photo;
                     rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem.ToString()).First().Id;
+                }
+                // Проверяем, изменился ли IdTimeResponUser
+                if (oldIdResponUser != rasxodMaterials.UserRespon)
+                {
+                    // Создаем запись в истории
+                    var historyRashod = new Models.HistoryRashod
+                    {
+                        IdUser = usersContext.Users.First(x => x.FIO == tb_responUser.SelectedItem).Id,
+                        IdRashod = rasxodMaterials.Id, // Используем Id оборудования, который был сгенерирован при сохранении
+                        Date = DateTime.Now,
+                    };
+
+                    // Используем HistoryOborContext для сохранения истории
+                    using (var historyContext = new HistoryRashodContext())
+                    {
+                        historyContext.HistoryRashod.Add(historyRashod);
+                        historyContext.SaveChanges();
+                    }
                 }
                 MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
                 MainWindow.init.OpenPages(new Pages.RasxodMaterials.RasxodMaterials());
