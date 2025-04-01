@@ -47,7 +47,7 @@ namespace YP02.Pages.ViewModel
 
             // Заполнение элементов управления данными модели представления
             lb_Name.Content = ViewModel.Name; // Установка имени модели
-            lb_OborType.Content = oborTypeContext.OborType.Where(x => x.Id == ViewModel.Id).FirstOrDefault()?.Name; // Установка типа оборудования по ID
+            lb_OborType.Content = oborTypeContext.OborType.FirstOrDefault(x => x.Id == ViewModel.OborType)?.Name; // Установка типа оборудования по ID
         }
 
         // Обработчик события нажатия кнопки "Редактировать"

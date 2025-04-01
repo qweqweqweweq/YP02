@@ -23,6 +23,7 @@ namespace YP02.Pages
             {
                 string Login = login.Text;
                 string Password = password.Password;
+                Models.Users? user;
 
                 if (string.IsNullOrWhiteSpace(Login))
                 {
@@ -38,7 +39,8 @@ namespace YP02.Pages
 
                 using (var usersContext = new UsersContext())
                 {
-                    var user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                    user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                }
                     if (user != null)
                     {
                         MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
@@ -48,7 +50,6 @@ namespace YP02.Pages
                     {
                         MessageBox.Show("Некорректный ввод логина или пароля.");
                     }
-                }
             }
             catch (Exception ex)
             {
