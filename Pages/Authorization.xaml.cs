@@ -3,60 +3,86 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using YP02.Context;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace YP02.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для Authorization.xaml
-    /// </summary>
     public partial class Authorization : Page
     {
+        private readonly UsersContext _usersContext;
 
         public Authorization()
         {
             InitializeComponent();
+            _usersContext = new UsersContext();
+
+            // Опционально: предварительная инициализация контекста
+            InitializeDbContextAsync().ConfigureAwait(false);
         }
 
-        private void AuthorizationClick(object sender, RoutedEventArgs e)
+        private async Task InitializeDbContextAsync()
+        {
+            // Предварительная "прогрев" контекста
+            await _usersContext.Users.FirstOrDefaultAsync();
+        }
+
+        private async void AuthorizationClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                string Login = login.Text;
-                string Password = password.Password;
-                Models.Users? user;
+                string loginText = login.Text.Trim();
+                string passwordText = password.Password;
 
-                if (string.IsNullOrWhiteSpace(Login))
+                if (string.IsNullOrWhiteSpace(loginText))
                 {
                     MessageBox.Show("Введите логин.");
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(Password))
+                if (string.IsNullOrWhiteSpace(passwordText))
                 {
                     MessageBox.Show("Введите пароль.");
                     return;
                 }
+                                
+                // Асинхронный поиск пользователя с оптимизированным запросом
+                var user = await FindUserAsync(loginText, passwordText);
 
-                using (var usersContext = new UsersContext())
+                if (user != null)
                 {
-                    user = usersContext.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                    MainWindow.init.SetCurrentUser(user);
+                    MainWindow.init.OpenPages(new Menu());
                 }
-                    if (user != null)
-                    {
-                        MainWindow.init.SetCurrentUser(user); // Сохраняем пользователя в MainWindow
-                        MainWindow.init.OpenPages(new Menu());
-                    }
-                    else
-                    {
-                        MessageBox.Show("Некорректный ввод логина или пароля.");
-                    }
+                else
+                {
+                    MessageBox.Show("Некорректный ввод логина или пароля.");
+                }
             }
             catch (Exception ex)
             {
-                LogError("Ошибка", ex).ConfigureAwait(false);
+                await LogError("Ошибка авторизации", ex);
+                MessageBox.Show("Произошла ошибка при авторизации. Попробуйте позже.");
             }
         }
 
+        private async Task<Models.Users?> FindUserAsync(string login, string password)
+        {
+            // Оптимизированный запрос - выбираем только необходимые поля
+            return await _usersContext.Users
+                .AsNoTracking() // Не отслеживать изменения
+                .Where(u => u.Login == login)
+                .Select(u => new Models.Users
+                {
+                    Id = u.Id,
+                    Login = u.Login,
+                    Password = u.Password,
+                    FIO = u.FIO,
+                    Role = u.Role
+                })
+                .FirstOrDefaultAsync();
+        }
+                
         private async Task LogError(string message, Exception ex)
         {
             Debug.WriteLine($"{message}: {ex.Message}");
@@ -68,9 +94,9 @@ namespace YP02.Pages
                     errorsContext.Errors.Add(new Models.Errors { Message = ex.Message });
                     await errorsContext.SaveChangesAsync();
                 }
+
                 string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "log.txt");
                 Directory.CreateDirectory(Path.GetDirectoryName(logPath) ?? string.Empty);
-
                 await File.AppendAllTextAsync(logPath, $"{DateTime.Now}: {ex.Message}\n{ex.StackTrace}\n\n");
             }
             catch (Exception logEx)
