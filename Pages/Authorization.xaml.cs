@@ -71,7 +71,7 @@ namespace YP02.Pages
             // Оптимизированный запрос - выбираем только необходимые поля
             return await _usersContext.Users
                 .AsNoTracking() // Не отслеживать изменения
-                .Where(u => u.Login == login)
+                .Where(u => u.Login == login && u.Password == password) // Проверяем и логин, и пароль
                 .Select(u => new Models.Users
                 {
                     Id = u.Id,
