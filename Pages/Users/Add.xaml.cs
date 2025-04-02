@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using MathNet.Numerics;
+using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using YP02.Context;
@@ -50,29 +52,29 @@ namespace YP02.Pages.Users
             try
             {
                 // Проверка на заполненность полей
-                if (string.IsNullOrEmpty(tb_FIO.Text))
+                if (!Regex.IsMatch(tb_FIO.Text, "([А-ЯЁ][а-яё]+[\\-\\s]?){3,}") || tb_FIO.Text == "")
                 {
                     MessageBox.Show("Введите ФИО пользователя"); // Сообщение об ошибке, если поле пустое
                     return; // Прерывание выполнения метода
                 }
-                if (string.IsNullOrEmpty(tb_Login.Text))
+                if (!Regex.IsMatch(tb_Login.Text, "[A-Za-z]") || tb_Login.Text == "")
                 {
                     MessageBox.Show("Введите логин"); // Сообщение об ошибке, если поле пустое
                     return; // Прерывание выполнения метода
                 }
-                if (string.IsNullOrEmpty(tb_Password.Text))
+                if (!Regex.IsMatch(tb_Password.Text, "[a-zA-Z]") || tb_Password.Text == "")
                 {
                     MessageBox.Show("Введите пароль"); // Сообщение об ошибке, если поле пустое
                     return; // Прерывание выполнения метода
                 }
-                if (string.IsNullOrEmpty(tb_Phone.Text))
+                if (!Regex.IsMatch(tb_Phone.Text, "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$") || tb_Phone.Text == "")
                 {
                     MessageBox.Show("Введите номер телефона"); // Сообщение об ошибке, если поле пустое
                     return; // Прерывание выполнения метода
                 }
-                if (string.IsNullOrEmpty(tb_Email.Text))
+                if (!Regex.IsMatch(tb_Email.Text, @"^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$") || tb_Email.Text == "")
                 {
-                    MessageBox.Show("Введите эл. почту"); // Сообщение об ошибке, если поле пустое
+                    MessageBox.Show("Введите эл. почту в формате test@test.test"); // Сообщение об ошибке, если поле пустое
                     return; // Прерывание выполнения метода
                 }
                 if (string.IsNullOrEmpty(tb_Address.Text))
