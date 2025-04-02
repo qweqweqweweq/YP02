@@ -23,7 +23,7 @@ namespace YP02.Pages.Oborudovanie
 
         private byte[] tempPhoto = null;
         public Models.HistoryObor historyObor;
-        public Models.HistoryAuditory historyAuditoryObor;
+        public Models.HistoryAuditory historyAuditory;
 
         public Add(Oborudovanie MainOborudovanie, Models.Oborudovanie oborudovanie = null)
         {

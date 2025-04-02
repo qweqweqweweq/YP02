@@ -117,40 +117,45 @@ namespace YP02.Pages.RasxodMaterials
             {
                 if (imageData != null && imageData.Length > 0)
                 {
-                    try
+                    using (MemoryStream ms = new MemoryStream(imageData))
                     {
-                        using (var ms = new MemoryStream(imageData))
-                        {
-                            var image = System.Drawing.Image.FromStream(ms);
-                            var bitmapImage = new BitmapImage();
-                            bitmapImage.BeginInit();
-                            MemoryStream memoryStream = new MemoryStream();
-                            image.Save(memoryStream, ImageFormat.Png);
-                            memoryStream.Seek(0, SeekOrigin.Begin);
-                            bitmapImage.StreamSource = memoryStream;
-                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapImage.EndInit();
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = ms;
+                        bitmap.EndInit();
+                        bitmap.Freeze();
 
-                            imgObor.Source = bitmapImage;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                        imgObor.Source = new BitmapImage(uri);
-
-                        Debug.WriteLine(ex.Message);
+                        imgObor.Source = bitmap;
                     }
                 }
                 else
                 {
-                    Uri uri = new Uri("/Images/NoneImage.png", UriKind.Relative);
-                    imgObor.Source = new BitmapImage(uri);
+                    SetDefaultImage();
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Ошибка загрузки изображения: {ex.Message}");
+                SetDefaultImage();
+            }
+        }
+
+        private void SetDefaultImage()
+        {
+            try
+            {
+                var defaultImage = new BitmapImage();
+                defaultImage.BeginInit();
+                defaultImage.UriSource = new Uri("pack://application:,,,/Images/NoneImage.png", UriKind.Absolute);
+                defaultImage.EndInit();
+                defaultImage.Freeze();
+
+                imgObor.Source = defaultImage;
+            }
+            catch (Exception ex)
+            {
+                LogError($"Ошибка загрузки стандартного изображения: {ex.Message}", ex).ConfigureAwait(false);
             }
         }
 
