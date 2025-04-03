@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using YP02.Context;
+using YP02.Models;
 
 namespace YP02.Pages.RasxodMaterials
 {
@@ -28,36 +29,78 @@ namespace YP02.Pages.RasxodMaterials
             InitializeComponent();
             this.MainRasxodMaterials = MainRasxodMaterials;
             this.rasxodMaterials = rasxodMaterials;
+
+            // Инициализация элементов управления
+            InitializeControls();
+
             if (rasxodMaterials != null)
             {
-                text1.Content = "Изменение расходного материала";
-                text2.Content = "Изменить";
-                tb_Name.Text = rasxodMaterials.Name;
-                tb_Des.Text = rasxodMaterials.Description;
-                tb_DatePost.Text = rasxodMaterials.DatePostupleniya.ToString("dd.MM.yyyy");
-                tb_Quantity.Text = rasxodMaterials.Quantity.ToString();
-                tb_responUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.UserRespon).FirstOrDefault().FIO;
-                tb_timeResponUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.ResponUserTime).FirstOrDefault().FIO;
-                tb_typeRasMat.SelectedItem = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == rasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
-                tb_characters.SelectedItem = characteristicsContext.Characteristics.Where(x => x.Id == rasxodMaterials.Characteristics).FirstOrDefault().Name;
-                tb_valueChar.SelectedItem = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Id == rasxodMaterials.IdValue).FirstOrDefault().Znachenie;
+                LoadExistingData();
             }
+        }
+
+        private void InitializeControls()
+        {
             foreach (var item in usersContext.Users)
             {
                 tb_responUser.Items.Add(item.FIO);
                 tb_timeResponUser.Items.Add(item.FIO);
             }
+
             foreach (var item in typeCharacteristicsContext.TypeCharacteristics)
             {
                 tb_typeRasMat.Items.Add(item.Name);
             }
-            foreach (var item in characteristicsContext.Characteristics)
+
+            tb_typeRasMat.SelectionChanged += Tb_typeRasMat_SelectionChanged;
+            tb_characters.SelectionChanged += Tb_characters_SelectionChanged;
+        }
+
+        private void LoadExistingData()
+        {
+            text1.Content = "Изменение расходного материала";
+            text2.Content = "Изменить";
+            tb_Name.Text = rasxodMaterials.Name;
+            tb_Des.Text = rasxodMaterials.Description;
+            tb_DatePost.Text = rasxodMaterials.DatePostupleniya.ToString("dd.MM.yyyy");
+            tb_Quantity.Text = rasxodMaterials.Quantity.ToString();
+            tb_responUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.UserRespon).FirstOrDefault().FIO;
+            tb_timeResponUser.SelectedItem = usersContext.Users.Where(x => x.Id == rasxodMaterials.ResponUserTime).FirstOrDefault().FIO;
+            tb_typeRasMat.SelectedItem = typeCharacteristicsContext.TypeCharacteristics.Where(x => x.Id == rasxodMaterials.CharacteristicsType).FirstOrDefault().Name;
+            tb_characters.SelectedItem = characteristicsContext.Characteristics.Where(x => x.Id == rasxodMaterials.Characteristics).FirstOrDefault().Name;
+            tb_valueChar.SelectedItem = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Id == rasxodMaterials.IdValue).FirstOrDefault().Znachenie;
+        }
+
+        private void Tb_typeRasMat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tb_typeRasMat.SelectedItem != null)
             {
-                tb_characters.Items.Add(item.Name);
+                string selectedTypeName = tb_typeRasMat.SelectedItem.ToString();
+                int selectedTypeId = typeCharacteristicsContext.TypeCharacteristics.First(x => x.Name == selectedTypeName).Id;
+
+                // Очистка и заполнение характеристик
+                tb_characters.Items.Clear();
+                foreach (var characteristic in characteristicsContext.Characteristics.Where(c => c.TypeCharacter == selectedTypeId))
+                {
+                    tb_characters.Items.Add(characteristic.Name);
+                }
+                tb_valueChar.Items.Clear(); // Очистка значений при смене типа
             }
-            foreach (var item in valueCharacteristicsContext.ValueCharacteristics)
+        }
+
+        private void Tb_characters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tb_characters.SelectedItem != null)
             {
-                tb_valueChar.Items.Add(item.Znachenie);
+                string selectedCharacteristicName = tb_characters.SelectedItem.ToString();
+                int selectedCharacteristicId = characteristicsContext.Characteristics.First(x => x.Name == selectedCharacteristicName).Id;
+
+                // Очистка и заполнение значений характеристик
+                tb_valueChar.Items.Clear();
+                foreach (var value in valueCharacteristicsContext.ValueCharacteristics.Where(v => v.IdCharacter == selectedCharacteristicId))
+                {
+                    tb_valueChar.Items.Add(value.Znachenie);
+                }
             }
         }
 
@@ -67,7 +110,7 @@ namespace YP02.Pages.RasxodMaterials
             {
                 var ofd = new OpenFileDialog
                 {
-                    Filter = "Image Files (*.jpg;*.jpeg;*.png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
+                    Filter = "Image Files (*.jpg;*.jpeg;*. png;*.gif)|*.jpg;*.jpeg;*.png;*.gif"
                 };
                 if (ofd.ShowDialog() == true)
                 {
@@ -119,7 +162,6 @@ namespace YP02.Pages.RasxodMaterials
                     MessageBox.Show("Введите количество расходного материала");
                     return;
                 }
-                // Валидация количества (только цифры)
                 if (!Regex.IsMatch(tb_Quantity.Text, @"^\d*$"))
                 {
                     MessageBox.Show("Поле количество должно содержать только цифры");
@@ -171,9 +213,6 @@ namespace YP02.Pages.RasxodMaterials
                 rasxodMaterials.Photo = rasxodMaterials.Photo;
                 rasxodMaterials.IdValue = valueCharacteristicsContext.ValueCharacteristics.Where(x => x.Znachenie == tb_valueChar.SelectedItem).First().Id;
 
-
-
-                // Если фотография не была загружена, оставляем старую
                 if (tempPhoto != null)
                 {
                     rasxodMaterials.Photo = tempPhoto;
@@ -186,18 +225,15 @@ namespace YP02.Pages.RasxodMaterials
 
                 MainRasxodMaterials.rasxodMaterialsContext.SaveChanges();
 
-                // Проверяем, изменился ли IdTimeResponUser
                 if (oldIdResponUser != rasxodMaterials.UserRespon)
                 {
-                    // Создаем запись в истории
                     var historyRashod = new Models.HistoryRashod
                     {
                         IdUser = usersContext.Users.First(x => x.FIO == tb_responUser.SelectedItem).Id,
-                        IdRashod = rasxodMaterials.Id, // Используем Id оборудования, который был сгенерирован при сохранении
+                        IdRashod = rasxodMaterials.Id,
                         Date = DateTime.Now,
                     };
 
-                    // Используем HistoryOborContext для сохранения истории
                     using (var historyContext = new HistoryRashodContext())
                     {
                         historyContext.HistoryRashod.Add(historyRashod);
